@@ -6,9 +6,15 @@ import {
     MantineProvider,
 } from '@mantine/core';
 import { useState } from 'react';
+import { useColorScheme, useLocalStorage } from '@mantine/hooks';
 
 function App({ Component, pageProps }: AppProps) {
-    const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
+    const preferedColorScheme = useColorScheme();
+    const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+        key: 'mantine-color-scheme',
+        defaultValue: preferedColorScheme,
+        getInitialValueInEffect: true,
+    });
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
