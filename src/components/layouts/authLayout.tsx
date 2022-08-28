@@ -7,6 +7,7 @@ import {
     useMantineColorScheme,
 } from '@mantine/core';
 import { IconMoonStars, IconSun } from '@tabler/icons';
+import Head from 'next/head';
 import React from 'react';
 
 const useStyles = createStyles((theme) => ({
@@ -18,16 +19,25 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type AuthLayoutProps = {
+    siteTitle: string;
     children: JSX.Element;
 };
 
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
     const { classes } = useStyles();
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
     const dark = colorScheme === 'dark';
 
     return (
         <>
+            <Head>
+                <title>{siteTitle}</title>
+                <meta
+                    name="description"
+                    content="Login to your OpenKBan account"
+                />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <Header height={60} p="xs" mb={100}>
                 <Container>
                     <div className={classes.inner}>
@@ -49,7 +59,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
                     </div>
                 </Container>
             </Header>
-            {children}
+            <Container size="xs">{children}</Container>
         </>
     );
 };

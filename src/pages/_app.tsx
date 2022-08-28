@@ -5,7 +5,6 @@ import {
     ColorSchemeProvider,
     MantineProvider,
 } from '@mantine/core';
-import { useState } from 'react';
 import { useColorScheme, useLocalStorage } from '@mantine/hooks';
 
 function App({ Component, pageProps }: AppProps) {
