@@ -1,5 +1,5 @@
-import AuthLayout from '@components/layouts/authLayout';
-import AuthProviderButton from '@components/UI/Buttons/authProviderButton';
+import AuthLayout from '@components/layouts/auth-layout';
+import AuthProviderButton from '@components/UI/Buttons/auth-provider-button';
 import {
     EMAIL_REGEX,
     INVALID_EMAIL,

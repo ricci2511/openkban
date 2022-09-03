@@ -46,7 +46,7 @@ const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
                         </Title>
                         <ActionIcon
                             variant="filled"
-                            color={dark ? 'yellow' : 'blue'}
+                            color={dark ? 'yellow' : 'indigo'}
                             onClick={() => toggleColorScheme()}
                             title="Toggle Color Scheme"
                         >
