@@ -6,6 +6,7 @@ import {
     MantineProvider,
 } from '@mantine/core';
 import { useColorScheme, useLocalStorage } from '@mantine/hooks';
+import 'styles/index.css';
 
 function App({ Component, pageProps }: AppProps) {
     const preferedColorScheme = useColorScheme();

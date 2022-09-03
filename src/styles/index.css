@@ -1,0 +1,4 @@
+/* Animate colorscheme change */
+body {
+    transition: background-color 250ms ease;
+}
