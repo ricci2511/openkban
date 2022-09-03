@@ -1,22 +1,7 @@
-import {
-    ActionIcon,
-    Container,
-    createStyles,
-    Header,
-    Title,
-    useMantineColorScheme,
-} from '@mantine/core';
-import { IconMoonStars, IconSun } from '@tabler/icons';
+import CustomHeader from '@components/UI/Header';
+import { Container } from '@mantine/core';
 import Head from 'next/head';
 import React from 'react';
-
-const useStyles = createStyles((theme) => ({
-    inner: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-}));
 
 type AuthLayoutProps = {
     siteTitle: 'Login' | 'Register';
@@ -24,10 +9,6 @@ type AuthLayoutProps = {
 };
 
 const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
-    const { classes } = useStyles();
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-    const dark = colorScheme === 'dark';
-
     return (
         <>
             <Head>
@@ -38,27 +19,7 @@ const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header height={60} p="xs" mb={100}>
-                <Container>
-                    <div className={classes.inner}>
-                        <Title order={1} size="h2">
-                            OpenKBan
-                        </Title>
-                        <ActionIcon
-                            variant="filled"
-                            color={dark ? 'yellow' : 'indigo'}
-                            onClick={() => toggleColorScheme()}
-                            title="Toggle Color Scheme"
-                        >
-                            {dark ? (
-                                <IconSun size={18} />
-                            ) : (
-                                <IconMoonStars size={18} />
-                            )}
-                        </ActionIcon>
-                    </div>
-                </Container>
-            </Header>
+            <CustomHeader />
             <Container size="xs">{children}</Container>
         </>
     );
