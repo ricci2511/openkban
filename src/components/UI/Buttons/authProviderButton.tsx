@@ -8,13 +8,7 @@ type AuthProviderButtonProps = {
 
 const AuthProviderButton = ({ buttonText, icon }: AuthProviderButtonProps) => {
     return (
-        <Button
-            size="sm"
-            variant="gradient"
-            fullWidth
-            gradient={{ from: 'black', to: 'gray' }}
-            leftIcon={icon}
-        >
+        <Button variant="default" fullWidth leftIcon={icon}>
             {buttonText}
         </Button>
     );

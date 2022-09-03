@@ -19,7 +19,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type AuthLayoutProps = {
-    siteTitle: string;
+    siteTitle: 'Login' | 'Register';
     children: JSX.Element;
 };
 
@@ -34,7 +34,7 @@ const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
                 <title>{siteTitle}</title>
                 <meta
                     name="description"
-                    content="Login to your OpenKBan account"
+                    content={`${siteTitle} to your OpenKBan account`}
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
