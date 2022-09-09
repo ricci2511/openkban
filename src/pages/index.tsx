@@ -1,9 +1,14 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Login from './login';
+import { useRouter } from 'next/router';
+import SignIn from './auth/signin';
 
 const Home: NextPage = () => {
-    return <Login />;
+    return (
+        <>
+            <div>Empty index page</div>
+        </>
+    );
 };
 
 export default Home;

@@ -1,23 +1,13 @@
-import { AppProps } from 'next/app';
 import Head from 'next/head';
-import {
-    ColorScheme,
-    ColorSchemeProvider,
-    MantineProvider,
-} from '@mantine/core';
-import { useColorScheme, useLocalStorage } from '@mantine/hooks';
 import 'styles/index.css';
+import { withTRPC } from '@trpc/next';
+import { AppRouter } from '@server/router';
+import { AppType } from 'next/dist/shared/lib/utils';
+import { SessionProvider } from 'next-auth/react';
+import AbstractedMantineProvider from '@components/abstracted-mantine-provider';
+import superjson from 'superjson';
 
-function App({ Component, pageProps }: AppProps) {
-    const preferedColorScheme = useColorScheme();
-    const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-        key: 'mantine-color-scheme',
-        defaultValue: preferedColorScheme,
-        getInitialValueInEffect: true,
-    });
-    const toggleColorScheme = (value?: ColorScheme) =>
-        setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-
+const App: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
     return (
         <>
             <Head>
@@ -28,22 +18,21 @@ function App({ Component, pageProps }: AppProps) {
                 />
             </Head>
 
-            <ColorSchemeProvider
-                colorScheme={colorScheme}
-                toggleColorScheme={toggleColorScheme}
-            >
-                <MantineProvider
-                    withGlobalStyles
-                    withNormalizeCSS
-                    theme={{
-                        colorScheme: colorScheme,
-                    }}
-                >
+            <AbstractedMantineProvider>
+                <SessionProvider session={session}>
                     <Component {...pageProps} />
-                </MantineProvider>
-            </ColorSchemeProvider>
+                </SessionProvider>
+            </AbstractedMantineProvider>
         </>
     );
-}
+};
 
-export default App;
+export default withTRPC<AppRouter>({
+    config({ ctx }) {
+        const url = process.env.VERCEL_URL
+            ? `https://${process.env.VERCEL_URL}/api/trpc`
+            : 'http://localhost:3000/api/trpc';
+        return { url, transformer: superjson };
+    },
+    ssr: false,
+})(App);

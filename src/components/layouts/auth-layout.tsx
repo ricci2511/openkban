@@ -4,18 +4,17 @@ import Head from 'next/head';
 import React from 'react';
 
 type AuthLayoutProps = {
-    siteTitle: 'Login' | 'Register';
     children: JSX.Element;
 };
 
-const AuthLayout = ({ siteTitle, children }: AuthLayoutProps) => {
+const AuthLayout = ({ children }: AuthLayoutProps) => {
     return (
         <>
             <Head>
-                <title>{siteTitle}</title>
+                <title>Sign in</title>
                 <meta
                     name="description"
-                    content={`${siteTitle} to your OpenKBan account`}
+                    content="Sign in to your OpenKBan account"
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
