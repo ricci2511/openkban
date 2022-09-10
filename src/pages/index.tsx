@@ -1,7 +1,5 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import SignIn from './auth/signin';
+import { getServerAuthSession } from '@server/common/get-server-auth-session';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 
 const Home: NextPage = () => {
     return (
@@ -9,6 +7,16 @@ const Home: NextPage = () => {
             <div>Empty index page</div>
         </>
     );
+};
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    const session = await getServerAuthSession(ctx);
+    return {
+        redirect: {
+            destination: session ? '/dashboard' : '/auth/signin',
+            permanent: false,
+        },
+    };
 };
 
 export default Home;
