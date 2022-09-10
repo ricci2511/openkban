@@ -23,22 +23,20 @@ const CustomHeader = () => {
     const dark = colorScheme === 'dark';
 
     return (
-        <Header height={60} p="xs" mb={100}>
-            <Container>
-                <div className={classes.inner}>
-                    <Title order={1} size="h2">
-                        OpenKBan
-                    </Title>
-                    <ActionIcon
-                        variant="filled"
-                        color={dark ? 'yellow' : 'indigo'}
-                        onClick={() => toggleColorScheme()}
-                        title="Toggle Color Scheme"
-                    >
-                        {dark ? <HiSun size={18} /> : <HiMoon size={18} />}
-                    </ActionIcon>
-                </div>
-            </Container>
+        <Header height={60} py="xs" px="xl" mb={100}>
+            <div className={classes.inner}>
+                <Title order={1} size="h2">
+                    OpenKBan
+                </Title>
+                <ActionIcon
+                    variant="filled"
+                    color={dark ? 'yellow' : 'indigo'}
+                    onClick={() => toggleColorScheme()}
+                    title="Toggle Color Scheme"
+                >
+                    {dark ? <HiSun size={18} /> : <HiMoon size={18} />}
+                </ActionIcon>
+            </div>
         </Header>
     );
 };
