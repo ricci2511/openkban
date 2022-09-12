@@ -3,28 +3,16 @@ import { Button, Divider, Group, Paper, Text, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { GetServerSidePropsContext } from 'next';
-import {
-    signIn,
-    getProviders,
-    ClientSafeProvider,
-    LiteralUnion,
-} from 'next-auth/react';
+import { signIn, getProviders } from 'next-auth/react';
 import React from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGithub } from 'react-icons/si';
 import { MdEmail } from 'react-icons/md';
 import { emailSchema } from '@lib/constants';
-import { BuiltInProviderType } from 'next-auth/providers';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
+import { AuthProviders } from 'types/next-auth';
 
-interface ProvidersType {
-    providers: Record<
-        LiteralUnion<BuiltInProviderType, string>,
-        ClientSafeProvider
-    > | null;
-}
-
-const SignIn = ({ providers }: ProvidersType) => {
+const SignIn = ({ providers }: AuthProviders) => {
     const [authType, toggleAuthType] = useToggle(['noEmail', 'email']);
     const form = useForm({
         initialValues: {
@@ -33,12 +21,7 @@ const SignIn = ({ providers }: ProvidersType) => {
         validate: zodResolver(emailSchema),
     });
 
-    const getProviderButtons = (
-        providers: Record<
-            LiteralUnion<BuiltInProviderType, string>,
-            ClientSafeProvider
-        > | null
-    ) => {
+    const getProviderButtons = (providers: AuthProviders['providers']) => {
         const providersArr = Object.values(providers || []);
         if (!providersArr.length) {
             return (
