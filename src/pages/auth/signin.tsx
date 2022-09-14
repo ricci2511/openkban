@@ -1,5 +1,13 @@
 import AuthLayout from '@components/layouts/auth-layout';
-import { Button, Divider, Group, Paper, Text, TextInput } from '@mantine/core';
+import {
+    Button,
+    Divider,
+    Group,
+    Paper,
+    Text,
+    TextInput,
+    Title,
+} from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useToggle } from '@mantine/hooks';
 import { GetServerSidePropsContext } from 'next';
@@ -13,7 +21,7 @@ import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { AuthProviders } from 'types/next-auth';
 
 const SignIn = ({ providers }: AuthProviders) => {
-    const [authType, toggleAuthType] = useToggle(['noEmail', 'email']);
+    const [authType, toggleAuthType] = useToggle(['withoutEmail', 'withEmail']);
     const form = useForm({
         initialValues: {
             email: '',
@@ -36,9 +44,7 @@ const SignIn = ({ providers }: AuthProviders) => {
                 key={provider.id}
                 variant="default"
                 fullWidth
-                onClick={() =>
-                    signIn(provider.id, { callbackUrl: '/dashboard' })
-                }
+                onClick={() => signIn(provider.id, { callbackUrl: '/' })}
                 leftIcon={
                     provider.name === 'Google' ? (
                         <FcGoogle size={18} />
@@ -56,10 +62,10 @@ const SignIn = ({ providers }: AuthProviders) => {
 
     return (
         <AuthLayout>
-            <Paper radius="md" p="xl" withBorder>
-                <Text size="lg" weight={500}>
+            <Paper radius="md" p="xl" component="main" withBorder>
+                <Title order={2} size="h4" weight={500}>
                     Welcome to OpenKBan, sign in with
-                </Text>
+                </Title>
                 <Group mb="md" mt="md">
                     {providerButtons}
                 </Group>
@@ -76,7 +82,7 @@ const SignIn = ({ providers }: AuthProviders) => {
                 >
                     Email
                 </Button>
-                {authType === 'email' && (
+                {authType === 'withEmail' && (
                     <form
                         onSubmit={form.onSubmit((values) =>
                             console.log(values)
@@ -105,7 +111,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     if (session) {
         return {
             redirect: {
-                destination: '/dashboard',
+                destination: '/',
                 permanent: false,
             },
         };
