@@ -1,60 +1,51 @@
 import AuthLayout from '@components/layouts/auth-layout';
-import {
-    Button,
-    Divider,
-    Group,
-    Paper,
-    Text,
-    TextInput,
-    Title,
-} from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
-import { useToggle } from '@mantine/hooks';
 import { GetServerSidePropsContext } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGithub } from 'react-icons/si';
 import { MdEmail } from 'react-icons/md';
-import { emailSchema } from '@lib/constants';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { AuthProviders } from 'types/next-auth';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
 
 const SignIn = ({ providers }: AuthProviders) => {
-    const [authType, toggleAuthType] = useToggle(['withoutEmail', 'withEmail']);
-    const form = useForm({
-        initialValues: {
-            email: '',
-        },
-        validate: zodResolver(emailSchema),
+    const [withEmail, setWithEmail] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<EmailFormSchemaType>({
+        resolver: zodResolver(emailSchema),
     });
+
+    const onSubmit = handleSubmit((data) => console.log(data.email));
 
     const getProviderButtons = (providers: AuthProviders['providers']) => {
         const providersArr = Object.values(providers || []);
         if (!providersArr.length) {
             return (
-                <Text component="p" size="md">
+                <p className="text-xl">
                     Authentication providers failed to load :(
-                </Text>
+                </p>
             );
         }
 
         return providersArr.map((provider) => (
-            <Button
+            <button
                 key={provider.id}
-                variant="default"
-                fullWidth
+                className="btn w-full gap-2 sm:w-1/2"
                 onClick={() => signIn(provider.id, { callbackUrl: '/' })}
-                leftIcon={
-                    provider.name === 'Google' ? (
-                        <FcGoogle size={18} />
-                    ) : (
-                        <SiGithub size={18} />
-                    )
-                }
             >
+                {provider.name === 'Google' ? (
+                    <FcGoogle size={18} />
+                ) : (
+                    <SiGithub size={18} />
+                )}
                 {provider.name}
-            </Button>
+            </button>
         ));
     };
 
@@ -62,46 +53,48 @@ const SignIn = ({ providers }: AuthProviders) => {
 
     return (
         <AuthLayout>
-            <Paper radius="md" p="xl" component="main" withBorder>
-                <Title order={2} size="h4" weight={500}>
-                    Welcome to OpenKBan, sign in with
-                </Title>
-                <Group mb="md" mt="md">
-                    {providerButtons}
-                </Group>
-                <Divider
-                    label="Prefer your own email? We'll send you a magic link"
-                    labelPosition="center"
-                    my="xl"
-                />
-                <Button
-                    variant="default"
-                    fullWidth
-                    leftIcon={<MdEmail size={18} />}
-                    onClick={() => toggleAuthType()}
-                >
-                    Email
-                </Button>
-                {authType === 'withEmail' && (
-                    <form
-                        onSubmit={form.onSubmit((values) =>
-                            console.log(values)
-                        )}
+            <article className="card m-4 mx-auto mb-8 max-w-lg items-center bg-base-200 shadow-2xl">
+                <div className="card-body">
+                    <h2 className="card-title mb-3">
+                        Welcome to OpenKBan, sign in with
+                    </h2>
+                    <div className="flex w-full flex-col gap-2 self-center sm:flex-row">
+                        {providerButtons}
+                    </div>
+                    <div className="divider mb-0.5">Prefer your own email?</div>
+                    <button
+                        className="btn mt-2 gap-2"
+                        onClick={() => setWithEmail((prevState) => !prevState)}
                     >
-                        <TextInput
-                            withAsterisk
-                            type="email"
-                            label="Email"
-                            placeholder="janedoe@email.com"
-                            {...form.getInputProps('email')}
-                            my="lg"
-                        />
-                        <Button type="submit" color="indigo">
-                            Send magic link
-                        </Button>
-                    </form>
-                )}
-            </Paper>
+                        <MdEmail size={18} />
+                        Email
+                    </button>
+                    {withEmail && (
+                        <form
+                            className="form-control w-full max-w-xs"
+                            onSubmit={onSubmit}
+                        >
+                            <label className="label">
+                                <span className="label-text">Email</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="janedoe@email.com"
+                                className={`${
+                                    errors.email && 'input-error'
+                                } input input-bordered w-full max-w-xs placeholder-gray-500 placeholder-opacity-50`}
+                                {...register('email')}
+                            />
+                            <p className="mt-2 text-error">
+                                {errors.email?.message}
+                            </p>
+                            <button className="btn btn-primary mt-4 max-w-max">
+                                Send magic link
+                            </button>
+                        </form>
+                    )}
+                </div>
+            </article>
         </AuthLayout>
     );
 };
