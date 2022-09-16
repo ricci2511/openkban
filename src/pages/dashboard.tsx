@@ -5,26 +5,9 @@ import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { GetServerSidePropsContext } from 'next/types';
 
 const Dashboard = () => {
-    const { data: session } = useSession();
-
     return (
         <MainLayout>
-            <>
-                My dashboard
-                {session && (
-                    <div>
-                        Logged in as {session.user?.name}
-                        <button
-                            className="btn btn-error"
-                            onClick={() =>
-                                signOut({ callbackUrl: '/auth/signin' })
-                            }
-                        >
-                            Sign out bro
-                        </button>
-                    </div>
-                )}
-            </>
+            <>My dashboard</>
         </MainLayout>
     );
 };
