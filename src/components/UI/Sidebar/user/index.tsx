@@ -6,9 +6,9 @@ import { MdOutlineKeyboardArrowUp } from 'react-icons/md';
 import { BarsScaleFade } from 'react-svg-spinners';
 
 const User = () => {
-    const { data, isLoading, refetch } = trpc.useQuery(['auth.getSession']);
+    const { data, status, error, refetch } = trpc.useQuery(['auth.getSession']);
 
-    if (!isLoading && !data) {
+    if (error) {
         return (
             <article className="my-2 flex flex-col items-center gap-2 border-t border-t-base-100">
                 <p className="pt-2 font-semibold">User not found...</p>
@@ -19,7 +19,7 @@ const User = () => {
         );
     }
 
-    if (isLoading)
+    if (status !== 'success')
         return (
             <div className="mx-auto flex items-center justify-center">
                 <BarsScaleFade />
