@@ -1,7 +1,6 @@
 import MainLayout from '@components/layouts/main-layout';
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
-import { Button } from '@mantine/core';
 import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { GetServerSidePropsContext } from 'next/types';
 
@@ -15,14 +14,14 @@ const Dashboard = () => {
                 {session && (
                     <div>
                         Logged in as {session.user?.name}
-                        <Button
-                            variant="default"
+                        <button
+                            className="btn btn-error"
                             onClick={() =>
                                 signOut({ callbackUrl: '/auth/signin' })
                             }
                         >
                             Sign out bro
-                        </Button>
+                        </button>
                     </div>
                 )}
             </>

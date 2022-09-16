@@ -4,7 +4,6 @@ import { withTRPC } from '@trpc/next';
 import { AppRouter } from '@server/router';
 import { AppType } from 'next/dist/shared/lib/utils';
 import { SessionProvider } from 'next-auth/react';
-import AbstractedMantineProvider from '@components/abstracted-mantine-provider';
 import superjson from 'superjson';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
@@ -20,11 +19,9 @@ const App: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
                 />
             </Head>
 
-            <AbstractedMantineProvider>
-                <SessionProvider session={session}>
-                    <Component {...pageProps} />
-                </SessionProvider>
-            </AbstractedMantineProvider>
+            <SessionProvider session={session}>
+                <Component {...pageProps} />
+            </SessionProvider>
         </>
     );
 };

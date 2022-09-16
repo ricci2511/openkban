@@ -1,5 +1,4 @@
-import CustomHeader from '@components/UI/Header';
-import { Container } from '@mantine/core';
+import Header from '@components/UI/Header';
 import Head from 'next/head';
 import React from 'react';
 
@@ -18,8 +17,8 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <CustomHeader />
-            <Container size="xs">{children}</Container>
+            <Header />
+            <main className="mt-32">{children}</main>
         </>
     );
 };
