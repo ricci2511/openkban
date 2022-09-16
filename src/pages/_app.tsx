@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react';
 import superjson from 'superjson';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
+import { SSRContext } from '@lib/trpc';
 
 const App: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
     return (
@@ -54,4 +55,27 @@ export default withTRPC<AppRouter>({
         };
     },
     ssr: true,
+    /**
+     * Set headers or status code when doing SSR
+     */
+    responseMeta(opts) {
+        const ctx = opts.ctx as SSRContext;
+
+        if (ctx.status) {
+            // If HTTP status set, propagate that
+            return {
+                status: ctx.status,
+            };
+        }
+
+        const error = opts.clientErrors[0];
+        if (error) {
+            // Propagate http first error from API calls
+            return {
+                status: error.data?.httpStatus ?? 500,
+            };
+        }
+        // For app caching with SSR see https://trpc.io/docs/caching
+        return {};
+    },
 })(App);
