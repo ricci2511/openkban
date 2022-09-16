@@ -1,15 +1,22 @@
 import React from 'react';
-import { Navbar } from '@mantine/core';
+import User from './user';
 
 const Sidebar = () => {
     return (
-        <Navbar width={{ base: 300 }} height="100%" p="xs">
-            <ul>
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-            </ul>
-        </Navbar>
+        <div className="drawer-side">
+            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+            <nav className="menu w-80 overflow-y-auto bg-base-200 p-4 text-base-content">
+                <div className="flex-1">
+                    <li>
+                        <a>Sidebar Item 1</a>
+                    </li>
+                    <li>
+                        <a>Sidebar Item 2</a>
+                    </li>
+                </div>
+                <User />
+            </nav>
+        </div>
     );
 };
 
