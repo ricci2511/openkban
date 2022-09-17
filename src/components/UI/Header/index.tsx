@@ -17,7 +17,7 @@ const Header = ({ withDrawerBtn = false }: { withDrawerBtn?: boolean }) => {
                     )}
                 </div>
                 <div className="flex-1 px-3">
-                    <a className="text-xl normal-case">OpenKBan</a>
+                    <a className="text-2xl font-bold normal-case">OpenKBan</a>
                 </div>
             </header>
         </>
