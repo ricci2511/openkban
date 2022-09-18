@@ -2,7 +2,7 @@ import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
-import DropdownTopButton from '@components/UI/Buttons/dropdown-top-button';
+import DropdownTopButton from '@components/UI/buttons/dropdown-top-button';
 import { RiSettings3Fill, RiUserSettingsFill } from 'react-icons/ri';
 
 const User = ({ session }: { session: Session }) => {
