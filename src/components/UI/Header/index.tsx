@@ -1,6 +1,6 @@
 import React from 'react';
-import { HiSun, HiMoon } from 'react-icons/hi';
 import { CgMenuRightAlt } from 'react-icons/cg';
+import ThemeSwitchSelect from '@components/UI/buttons/theme-switch-select';
 
 const Header = ({ withDrawerBtn = false }: { withDrawerBtn?: boolean }) => {
     return (
@@ -18,6 +18,9 @@ const Header = ({ withDrawerBtn = false }: { withDrawerBtn?: boolean }) => {
                 </div>
                 <div className="flex-1 px-3">
                     <a className="text-2xl font-bold normal-case">OpenKBan</a>
+                </div>
+                <div className="px-3">
+                    <ThemeSwitchSelect />
                 </div>
             </header>
         </>

@@ -21,6 +21,7 @@
     "dayjs": "^1.11.5",
     "next": "12.2.5",
     "next-auth": "^4.10.3",
+    "next-themes": "^0.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.35.0",

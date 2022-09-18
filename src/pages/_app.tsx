@@ -8,6 +8,7 @@ import superjson from 'superjson';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { SSRContext } from '@lib/trpc';
+import { ThemeProvider } from 'next-themes';
 
 const App: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
     return (
@@ -20,9 +21,11 @@ const App: AppType = ({ Component, pageProps: { session, ...pageProps } }) => {
                 />
             </Head>
 
-            <SessionProvider session={session}>
-                <Component {...pageProps} />
-            </SessionProvider>
+            <ThemeProvider>
+                <SessionProvider session={session}>
+                    <Component {...pageProps} />
+                </SessionProvider>
+            </ThemeProvider>
         </>
     );
 };
