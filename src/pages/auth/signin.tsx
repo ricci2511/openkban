@@ -1,15 +1,15 @@
 import AuthLayout from '@components/layouts/auth-layout';
-import { GetServerSidePropsContext } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGithub } from 'react-icons/si';
 import { MdEmail } from 'react-icons/md';
-import { getServerAuthSession } from '@server/common/get-server-auth-session';
 import { AuthProviders } from 'types/next-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
+import useAuthRouting from '@hooks/use-auth-routing';
+import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
 
 const SignIn = ({ providers }: AuthProviders) => {
     const [withEmail, setWithEmail] = useState(false);
@@ -20,6 +20,10 @@ const SignIn = ({ providers }: AuthProviders) => {
     } = useForm<EmailFormSchemaType>({
         resolver: zodResolver(emailSchema),
     });
+    const { status } = useAuthRouting();
+
+    if (status === 'loading' || status === 'authenticated')
+        return <CenteredLoadingSpinner />;
 
     const onSubmit = handleSubmit((data) => console.log(data.email));
 
@@ -37,7 +41,9 @@ const SignIn = ({ providers }: AuthProviders) => {
             <button
                 key={provider.id}
                 className="btn w-full gap-2 sm:w-1/2"
-                onClick={() => signIn(provider.id, { callbackUrl: '/' })}
+                onClick={() =>
+                    signIn(provider.id, { callbackUrl: '/dashboard' })
+                }
             >
                 {provider.name === 'Google' ? (
                     <FcGoogle size={18} />
@@ -99,17 +105,7 @@ const SignIn = ({ providers }: AuthProviders) => {
     );
 };
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-    const session = await getServerAuthSession(ctx);
-    if (session) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        };
-    }
-
+export const getStaticProps = async () => {
     return {
         props: { providers: await getProviders() },
     };

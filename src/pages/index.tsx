@@ -3,25 +3,16 @@ import type { GetServerSidePropsContext, NextPage } from 'next';
 import Dashboard from './dashboard';
 
 const Home: NextPage = () => {
-    return (
-        <>
-            <Dashboard />
-        </>
-    );
+    return <></>;
 };
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     const session = await getServerAuthSession(ctx);
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/auth/signin',
-                permanent: false,
-            },
-        };
-    }
     return {
-        props: {},
+        redirect: {
+            destination: session ? 'dashboard' : '/auth/signin',
+            permanent: false,
+        },
     };
 };
 
