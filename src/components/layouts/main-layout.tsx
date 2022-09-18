@@ -13,7 +13,7 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
                     type="checkbox"
                     className="drawer-toggle"
                 />
-                <div className="drawer-content flex flex-col bg-gray-700 p-4">
+                <div className="drawer-content flex flex-col p-4">
                     <main>{children}</main>
                 </div>
                 <Sidebar />
