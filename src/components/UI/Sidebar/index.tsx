@@ -11,7 +11,7 @@ const Sidebar = () => {
         <div className="drawer-side">
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <nav className="menu w-80 overflow-y-auto bg-base-200 p-4 text-base-content">
-                <div className="flex-1">
+                <section className="flex-1" aria-label="primary links">
                     <li>
                         <a>
                             <RiDashboardFill size={18} />
@@ -23,13 +23,15 @@ const Sidebar = () => {
                             <RiStarFill size={18} /> Favorites
                         </a>
                     </li>
-                </div>
-                {status === 'loading' && (
-                    <div className="mx-auto flex items-center justify-center">
-                        <BarsScaleFade />
-                    </div>
-                )}
-                {session && <User session={session} />}
+                </section>
+                <section className="flex-none" aria-label="user">
+                    {status === 'loading' && (
+                        <div className="mx-auto flex items-center justify-center">
+                            <BarsScaleFade />
+                        </div>
+                    )}
+                    {session && <User session={session} />}
+                </section>
             </nav>
         </div>
     );
