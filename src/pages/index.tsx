@@ -1,19 +1,12 @@
-import { getServerAuthSession } from '@server/common/get-server-auth-session';
-import type { GetServerSidePropsContext, NextPage } from 'next';
-import Dashboard from './dashboard';
+import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
+import useAuthRouting from '@hooks/use-auth-routing';
+import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
-    return <></>;
-};
+    const { status } = useAuthRouting();
+    if (status) return <CenteredLoadingSpinner />;
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-    const session = await getServerAuthSession(ctx);
-    return {
-        redirect: {
-            destination: session ? 'dashboard' : '/auth/signin',
-            permanent: false,
-        },
-    };
+    return <></>;
 };
 
 export default Home;

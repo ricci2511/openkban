@@ -13,8 +13,10 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
                     type="checkbox"
                     className="drawer-toggle"
                 />
-                <div className="drawer-content flex flex-col p-4">
-                    <main>{children}</main>
+                <div className="drawer-content flex flex-col">
+                    <main className="mx-auto max-w-screen-xl p-4 sm:p-6 lg:p-8">
+                        {children}
+                    </main>
                 </div>
                 <Sidebar />
             </div>

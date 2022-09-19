@@ -1,29 +1,26 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+
+// Protect routes on the client side
 const useAuthRouting = () => {
     const router = useRouter();
     const { data: session, status } = useSession();
     const signInRoute = '/auth/signin';
 
     useEffect(() => {
-        if (
-            !session &&
-            status === 'unauthenticated' &&
-            router.pathname !== signInRoute
-        ) {
+        if (status === 'unauthenticated' && router.pathname !== signInRoute) {
             router.replace(signInRoute);
         }
         if (
-            session &&
             status === 'authenticated' &&
-            router.pathname === signInRoute
+            (router.pathname === signInRoute || router.pathname === '/')
         ) {
             router.replace('/dashboard');
         }
-    }, [session, router, status]);
+    }, [router, status]);
 
-    return { status };
+    return { session, status };
 };
 
 export default useAuthRouting;
