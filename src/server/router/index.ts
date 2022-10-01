@@ -1,9 +1,8 @@
-import { createRouter } from "./context";
-import superjson from 'superjson';
-import { authRouter } from "./auth-router";
+import { authRouter } from './auth-router';
+import { t } from '@server/trpc';
 
-export const appRouter = createRouter()
-    .transformer(superjson)
-    .merge('auth.', authRouter);
+export const appRouter = t.router({
+    authRouter: authRouter,
+});
 
 export type AppRouter = typeof appRouter;

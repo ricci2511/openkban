@@ -1,13 +1,30 @@
-import * as trpc from '@trpc/server';
-import { createRouter } from './context';
-import { createProtectedRouter } from './protected-router';
+import { t } from '@server/trpc';
+import { TRPCError } from '@trpc/server';
 
-/**
- * These queries can only be hit if the user requesting them is signed in.
- * See ./protected-router.ts for more information.
- */
-export const authRouter = createProtectedRouter().query('getSession', {
-    resolve({ ctx }) {
+const authMiddleware = t.middleware(({ ctx, next }) => {
+    // any query that uses this middleware will throw
+    // an error unless there is a current session
+    if (!ctx.session) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+    return next({
+        ctx: {
+            // Old context will automatically be spread.
+            session: ctx.session,
+        },
+    });
+});
+
+const authedProcedure = t.procedure.use(authMiddleware);
+
+export const authRouter = t.router({
+    getSession: t.procedure.query(({ ctx }) => {
+        // The session object is added to the routers context
+        // in the context file server side
         return ctx.session;
-    },
+    }),
+    getSecretCode: authedProcedure.query(async () => {
+        const secretCode = 'the cake is a lie.';
+        return secretCode;
+    }),
 });
