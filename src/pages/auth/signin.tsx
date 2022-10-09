@@ -1,6 +1,6 @@
 import AuthLayout from '@components/layouts/auth-layout';
-import { signIn, getProviders } from 'next-auth/react';
-import React, { useState } from 'react';
+import { signIn, getProviders, useSession } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGithub } from 'react-icons/si';
 import { MdEmail } from 'react-icons/md';
@@ -8,8 +8,8 @@ import { AuthProviders } from 'types/next-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
-import useAuthRouting from '@hooks/use-auth-routing';
 import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
+import { useRouter } from 'next/router';
 
 const SignIn = ({ providers }: AuthProviders) => {
     const [withEmail, setWithEmail] = useState(false);
@@ -20,8 +20,13 @@ const SignIn = ({ providers }: AuthProviders) => {
     } = useForm<EmailFormSchemaType>({
         resolver: zodResolver(emailSchema),
     });
-    const { status } = useAuthRouting();
 
+    // redirect back to dashboard if user is already logged in
+    const { status } = useSession();
+    const router = useRouter();
+    useEffect(() => {
+        if (status === 'authenticated') router.replace('/dashboard');
+    }, [status, router]);
     if (status === 'loading' || status === 'authenticated')
         return <CenteredLoadingSpinner />;
 

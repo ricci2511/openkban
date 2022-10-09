@@ -1,12 +1,8 @@
-import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
-import useAuthRouting from '@hooks/use-auth-routing';
-import type { NextPage } from 'next';
+import Dashboard from './dashboard';
 
-const Home: NextPage = () => {
-    const { status } = useAuthRouting();
-    if (status) return <CenteredLoadingSpinner />;
-
-    return <></>;
+const Home = () => {
+    return <Dashboard />;
 };
 
+Home.auth = true;
 export default Home;
