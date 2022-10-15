@@ -14,7 +14,9 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
                     className="drawer-toggle"
                 />
                 <div className="drawer-content flex flex-col">
-                    <main className="p-4 sm:p-6 lg:p-8">{children}</main>
+                    <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+                        {children}
+                    </main>
                 </div>
                 <Sidebar />
             </div>

@@ -29,7 +29,7 @@ const Dashboard = () => {
                 </h1>
                 {isLoading && <CenteredLoadingSpinner />}
                 {boards && (
-                    <ul className="mb-4 flex gap-3">
+                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
                         {boards.map((board) => (
                             <li
                                 key={board.id}
@@ -40,20 +40,22 @@ const Dashboard = () => {
                         ))}
                     </ul>
                 )}
-                <input
-                    type="text"
-                    placeholder="Type here"
-                    className="input input-bordered mr-4 w-full max-w-xs"
-                    onChange={(e) => setBoardTitle(e.currentTarget.value)}
-                />
-                <button
-                    className="btn btn-primary"
-                    onClick={async () => {
-                        createBoard({ title: boardTitle });
-                    }}
-                >
-                    Create Random Board
-                </button>
+                <form className="flex flex-col gap-2 sm:flex-row">
+                    <input
+                        type="text"
+                        placeholder="Type here"
+                        className="input input-bordered w-full"
+                        onChange={(e) => setBoardTitle(e.currentTarget.value)}
+                    />
+                    <button
+                        className="btn btn-primary"
+                        onClick={async () => {
+                            createBoard({ title: boardTitle });
+                        }}
+                    >
+                        Create Random Board
+                    </button>
+                </form>
             </>
         </MainLayout>
     );
