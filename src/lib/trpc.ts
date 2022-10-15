@@ -2,6 +2,7 @@ import { httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import type { AppRouter } from '@server/router';
 import { NextPageContext } from 'next';
+import superjson from 'superjson';
 
 /**
  * Extend `NextPageContext` with meta data that can be picked up by `responseMeta()` when server-side rendering
@@ -31,6 +32,7 @@ const getBaseUrl = () => {
 export const trpc = createTRPCNext<AppRouter>({
     config({ ctx }) {
         return {
+            transformer: superjson,
             links: [
                 loggerLink({
                     enabled: (opts) =>
@@ -50,33 +52,6 @@ export const trpc = createTRPCNext<AppRouter>({
              * @link https://react-query-v3.tanstack.com/reference/QueryClient
              **/
             // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-        };
-    },
-    /**
-     * @link https://trpc.io/docs/ssr
-     **/
-    ssr: true,
-    responseMeta(opts) {
-        const ctx = opts.ctx as SSRContext;
-
-        if (ctx.status) {
-            // If HTTP status set, propagate that
-            return {
-                status: ctx.status,
-            };
-        }
-
-        const error = opts.clientErrors[0];
-        if (error) {
-            // Propagate http first error from API calls
-            return {
-                status: error.data?.httpStatus ?? 500,
-            };
-        }
-        // cache full page for 1 day + revalidate once every second
-        const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
-        return {
-            'Cache-Control': `s-maxage=1, stale-while-revalidate=${ONE_DAY_IN_SECONDS}`,
         };
     },
 });
