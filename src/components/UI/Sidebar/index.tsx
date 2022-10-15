@@ -2,7 +2,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import User from './user';
 import { BarsScaleFade } from 'react-svg-spinners';
-import { RiDashboardFill, RiStarFill } from 'react-icons/ri';
+import SidebarLinks from './links';
 
 const Sidebar = () => {
     const { data: session, status } = useSession();
@@ -12,17 +12,7 @@ const Sidebar = () => {
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <nav className="menu w-80 overflow-y-auto bg-base-200 p-4 text-base-content">
                 <section className="flex-1" aria-label="primary links">
-                    <li>
-                        <a>
-                            <RiDashboardFill size={18} />
-                            Dashboard
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <RiStarFill size={18} /> Favorites
-                        </a>
-                    </li>
+                    <SidebarLinks />
                 </section>
                 <section className="flex-none" aria-label="user">
                     {status === 'loading' && (
