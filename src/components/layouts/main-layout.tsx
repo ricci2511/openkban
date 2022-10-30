@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
         <>
             <Header withDrawerBtn />
             {/* Since header size is 4rem the height should be 100vh taking into account the header height */}
-            <div className="drawer-mobile drawer h-[calc(100vh-4rem)]">
+            <div className="drawer drawer-mobile h-[calc(100vh-4rem)]">
                 <input
                     id="my-drawer-2"
                     type="checkbox"

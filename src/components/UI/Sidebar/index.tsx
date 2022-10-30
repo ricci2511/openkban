@@ -3,6 +3,7 @@ import React from 'react';
 import User from './user';
 import { BarsScaleFade } from 'react-svg-spinners';
 import SidebarLinks from './links';
+import CustomLoadingSpinner from '../other/custom-loading-spinner';
 
 const Sidebar = () => {
     const { data: session, status } = useSession();
@@ -15,11 +16,7 @@ const Sidebar = () => {
                     <SidebarLinks />
                 </section>
                 <section className="flex-none" aria-label="user">
-                    {status === 'loading' && (
-                        <div className="mx-auto flex items-center justify-center">
-                            <BarsScaleFade />
-                        </div>
-                    )}
+                    {status === 'loading' && <CustomLoadingSpinner />}
                     {session && <User session={session} />}
                 </section>
             </nav>

@@ -2,17 +2,14 @@ import MainLayout from '@components/layouts/main-layout';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
-import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
+import CustomLoadingSpinner from '@components/UI/other/custom-loading-spinner';
 
 const Dashboard = () => {
     const { data: session } = useSession();
-    const {
-        data: boards,
-        isLoading,
-        refetch,
-    } = trpc.boardRouter.getAll.useQuery();
+    const utils = trpc.useContext();
+    const { data: boards, isLoading } = trpc.boardRouter.getAll.useQuery();
     const { mutate: createBoard } = trpc.boardRouter.create.useMutation({
-        onSuccess: () => refetch(),
+        onSuccess: () => utils.boardRouter.getAll.invalidate(),
     });
 
     // Testing purposes
@@ -27,7 +24,7 @@ const Dashboard = () => {
                         : `Your`}{' '}
                     dashboard
                 </h1>
-                {isLoading && <CenteredLoadingSpinner />}
+                {isLoading && <CustomLoadingSpinner />}
                 {boards && (
                     <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
                         {boards.map((board) => (
@@ -40,22 +37,20 @@ const Dashboard = () => {
                         ))}
                     </ul>
                 )}
-                <form className="flex flex-col gap-2 sm:flex-row">
-                    <input
-                        type="text"
-                        placeholder="Type here"
-                        className="input input-bordered w-full"
-                        onChange={(e) => setBoardTitle(e.currentTarget.value)}
-                    />
-                    <button
-                        className="btn btn-primary"
-                        onClick={async () => {
-                            createBoard({ title: boardTitle });
-                        }}
-                    >
-                        Create Random Board
-                    </button>
-                </form>
+                <input
+                    type="text"
+                    placeholder="Type here"
+                    className="input input-bordered w-full"
+                    onChange={(e) => setBoardTitle(e.currentTarget.value)}
+                />
+                <button
+                    className="btn btn-primary mt-4"
+                    onClick={async () => {
+                        createBoard({ title: boardTitle });
+                    }}
+                >
+                    Create Random Board
+                </button>
             </>
         </MainLayout>
     );

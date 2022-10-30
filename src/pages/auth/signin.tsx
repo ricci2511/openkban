@@ -8,7 +8,7 @@ import { AuthProviders } from 'types/next-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
-import CenteredLoadingSpinner from '@components/UI/other/centered-loading-spinner';
+import CustomLoadingSpinner from '@components/UI/other/custom-loading-spinner';
 import { useRouter } from 'next/router';
 
 const SignIn = ({ providers }: AuthProviders) => {
@@ -28,7 +28,7 @@ const SignIn = ({ providers }: AuthProviders) => {
         if (status === 'authenticated') router.replace('/dashboard');
     }, [status, router]);
     if (status === 'loading' || status === 'authenticated')
-        return <CenteredLoadingSpinner />;
+        return <CustomLoadingSpinner centered />;
 
     const onSubmit = handleSubmit((data) => console.log(data.email));
 

@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import CenteredLoadingSpinner from './UI/other/centered-loading-spinner';
+import CustomLoadingSpinner from './UI/other/custom-loading-spinner';
 
 const Auth = ({ children }: { children: any }) => {
     const router = useRouter();
@@ -12,7 +12,7 @@ const Auth = ({ children }: { children: any }) => {
         },
     });
 
-    if (status === 'loading') return <CenteredLoadingSpinner />;
+    if (status === 'loading') return <CustomLoadingSpinner centered />;
 
     return children;
 };
