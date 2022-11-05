@@ -8,17 +8,13 @@ const SidebarLinks = () => {
         <>
             <li>
                 <Link href="/dashboard">
-                    <a>
-                        <RiDashboardFill size={18} />
-                        Dashboard
-                    </a>
+                    <RiDashboardFill size={18} />
+                    Dashboard
                 </Link>
             </li>
             <li>
                 <Link href="/boards">
-                    <a>
-                        <HiViewBoards size={18} /> Boards
-                    </a>
+                    <HiViewBoards size={18} /> Boards
                 </Link>
             </li>
             {/* 
