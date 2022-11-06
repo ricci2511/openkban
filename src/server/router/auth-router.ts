@@ -29,8 +29,4 @@ export const authRouter = t.router({
         // in the context file server side
         return ctx.session;
     }),
-    getSecretCode: authedProcedure.query(async () => {
-        const secretCode = 'the cake is a lie.';
-        return secretCode;
-    }),
 });
