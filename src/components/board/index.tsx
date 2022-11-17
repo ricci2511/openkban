@@ -1,5 +1,6 @@
-import DotsDropdownButton from '@components/UI/buttons/dots-dropdown-button';
-import { trpc } from '@lib/trpc';
+import DotsDropdownButton from '@components/ui/buttons/dots-dropdown-button';
+import useDeleteBoard from '@hooks/use-delete-board';
+import useUpdateBoard from '@hooks/use-update-board';
 import { Board } from '@prisma/client';
 import React, { useState } from 'react';
 import { HiPencil, HiTrash } from 'react-icons/hi';
@@ -9,33 +10,10 @@ interface BoardProps {
 }
 
 const BoardItem = ({ board }: BoardProps) => {
-    const utils = trpc.useContext();
+    const { deleteBoard } = useDeleteBoard();
+    const { updateBoard } = useUpdateBoard();
 
-    // get cached boards data
-    const boards = utils.boardRouter.getAll.getData();
-    const { mutate: deleteBoard } = trpc.boardRouter.delete.useMutation({
-        onSuccess: (data) => {
-            const newBoards = [...(boards || [])].filter(
-                (board) => board.id !== data.id
-            );
-            utils.boardRouter.getAll.setData(newBoards);
-        },
-    });
-    const { mutate: updateBoard } = trpc.boardRouter.update.useMutation({
-        onSuccess: (data) => {
-            const boardToUpdate = boards?.findIndex(
-                (board) => board.id === data.id
-            );
-            if (boardToUpdate) {
-                const newBoards = [...(boards || [])];
-                newBoards.splice(boardToUpdate, 1, data);
-                utils.boardRouter.getAll.setData(newBoards);
-            }
-        },
-    });
-
-    const { title, id } = board;
-    // client state
+    const { id, title, isFavourite } = board;
     const [editTitle, setEditTitle] = useState(title);
     const [editMode, setEditMode] = useState(false);
 
@@ -56,6 +34,9 @@ const BoardItem = ({ board }: BoardProps) => {
             {editMode ? (
                 <input
                     type="text"
+                    name="board-title"
+                    title="Board Title"
+                    aria-label="Edit title"
                     className="input w-full max-w-xs"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.currentTarget.value)}
@@ -69,6 +50,8 @@ const BoardItem = ({ board }: BoardProps) => {
             <DotsDropdownButton>
                 <li>
                     <button
+                        type="button"
+                        aria-describedby="Click this to edit the selected board title"
                         className="btn-outline btn-md font-medium"
                         onClick={handleEditMode}
                     >
@@ -78,6 +61,8 @@ const BoardItem = ({ board }: BoardProps) => {
                 </li>
                 <li>
                     <button
+                        type="button"
+                        aria-describedby="Click this to delete the selected board"
                         className="btn-outline btn-error btn-md font-medium"
                         onClick={() => deleteBoard({ id: id })}
                     >

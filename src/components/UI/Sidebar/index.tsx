@@ -1,9 +1,9 @@
 import { useSession } from 'next-auth/react';
 import React from 'react';
-import User from './user';
 import { BarsScaleFade } from 'react-svg-spinners';
-import SidebarLinks from './links';
 import CustomLoadingSpinner from '../other/custom-loading-spinner';
+import SidebarLinks from './links';
+import User from './user';
 
 const Sidebar = () => {
     const { data: session, status } = useSession();

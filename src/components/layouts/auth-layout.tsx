@@ -1,4 +1,4 @@
-import Header from '@components/UI/Header';
+import Header from '@components/ui/header';
 import Head from 'next/head';
 import React from 'react';
 

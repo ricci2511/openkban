@@ -2,7 +2,7 @@ import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
-import DropdownTopButton from '@components/UI/buttons/dropdown-top-button';
+import DropdownTopButton from '@components/ui/buttons/dropdown-top-button';
 import { RiSettings3Fill, RiUserSettingsFill } from 'react-icons/ri';
 
 const User = ({ session }: { session: Session }) => {
@@ -50,7 +50,7 @@ const User = ({ session }: { session: Session }) => {
                         </li>
                         <li className="mt-3">
                             <button
-                                className="btn btn-outline btn-error"
+                                className="btn-outline btn-error btn"
                                 onClick={() =>
                                     signOut({ callbackUrl: '/auth/signin' })
                                 }

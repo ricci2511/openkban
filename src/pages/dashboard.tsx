@@ -2,22 +2,22 @@ import MainLayout from '@components/layouts/main-layout';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
-import CustomLoadingSpinner from '@components/UI/other/custom-loading-spinner';
-import DotsDropdownButton from '@components/UI/buttons/dots-dropdown-button';
+import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
+import DotsDropdownButton from '@components/ui/buttons/dots-dropdown-button';
 import BoardItem from '@components/board';
+import useCreateBoard from '@hooks/use-create-board';
 
 const Dashboard = () => {
-    const utils = trpc.useContext();
     const { data: session } = useSession();
     const { data: boards, isLoading } = trpc.boardRouter.getAll.useQuery();
-    const { mutate: createBoard, error } = trpc.boardRouter.create.useMutation({
-        onSuccess: (data) => {
-            const newBoards = [...(boards || [])].concat(data);
-            utils.boardRouter.getAll.setData(newBoards);
-        },
-    });
-
+    const { createBoard, error } = useCreateBoard();
     const [boardTitle, setBoardTitle] = useState('');
+
+    const boardItems =
+        boards &&
+        boards
+            .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
+            .map((board) => <BoardItem key={board.id} board={board} />);
 
     return (
         <MainLayout>
@@ -29,11 +29,9 @@ const Dashboard = () => {
                     dashboard
                 </h1>
                 {isLoading && <CustomLoadingSpinner />}
-                {boards && (
+                {boardItems && (
                     <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
-                        {boards.map((board) => (
-                            <BoardItem key={board.id} board={board} />
-                        ))}
+                        {boardItems}
                     </ul>
                 )}
                 <input

@@ -8,7 +8,7 @@ import { AuthProviders } from 'types/next-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
-import CustomLoadingSpinner from '@components/UI/other/custom-loading-spinner';
+import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import { useRouter } from 'next/router';
 
 const SignIn = ({ providers }: AuthProviders) => {
@@ -93,13 +93,13 @@ const SignIn = ({ providers }: AuthProviders) => {
                                 placeholder="janedoe@email.com"
                                 className={`${
                                     errors.email && 'input-error'
-                                } input input-bordered w-full max-w-xs placeholder-gray-500 placeholder-opacity-50`}
+                                } input-bordered input w-full max-w-xs placeholder-gray-500 placeholder-opacity-50`}
                                 {...register('email')}
                             />
                             <p className="mt-2 text-error">
                                 {errors.email?.message}
                             </p>
-                            <button className="btn btn-primary mt-4 max-w-max">
+                            <button className="btn-primary btn mt-4 max-w-max">
                                 Send magic link
                             </button>
                         </form>
