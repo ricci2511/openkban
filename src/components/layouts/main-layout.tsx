@@ -1,5 +1,5 @@
-import Header from '@components/ui/Header';
-import Sidebar from '@components/ui/Sidebar';
+import Header from '@components/ui/header';
+import Sidebar from '@components/ui/sidebar';
 import React, { useState } from 'react';
 
 const MainLayout = ({ children }: { children: JSX.Element }) => {
