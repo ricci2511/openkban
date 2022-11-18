@@ -11,6 +11,20 @@ export const boardRouter = t.router({
         });
         return boards;
     }),
+    getById: authedProcedure
+        .input(
+            z.object({
+                id: z.string().cuid(),
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            const board = await ctx.prisma.board.findUnique({
+                where: {
+                    id: input.id,
+                },
+            });
+            return board;
+        }),
     create: authedProcedure
         .input(
             z.object({
@@ -30,7 +44,8 @@ export const boardRouter = t.router({
         .input(
             z.object({
                 id: z.string().cuid(),
-                title: z.string().min(2).max(30),
+                title: z.string().min(2).max(30).optional(),
+                isFavourite: z.boolean().optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -40,6 +55,7 @@ export const boardRouter = t.router({
                 },
                 data: {
                     title: input.title,
+                    isFavourite: input.isFavourite,
                 },
             });
             return updateBoard;
