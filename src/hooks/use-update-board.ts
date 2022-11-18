@@ -1,5 +1,4 @@
 import { trpc } from '@lib/trpc';
-import React from 'react';
 
 const useUpdateBoard = () => {
     const utils = trpc.useContext().boardRouter.getAll;
@@ -7,13 +6,16 @@ const useUpdateBoard = () => {
         onMutate: async (boardToUpdate) => {
             utils.cancel();
             const previousBoards = utils.getData();
-            const newBoards = previousBoards?.map((board) => {
-                if (board.id === boardToUpdate.id) {
-                    board.title = boardToUpdate.title;
-                }
-                return board;
-            });
-            utils.setData(newBoards);
+            const { id, title, isFavourite } = boardToUpdate;
+            utils.setData((oldBoards) =>
+                (oldBoards || []).map((board) => {
+                    if (board.id === id) {
+                        board.title = title || board.title;
+                        board.isFavourite = isFavourite || board.isFavourite;
+                    }
+                    return board;
+                })
+            );
             return { previousBoards };
         },
         onError: (err, boardToUpdate, context) => {

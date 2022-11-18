@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
-import DotsDropdownButton from '@components/ui/buttons/dots-dropdown-button';
 import BoardItem from '@components/board';
 import useCreateBoard from '@hooks/use-create-board';
 
@@ -22,7 +21,7 @@ const Dashboard = () => {
     return (
         <MainLayout>
             <>
-                <h1 className="mb-4 text-xl font-semibold">
+                <h1 className="mb-8 text-xl font-semibold">
                     {session && session.user
                         ? `${session.user.name}'s`
                         : `Your`}{' '}
@@ -30,7 +29,7 @@ const Dashboard = () => {
                 </h1>
                 {isLoading && <CustomLoadingSpinner />}
                 {boardItems && (
-                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-7 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                         {boardItems}
                     </ul>
                 )}
