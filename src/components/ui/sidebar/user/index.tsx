@@ -2,8 +2,9 @@ import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
-import DropdownTopButton from '@components/ui/buttons/dropdown-top-button';
 import { RiSettings3Fill, RiUserSettingsFill } from 'react-icons/ri';
+import DropdownButton from '@components/ui/buttons/dropdown-button';
+import { MdOutlineKeyboardArrowUp } from 'react-icons/md';
 
 const User = ({ session }: { session: Session }) => {
     if (!session.user) {
@@ -35,7 +36,12 @@ const User = ({ session }: { session: Session }) => {
                     <small className="text-slate-500">{email}</small>
                 </div>
                 <div>
-                    <DropdownTopButton>
+                    <DropdownButton
+                        position="topEnd"
+                        labelIcon={<MdOutlineKeyboardArrowUp size={16} />}
+                        labelClassName="btn btn-outline btn-circle btn-xs btn-active"
+                        contentClassName="rounded-box mb-3 w-52 bg-base-100 p-2 shadow"
+                    >
                         <li>
                             <a>
                                 <RiUserSettingsFill size={18} />
@@ -58,7 +64,7 @@ const User = ({ session }: { session: Session }) => {
                                 Sign out
                             </button>
                         </li>
-                    </DropdownTopButton>
+                    </DropdownButton>
                 </div>
             </div>
         </article>

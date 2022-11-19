@@ -19,6 +19,7 @@
     "@trpc/next": "^10.0.0-rc.4",
     "@trpc/react-query": "^10.0.0-rc.4",
     "@trpc/server": "^10.0.0-rc.4",
+    "class-variance-authority": "^0.3.0",
     "daisyui": "^2.38.0",
     "dayjs": "^1.11.6",
     "next": "^13.0.2",
