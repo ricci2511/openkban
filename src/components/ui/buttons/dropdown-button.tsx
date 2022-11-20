@@ -42,11 +42,12 @@ const DropdownButton = ({
     return (
         <div className={dropdownBase({ position, display })}>
             <label tabIndex={0} className={labelClassName}>
-                {labelIcon || labelText}
+                {labelIcon}
+                {labelText}
             </label>
             <ul
                 tabIndex={0}
-                className={`dropdown-content menu ${contentClassName}`}
+                className={cx('dropdown-content menu', contentClassName)}
             >
                 {children}
             </ul>
