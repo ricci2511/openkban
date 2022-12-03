@@ -1,8 +1,8 @@
 import Header from '@components/ui/header';
 import Sidebar from '@components/ui/sidebar';
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 
-const MainLayout = ({ children }: { children: JSX.Element }) => {
+const MainLayout = ({ children }: PropsWithChildren) => {
     return (
         <>
             <Header withDrawerBtn />

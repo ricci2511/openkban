@@ -1,16 +1,16 @@
-import MainLayout from '@components/layouts/main-layout';
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/board';
-import useCreateBoard from '@hooks/use-create-board';
+import DashboardLayout from '@components/layouts/dashboard-layout';
+import { useSetAtom } from 'jotai';
+import { isCreateBoardModalOpen } from '@components/dashboard/create-board-modal';
 
 const Dashboard = () => {
     const { data: session } = useSession();
     const { data: boards, isLoading } = trpc.boardRouter.getAll.useQuery();
-    const { createBoard, error } = useCreateBoard();
-    const [boardTitle, setBoardTitle] = useState('');
+    const setIsCreateBoardModalOpen = useSetAtom(isCreateBoardModalOpen);
 
     const boardItems =
         boards &&
@@ -19,7 +19,7 @@ const Dashboard = () => {
             .map((board) => <BoardItem key={board.id} board={board} />);
 
     return (
-        <MainLayout>
+        <DashboardLayout>
             <>
                 <h1 className="mb-8 text-xl font-semibold">
                     {session && session.user
@@ -33,22 +33,14 @@ const Dashboard = () => {
                         {boardItems}
                     </ul>
                 )}
-                <input
-                    type="text"
-                    placeholder="Type here"
-                    className="input-bordered input w-full"
-                    onChange={(e) => setBoardTitle(e.currentTarget.value)}
-                />
                 <button
-                    className="btn-primary btn mt-4"
-                    onClick={() => {
-                        createBoard({ title: boardTitle });
-                    }}
+                    className="btn-primary btn"
+                    onClick={() => setIsCreateBoardModalOpen(true)}
                 >
-                    Create Board
+                    Add Board
                 </button>
             </>
-        </MainLayout>
+        </DashboardLayout>
     );
 };
 

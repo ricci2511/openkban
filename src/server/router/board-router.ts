@@ -29,12 +29,14 @@ export const boardRouter = t.router({
         .input(
             z.object({
                 title: z.string().min(2).max(30),
+                isFavourite: z.boolean(),
             })
         )
         .mutation(async ({ ctx, input }) => {
             const createBoard = await ctx.prisma.board.create({
                 data: {
                     title: input.title,
+                    isFavourite: input.isFavourite,
                     userId: ctx.session.user.id,
                 },
             });
