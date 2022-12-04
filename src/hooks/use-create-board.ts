@@ -1,14 +1,18 @@
 import { trpc } from '@lib/trpc';
-import React from 'react';
 
-const useCreateBoard = () => {
+const useCreateBoard = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
-    const { mutate: createBoard, error } = trpc.boardRouter.create.useMutation({
+    const {
+        mutate: createBoard,
+        isLoading,
+        error,
+    } = trpc.boardRouter.create.useMutation({
         onSuccess: (newBoard) => {
             utils.setData((oldBoards) => [...(oldBoards || []), newBoard]);
+            successCb !== undefined ? successCb() : null;
         },
     });
-    return { createBoard, error };
+    return { createBoard, isLoading, error };
 };
 
 export default useCreateBoard;

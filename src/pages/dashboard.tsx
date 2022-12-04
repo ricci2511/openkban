@@ -4,13 +4,10 @@ import { trpc } from '@lib/trpc';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/board';
 import DashboardLayout from '@components/layouts/dashboard-layout';
-import { useSetAtom } from 'jotai';
-import { isCreateBoardModalOpen } from '@components/dashboard/create-board-modal';
 
 const Dashboard = () => {
     const { data: session } = useSession();
     const { data: boards, isLoading } = trpc.boardRouter.getAll.useQuery();
-    const setIsCreateBoardModalOpen = useSetAtom(isCreateBoardModalOpen);
 
     const boardItems =
         boards &&
@@ -29,16 +26,10 @@ const Dashboard = () => {
                 </h1>
                 {isLoading && <CustomLoadingSpinner />}
                 {boardItems && (
-                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-7 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                         {boardItems}
                     </ul>
                 )}
-                <button
-                    className="btn-primary btn"
-                    onClick={() => setIsCreateBoardModalOpen(true)}
-                >
-                    Add Board
-                </button>
             </>
         </DashboardLayout>
     );

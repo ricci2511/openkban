@@ -1,4 +1,4 @@
-import Modal from '@components/ui/modal';
+import Modal, { ModalType } from '@components/ui/modal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useCreateBoard from '@hooks/use-create-board';
 import {
@@ -6,15 +6,11 @@ import {
     BoardFormSchemaType,
 } from '@lib/schemas/board-creation-schema';
 import { cx } from 'class-variance-authority';
-import { atom, useAtom } from 'jotai';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-export const isCreateBoardModalOpen = atom(false);
-
-const CreateBoardModal = () => {
-    const { createBoard, error } = useCreateBoard();
-    const [isOpen, setIsOpen] = useAtom(isCreateBoardModalOpen);
+const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
+    const { createBoard, isLoading, error } = useCreateBoard(toggleModal);
     const {
         register,
         handleSubmit,
@@ -26,12 +22,15 @@ const CreateBoardModal = () => {
 
     const onSubmit = handleSubmit(({ title, isFavourite }) => {
         createBoard({ title: title, isFavourite: isFavourite });
-        setIsOpen(false);
         reset();
     });
 
     return (
-        <Modal title="Create your board" isOpen={isOpen} setIsOpen={setIsOpen}>
+        <Modal
+            title="Create your board"
+            isOpen={isOpen}
+            toggleModal={toggleModal}
+        >
             <form className="form-control mt-2 w-full" onSubmit={onSubmit}>
                 <label className="label">
                     <span className="label-text" aria-required>
@@ -60,8 +59,21 @@ const CreateBoardModal = () => {
                     />
                 </label>
                 <div className="modal-action">
-                    <button type="submit" className="btn-primary btn">
-                        Create Board
+                    <button
+                        type="submit"
+                        className={cx(
+                            'btn-primary btn',
+                            isLoading ? 'btn-disabled loading' : null
+                        )}
+                    >
+                        {isLoading ? 'Creating...' : 'Create Board'}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn-error btn"
+                        onClick={toggleModal}
+                    >
+                        Cancel
                     </button>
                 </div>
             </form>

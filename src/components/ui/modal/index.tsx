@@ -1,24 +1,26 @@
 import { cx } from 'class-variance-authority';
-import { SetStateAction } from 'jotai';
 import React, { PropsWithChildren } from 'react';
 
-interface ModalProps extends PropsWithChildren {
+export type ModalType = {
     isOpen: boolean;
-    setIsOpen: (
-        update: SetStateAction<boolean>
-    ) => void | React.Dispatch<React.SetStateAction<boolean>>;
+    toggleModal: () => void;
+};
+
+interface ModalProps extends ModalType, PropsWithChildren {
     title?: string;
 }
 
-const Modal = ({ children, isOpen, setIsOpen, title }: ModalProps) => {
+const Modal = ({ children, isOpen, toggleModal, title }: ModalProps) => {
     return (
-        <div className={cx('modal', isOpen ? 'modal-open' : null)}>
+        <div
+            className={cx('modal cursor-pointer', isOpen ? 'modal-open' : null)}
+        >
             <div className="modal-box relative">
                 <button
                     type="button"
                     className="btn-sm btn-circle btn absolute right-2 top-2"
                     aria-label="close modal"
-                    onClick={() => setIsOpen(false)}
+                    onClick={toggleModal}
                 >
                     ✕
                 </button>
