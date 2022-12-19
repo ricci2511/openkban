@@ -31,9 +31,14 @@ const User = ({ session }: { session: Session }) => {
                         </div>
                     </div>
                 )}
-                <div>
+                <div className="max-w-[12rem]">
                     <p className="text-md font-bold">{name}</p>
-                    <small className="text-slate-500">{email}</small>
+                    <p
+                        className="truncate text-sm text-slate-500"
+                        title={email ?? ''}
+                    >
+                        {email}
+                    </p>
                 </div>
                 <div>
                     <DropdownButton

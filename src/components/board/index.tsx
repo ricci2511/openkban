@@ -4,6 +4,7 @@ import { Board } from '@prisma/client';
 import React, { useState } from 'react';
 import FavouriteButton from './favourite-button';
 import OptionsDropdown from './options-dropdown';
+import { HiPencil } from 'react-icons/hi';
 
 interface BoardProps {
     board: Board;
@@ -19,22 +20,21 @@ const BoardItem = ({ board }: BoardProps) => {
     const { updateBoard } = useUpdateBoard();
 
     const deleteItem = () => deleteBoard({ id: id });
-    const updateTitle = () => updateBoard({ id: id, title: editTitle });
-    const updateFavourite = () =>
-        updateBoard({ id: id, isFavourite: !favourite });
-
     const handleEditMode = () => setEditMode((edit) => !edit);
+
+    const updateTitle = () => {
+        handleEditMode();
+        if (editTitle === title) return;
+        updateBoard({ id: id, title: editTitle });
+    };
+
     const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleEditMode();
-            if (editTitle === title) return;
-            updateTitle();
-        }
+        if (e.key === 'Enter') updateTitle();
     };
 
     const handleFavouriteClick = () => {
         setFavourite((favourite) => !favourite);
-        updateFavourite();
+        updateBoard({ id: id, isFavourite: !favourite });
     };
 
     return (
@@ -43,29 +43,40 @@ const BoardItem = ({ board }: BoardProps) => {
             className="relative flex min-h-[85px] items-center justify-between gap-4 rounded-sm bg-base-300 py-3 pl-3 pr-1"
         >
             {editMode ? (
-                <input
-                    type="text"
-                    name="board-title"
-                    title="Board Title"
-                    aria-label="Edit title"
-                    className="input w-full max-w-xs"
-                    value={editTitle}
-                    onChange={(e) => setEditTitle(e.currentTarget.value)}
-                    onKeyDown={(e) => handleEditKeyDown(e)}
-                    onBlur={handleEditMode}
-                    autoFocus
-                />
+                <div className="input-group">
+                    <input
+                        type="text"
+                        name="board-title"
+                        title="Board Title"
+                        aria-label="Edit title"
+                        className="input w-full max-w-xs"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.currentTarget.value)}
+                        onKeyDown={(e) => handleEditKeyDown(e)}
+                        onBlur={handleEditMode}
+                        autoFocus
+                    />
+                    <button
+                        className="btn-square btn"
+                        title="Submit edit"
+                        onClick={updateTitle}
+                    >
+                        <HiPencil />
+                    </button>
+                </div>
             ) : (
-                <p className="text-base">{title}</p>
+                <p className="break-all text-base">{title}</p>
             )}
             <FavouriteButton
                 favourite={favourite}
                 handleFavouriteClick={handleFavouriteClick}
             />
-            <OptionsDropdown
-                handleEditMode={handleEditMode}
-                deleteItem={deleteItem}
-            />
+            {!editMode && (
+                <OptionsDropdown
+                    handleEditMode={handleEditMode}
+                    deleteItem={deleteItem}
+                />
+            )}
         </li>
     );
 };

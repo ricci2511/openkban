@@ -12,9 +12,7 @@ interface ModalProps extends ModalType, PropsWithChildren {
 
 const Modal = ({ children, isOpen, toggleModal, title }: ModalProps) => {
     return (
-        <div
-            className={cx('modal cursor-pointer', isOpen ? 'modal-open' : null)}
-        >
+        <div className={cx('modal', isOpen ? 'modal-open' : null)}>
             <div className="modal-box relative">
                 <button
                     type="button"
