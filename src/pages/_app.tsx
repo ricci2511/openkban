@@ -3,17 +3,28 @@ import 'styles/index.css';
 import { SessionProvider } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
 import { ThemeProvider } from 'next-themes';
-import Auth from '@components/auth';
 import { AppProps } from 'next/app';
+import { ReactElement, ReactNode } from 'react';
+import { NextPage } from 'next';
 
-interface AppPropsWithAuth extends AppProps {
-    Component: AppProps['Component'] & { auth: boolean };
-}
+/**
+ * Persistent layout between page changes.
+ * https://nextjs.org/docs/basic-features/layouts#with-typescript
+ */
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+    getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+    Component: NextPageWithLayout;
+};
 
 const App = ({
     Component,
     pageProps: { session, ...pageProps },
-}: AppPropsWithAuth) => {
+}: AppPropsWithLayout) => {
+    const getLayout = Component.getLayout ?? ((page) => page);
+
     return (
         <>
             <Head>
@@ -26,13 +37,7 @@ const App = ({
 
             <ThemeProvider>
                 <SessionProvider session={session}>
-                    {Component.auth ? (
-                        <Auth>
-                            <Component {...pageProps} />
-                        </Auth>
-                    ) : (
-                        <Component {...pageProps} />
-                    )}
+                    {getLayout(<Component {...pageProps} />)}
                 </SessionProvider>
             </ThemeProvider>
         </>

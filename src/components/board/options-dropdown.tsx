@@ -15,7 +15,7 @@ const OptionsDropdown = ({
         <DropdownButton
             position="end"
             labelIcon={<HiOutlineDotsVertical size={19} />}
-            labelClassName="cursor-pointer btn px-1 btn-ghost"
+            labelClassName="cursor-pointer btn px-1 btn-ghost flex-none"
             contentClassName="rounded-box mt-4 w-36 gap-2 bg-base-200 p-2 shadow"
         >
             <li>

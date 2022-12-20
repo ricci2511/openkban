@@ -35,5 +35,4 @@ const Dashboard = () => {
     );
 };
 
-Dashboard.auth = true;
 export default Dashboard;

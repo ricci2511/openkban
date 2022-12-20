@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import FavouriteButton from './favourite-button';
 import OptionsDropdown from './options-dropdown';
 import { HiPencil } from 'react-icons/hi';
+import Link from 'next/link';
 
 interface BoardProps {
     board: Board;
@@ -40,10 +41,10 @@ const BoardItem = ({ board }: BoardProps) => {
     return (
         <li
             key={id}
-            className="relative flex min-h-[85px] items-center justify-between gap-4 rounded-sm bg-base-300 py-3 pl-3 pr-1"
+            className="relative flex min-h-[85px] items-center justify-between gap-2 rounded-sm bg-base-300 py-3 pl-3 pr-1"
         >
             {editMode ? (
-                <div className="input-group">
+                <div className="input-group flex-1">
                     <input
                         type="text"
                         name="board-title"
@@ -65,7 +66,12 @@ const BoardItem = ({ board }: BoardProps) => {
                     </button>
                 </div>
             ) : (
-                <p className="break-all text-base">{title}</p>
+                <Link
+                    href={`/board/${id}`}
+                    className="flex-1 cursor-pointer break-all text-base"
+                >
+                    {title}
+                </Link>
             )}
             <FavouriteButton
                 favourite={favourite}
