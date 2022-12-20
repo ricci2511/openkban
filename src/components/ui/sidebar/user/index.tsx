@@ -20,7 +20,7 @@ const User = ({ session }: { session: Session }) => {
         <article className="my-2 mx-auto border-t border-t-base-100">
             <div className="flex gap-2 pt-3">
                 {image && (
-                    <div className="avatar">
+                    <div className="avatar m-auto inline-block">
                         <div className="w-12 rounded-full">
                             <Image
                                 src={image}
