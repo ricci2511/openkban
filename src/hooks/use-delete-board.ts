@@ -7,7 +7,7 @@ const useDeleteBoard = () => {
         onMutate: async (boardToDelete) => {
             await utils.cancel();
             const previousBoards = utils.getData();
-            utils.setData((oldBoards) =>
+            utils.setData(undefined, (oldBoards) =>
                 (oldBoards || []).filter(
                     (board) => board.id !== boardToDelete.id
                 )
@@ -15,7 +15,7 @@ const useDeleteBoard = () => {
             return { previousBoards };
         },
         onError: (err, boardToDelete, context) => {
-            utils.setData(context?.previousBoards);
+            utils.setData(undefined, context?.previousBoards);
         },
         onSettled: () => {
             utils.invalidate();

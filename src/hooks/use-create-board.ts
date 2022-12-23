@@ -8,7 +8,10 @@ const useCreateBoard = (successCb?: () => void) => {
         error,
     } = trpc.boardRouter.create.useMutation({
         onSuccess: (newBoard) => {
-            utils.setData((oldBoards) => [...(oldBoards || []), newBoard]);
+            utils.setData(undefined, (oldBoards) => [
+                ...(oldBoards || []),
+                newBoard,
+            ]);
             successCb !== undefined ? successCb() : null;
         },
     });

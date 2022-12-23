@@ -7,7 +7,7 @@ const useUpdateBoard = () => {
             utils.cancel();
             const previousBoards = utils.getData();
             const { id, title, isFavourite, lastInteractedAt } = boardToUpdate;
-            utils.setData((oldBoards) =>
+            utils.setData(undefined, (oldBoards) =>
                 (oldBoards || []).map((board) => {
                     if (board.id === id) {
                         board.title = title ?? board.title;
@@ -21,7 +21,7 @@ const useUpdateBoard = () => {
             return { previousBoards };
         },
         onError: (err, boardToUpdate, context) => {
-            utils.setData(context?.previousBoards);
+            utils.setData(undefined, context?.previousBoards);
         },
         onSettled: () => {
             utils.invalidate();
