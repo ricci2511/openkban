@@ -1,13 +1,22 @@
 import NextError from 'next/error';
 import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
+import useUpdateBoard from '@hooks/use-update-board';
 
 export const Board: NextPageWithLayout = () => {
     const id = useRouter().query.bid as string;
     const { data, error, status } = trpc.boardRouter.getById.useQuery({ id });
+    const { updateBoard } = useUpdateBoard();
+
+    // Update the board's lastInteractedAt field
+    useEffect(() => {
+        if (id) {
+            updateBoard({ id, lastInteractedAt: new Date() });
+        }
+    }, [id, updateBoard]);
 
     if (error) {
         return (

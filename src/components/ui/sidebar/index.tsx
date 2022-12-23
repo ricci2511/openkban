@@ -12,7 +12,10 @@ const Sidebar = () => {
         <div className="drawer-side">
             <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
             <nav className="menu max-w-xs overflow-y-auto bg-base-200 p-4 text-base-content">
-                <section className="flex-1" aria-label="primary links">
+                <section
+                    className="flex-1 overflow-y-scroll"
+                    aria-label="primary links"
+                >
                     <SidebarLinks />
                 </section>
                 <section className="flex-none" aria-label="user">

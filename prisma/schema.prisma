@@ -62,10 +62,11 @@ model VerificationToken {
 }
 
 model Board {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  title       String
-  isFavourite Boolean  @default(false)
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  title            String
+  isFavourite      Boolean  @default(false)
+  user             User     @relation(fields: [userId], references: [id])
+  userId           String
+  lastInteractedAt DateTime @default(now())
 }

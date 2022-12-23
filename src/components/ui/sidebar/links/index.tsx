@@ -1,9 +1,29 @@
 import Link from 'next/link';
 import React from 'react';
-import { RiDashboardFill, RiStarFill } from 'react-icons/ri';
+import { RiDashboardFill } from 'react-icons/ri';
 import { HiViewBoards } from 'react-icons/hi';
+import { trpc } from '@lib/trpc';
 
 const SidebarLinks = () => {
+    const { data: boards } = trpc.boardRouter.getAll.useQuery();
+    const boardLinks =
+        boards &&
+        boards
+            .sort(
+                (a, b) =>
+                    Number(b.lastInteractedAt) - Number(a.lastInteractedAt)
+            )
+            .map((board) => (
+                <li key={board.id}>
+                    <Link
+                        href={`/board/${board.id}`}
+                        className="w-full gap-4 rounded-md p-2"
+                    >
+                        {board.title}
+                    </Link>
+                </li>
+            ));
+
     return (
         <ul>
             <li>
@@ -12,11 +32,16 @@ const SidebarLinks = () => {
                     Dashboard
                 </Link>
             </li>
-            <li>
-                <Link href="/boards">
-                    <HiViewBoards size={18} /> Boards
-                </Link>
-            </li>
+            <div tabIndex={0} className="collapse-arrow collapse">
+                <input type="checkbox" className="peer" />
+                <div className="collapse-title mb-2 flex items-center gap-3 rounded-lg peer-checked:bg-base-100">
+                    <HiViewBoards size={18} />
+                    <span>Boards</span>
+                </div>
+                <ul className="collapse-content menu">
+                    {boardLinks ?? <p>Failed to load recent boards</p>}
+                </ul>
+            </div>
         </ul>
     );
 };

@@ -6,12 +6,14 @@ const useUpdateBoard = () => {
         onMutate: async (boardToUpdate) => {
             utils.cancel();
             const previousBoards = utils.getData();
-            const { id, title, isFavourite } = boardToUpdate;
+            const { id, title, isFavourite, lastInteractedAt } = boardToUpdate;
             utils.setData((oldBoards) =>
                 (oldBoards || []).map((board) => {
                     if (board.id === id) {
-                        board.title = title || board.title;
-                        board.isFavourite = isFavourite || board.isFavourite;
+                        board.title = title ?? board.title;
+                        board.isFavourite = isFavourite ?? board.isFavourite;
+                        board.lastInteractedAt =
+                            lastInteractedAt ?? board.lastInteractedAt;
                     }
                     return board;
                 })

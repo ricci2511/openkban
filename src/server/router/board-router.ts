@@ -48,6 +48,7 @@ export const boardRouter = t.router({
                 id: z.string().cuid(),
                 title: z.string().min(2).max(30).optional(),
                 isFavourite: z.boolean().optional(),
+                lastInteractedAt: z.date().optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -58,6 +59,7 @@ export const boardRouter = t.router({
                 data: {
                     title: input.title,
                     isFavourite: input.isFavourite,
+                    lastInteractedAt: input.lastInteractedAt,
                 },
             });
             return updateBoard;
