@@ -21,31 +21,33 @@ const useGetBoards = (sortBy?: SortableBoardType) => {
         const { prop, desc } = sort;
         switch (prop) {
             case 'lastInteractedAt':
-                return boards.sort((a, b) => {
-                    if (desc) {
-                        return (
+                if (desc) {
+                    return boards.sort(
+                        (a, b) =>
                             Number(b.lastInteractedAt) -
                             Number(a.lastInteractedAt)
-                        );
-                    }
-                    return (
-                        Number(a.lastInteractedAt) - Number(b.lastInteractedAt)
                     );
-                });
+                }
+                return boards.sort(
+                    (a, b) =>
+                        Number(a.lastInteractedAt) - Number(b.lastInteractedAt)
+                );
             case 'title':
-                return boards.sort((a, b) => {
-                    if (desc) {
-                        return b.title.localeCompare(a.title);
-                    }
-                    return a.title.localeCompare(b.title);
-                });
+                if (desc) {
+                    return boards.sort((a, b) =>
+                        b.title.localeCompare(a.title)
+                    );
+                }
+                return boards.sort((a, b) => a.title.localeCompare(b.title));
             case 'createdAt':
-                return boards.sort((a, b) => {
-                    if (desc) {
-                        return Number(b.createdAt) - Number(a.createdAt);
-                    }
-                    return Number(a.createdAt) - Number(b.createdAt);
-                });
+                if (desc) {
+                    return boards.sort(
+                        (a, b) => Number(b.createdAt) - Number(a.createdAt)
+                    );
+                }
+                return boards.sort(
+                    (a, b) => Number(a.createdAt) - Number(b.createdAt)
+                );
             default:
                 return boards;
         }
