@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { trpc } from '@lib/trpc';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/board';
 import DashboardLayout from '@components/layouts/dashboard-layout';
+import useGetBoards from '@hooks/use-get-boards';
 
 const Dashboard = () => {
     const { data: session } = useSession();
-    const { data: boards, isLoading } = trpc.boardRouter.getAll.useQuery();
+    const { boards, isLoading } = useGetBoards({
+        prop: 'createdAt',
+        desc: true,
+    });
 
     const boardItems =
         boards &&
-        boards
-            .sort((a, b) => Number(b.createdAt) - Number(a.createdAt))
-            .map((board) => <BoardItem key={board.id} board={board} />);
+        boards.map((board) => <BoardItem key={board.id} board={board} />);
 
     return (
         <DashboardLayout>

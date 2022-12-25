@@ -2,27 +2,25 @@ import Link from 'next/link';
 import React from 'react';
 import { RiDashboardFill } from 'react-icons/ri';
 import { HiViewBoards } from 'react-icons/hi';
-import { trpc } from '@lib/trpc';
+import useGetBoards from '@hooks/use-get-boards';
 
 const SidebarLinks = () => {
-    const { data: boards } = trpc.boardRouter.getAll.useQuery();
+    const { boards } = useGetBoards({
+        prop: 'lastInteractedAt',
+        desc: true,
+    });
     const boardLinks =
         boards &&
-        boards
-            .sort(
-                (a, b) =>
-                    Number(b.lastInteractedAt) - Number(a.lastInteractedAt)
-            )
-            .map((board) => (
-                <li key={board.id}>
-                    <Link
-                        href={`/board/${board.id}`}
-                        className="w-full gap-4 rounded-md p-2"
-                    >
-                        {board.title}
-                    </Link>
-                </li>
-            ));
+        boards.map((board) => (
+            <li key={board.id}>
+                <Link
+                    href={`/board/${board.id}`}
+                    className="w-full gap-4 rounded-md p-2"
+                >
+                    {board.title}
+                </Link>
+            </li>
+        ));
 
     return (
         <ul>
