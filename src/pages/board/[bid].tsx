@@ -5,6 +5,7 @@ import React, { ReactElement, useEffect } from 'react';
 import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
+import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 
 export const Board: NextPageWithLayout = () => {
     const id = useRouter().query.bid as string;
@@ -28,7 +29,7 @@ export const Board: NextPageWithLayout = () => {
     }
 
     if (status !== 'success') {
-        return <>Loading...</>;
+        return <CustomLoadingSpinner centered />;
     }
 
     return <div>{data?.title}</div>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
-import BoardItem from '@components/board';
+import BoardItem from '@components/dashboard/board-item';
 import DashboardLayout from '@components/layouts/dashboard-layout';
 import useGetBoards from '@hooks/use-get-boards';
 
