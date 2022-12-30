@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSession } from 'next-auth/react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/board';

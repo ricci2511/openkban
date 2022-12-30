@@ -1,7 +1,7 @@
 import Auth from '@components/auth';
 import Header from '@components/ui/header';
 import Sidebar from '@components/ui/sidebar';
-import React, { PropsWithChildren, useState } from 'react';
+import React, { PropsWithChildren } from 'react';
 
 const MainLayout = ({ children }: PropsWithChildren) => {
     return (
