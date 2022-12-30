@@ -1,4 +1,18 @@
 import { trpc } from '@lib/trpc';
+import { Board } from '@prisma/client';
+
+type BoardUpdateType = Partial<Omit<Board, 'userId' | 'createdAt'>>;
+const updateBoardProps = (
+    currBoards: Board[] | undefined,
+    boardToUpdate: BoardUpdateType
+) => {
+    return (currBoards || []).map((board) => {
+        if (board.id === boardToUpdate.id) {
+            return { ...board, ...boardToUpdate };
+        }
+        return board;
+    });
+};
 
 const useUpdateBoard = () => {
     const utils = trpc.useContext().boardRouter.getAll;
@@ -6,17 +20,8 @@ const useUpdateBoard = () => {
         onMutate: async (boardToUpdate) => {
             utils.cancel();
             const previousBoards = utils.getData();
-            const { id, title, isFavourite, lastInteractedAt } = boardToUpdate;
-            utils.setData(undefined, (oldBoards) =>
-                (oldBoards || []).map((board) => {
-                    if (board.id === id) {
-                        board.title = title ?? board.title;
-                        board.isFavourite = isFavourite ?? board.isFavourite;
-                        board.lastInteractedAt =
-                            lastInteractedAt ?? board.lastInteractedAt;
-                    }
-                    return board;
-                })
+            utils.setData(undefined, (currBoards) =>
+                updateBoardProps(currBoards, boardToUpdate)
             );
             return { previousBoards };
         },
