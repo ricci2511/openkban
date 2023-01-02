@@ -58,6 +58,7 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
             title="Create your board"
             isOpen={isOpen}
             toggleModal={toggleModal}
+            maxWidth="twoXl"
         >
             <form className="form-control mt-2 w-full" onSubmit={onSubmit}>
                 <label className="label">

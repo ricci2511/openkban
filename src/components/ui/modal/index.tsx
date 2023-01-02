@@ -1,4 +1,4 @@
-import { cx } from 'class-variance-authority';
+import { VariantProps, cva, cx } from 'class-variance-authority';
 import React, { PropsWithChildren } from 'react';
 
 export type ModalType = {
@@ -6,14 +6,35 @@ export type ModalType = {
     toggleModal: () => void;
 };
 
-interface ModalProps extends ModalType, PropsWithChildren {
+const modalBase = cva('', {
+    variants: {
+        maxWidth: {
+            sm: ['max-w-sm'],
+            md: ['max-w-md'],
+            lg: ['max-w-lg'],
+            xl: ['max-w-xl'],
+            twoXl: ['max-w-2xl'],
+            threeXl: ['max-w-3xl'],
+            full: ['max-w-full'],
+        },
+    },
+});
+
+type ModalBaseProps = VariantProps<typeof modalBase>;
+interface ModalProps extends ModalBaseProps, ModalType, PropsWithChildren {
     title?: string;
 }
 
-const Modal = ({ children, isOpen, toggleModal, title }: ModalProps) => {
+const Modal = ({
+    children,
+    isOpen,
+    toggleModal,
+    title,
+    maxWidth,
+}: ModalProps) => {
     return (
         <div className={cx('modal', isOpen ? 'modal-open' : null)}>
-            <div className="modal-box relative">
+            <div className={cx('modal-box relative', modalBase({ maxWidth }))}>
                 <button
                     type="button"
                     className="btn-sm btn-circle btn absolute right-2 top-2"

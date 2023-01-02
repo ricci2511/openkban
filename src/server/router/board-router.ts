@@ -24,6 +24,9 @@ export const boardRouter = t.router({
                 },
                 include: {
                     columns: {
+                        orderBy: {
+                            position: 'asc',
+                        },
                         include: {
                             tasks: true,
                         },
