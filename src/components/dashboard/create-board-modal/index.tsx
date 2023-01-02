@@ -6,8 +6,9 @@ import {
     BoardFormSchemaType,
 } from '@lib/schemas/board-creation-schema';
 import { cx } from 'class-variance-authority';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import ColumnsLayoutSection from './columns-layout-section';
 
 const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
     const { createBoard, isLoading, error } = useCreateBoard(toggleModal);
@@ -19,9 +20,36 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
     } = useForm<BoardFormSchemaType>({
         resolver: zodResolver(boardCeationSchema),
     });
+    // columns layout state
+    const [layout, setLayout] = useState<'default' | 'custom'>('default');
+    const getColumnData = () => {
+        // TODO: handle custom column layout data
+        return [
+            {
+                title: 'To Do',
+                position: 0,
+            },
+            {
+                title: 'In Progress',
+                position: 1,
+            },
+            {
+                title: 'Testing',
+                position: 2,
+            },
+            {
+                title: 'Done',
+                position: 3,
+            },
+        ];
+    };
 
     const onSubmit = handleSubmit(({ title, isFavourite }) => {
-        createBoard({ title: title, isFavourite: isFavourite });
+        createBoard({
+            title: title,
+            isFavourite: isFavourite,
+            columns: getColumnData(),
+        });
         reset();
     });
 
@@ -58,6 +86,7 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
                         {...register('isFavourite')}
                     />
                 </label>
+                <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
                 <div className="modal-action">
                     <button
                         type="submit"

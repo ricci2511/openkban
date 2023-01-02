@@ -64,13 +64,50 @@ model VerificationToken {
 }
 
 model Board {
-  id               String   @id @default(cuid())
-  createdAt        DateTime @default(now())
+  id               String        @id @default(cuid())
+  createdAt        DateTime      @default(now())
   title            String
-  isFavourite      Boolean  @default(false)
-  user             User     @relation(fields: [userId], references: [id])
+  isFavourite      Boolean       @default(false)
+  user             User          @relation(fields: [userId], references: [id])
   userId           String
-  lastInteractedAt DateTime @default(now())
+  lastInteractedAt DateTime      @default(now())
+  columns          BoardColumn[]
 
   @@index([userId])
+}
+
+model BoardColumn {
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  title     String
+  board     Board       @relation(fields: [boardId], references: [id])
+  boardId   String
+  position  Int        @default(0)
+  tasks     BoardTask[]
+
+  @@index([boardId])
+}
+
+model BoardTask {
+  id        String         @id @default(cuid())
+  createdAt DateTime       @default(now())
+  title     String
+  column    BoardColumn    @relation(fields: [columnId], references: [id])
+  columnId  String
+  position  Int
+  subtasks  BoardSubtask[]
+
+  @@index([columnId])
+}
+
+model BoardSubtask {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  title     String
+  task      BoardTask @relation(fields: [taskId], references: [id])
+  taskId    String
+  position  Int
+  isDone    Boolean   @default(false)
+
+  @@index([taskId])
 }

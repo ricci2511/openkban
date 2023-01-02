@@ -22,6 +22,13 @@ export const boardRouter = t.router({
                 where: {
                     id: input.id,
                 },
+                include: {
+                    columns: {
+                        include: {
+                            tasks: true,
+                        },
+                    },
+                },
             });
             return board;
         }),
@@ -30,6 +37,14 @@ export const boardRouter = t.router({
             z.object({
                 title: z.string().min(2).max(30),
                 isFavourite: z.boolean(),
+                columns: z
+                    .array(
+                        z.object({
+                            title: z.string().max(25),
+                            position: z.number(),
+                        })
+                    )
+                    .max(6),
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -38,6 +53,9 @@ export const boardRouter = t.router({
                     title: input.title,
                     isFavourite: input.isFavourite,
                     userId: ctx.session.user.id,
+                    columns: {
+                        create: input.columns,
+                    },
                 },
             });
             return createBoard;
