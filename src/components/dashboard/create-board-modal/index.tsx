@@ -1,14 +1,13 @@
 import Modal, { ModalType } from '@components/ui/modal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useCreateBoard from '@hooks/use-create-board';
-import {
-    boardCeationSchema,
-    BoardFormSchemaType,
-} from '@lib/schemas/board-creation-schema';
+import { boardCeationSchema, BoardCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ColumnsLayoutSection from './columns-layout-section';
+import { BoardColumnsLayout } from 'types/board-types';
+import { defaultBoardColumnsLayout } from '@lib/constants';
 
 const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
     const { createBoard, isLoading, error } = useCreateBoard(toggleModal);
@@ -17,31 +16,14 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm<BoardFormSchemaType>({
+    } = useForm<BoardCreation>({
         resolver: zodResolver(boardCeationSchema),
     });
     // columns layout state
-    const [layout, setLayout] = useState<'default' | 'custom'>('default');
+    const [layout, setLayout] = useState<BoardColumnsLayout>('default');
     const getColumnData = () => {
         // TODO: handle custom column layout data
-        return [
-            {
-                title: 'To Do',
-                position: 0,
-            },
-            {
-                title: 'In Progress',
-                position: 1,
-            },
-            {
-                title: 'Testing',
-                position: 2,
-            },
-            {
-                title: 'Done',
-                position: 3,
-            },
-        ];
+        return defaultBoardColumnsLayout;
     };
 
     const onSubmit = handleSubmit(({ title, isFavourite }) => {

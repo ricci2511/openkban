@@ -1,9 +1,10 @@
+import { BoardColumnsLayout } from 'types/board-types';
 import { cx } from 'class-variance-authority';
 import React, { PropsWithChildren } from 'react';
 
 interface LayoutSelectionCardProps extends PropsWithChildren {
     selected: boolean;
-    radioButtonValue: 'default' | 'custom';
+    radioButtonValue: BoardColumnsLayout;
     title: string;
     handleLayoutChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

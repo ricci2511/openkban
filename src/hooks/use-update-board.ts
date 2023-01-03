@@ -1,10 +1,10 @@
 import { trpc } from '@lib/trpc';
 import { Board } from '@prisma/client';
+import { BoardToUpdate } from 'types/board-types';
 
-type BoardUpdateType = Partial<Omit<Board, 'userId' | 'createdAt'>>;
 const updateBoardProps = (
     currBoards: Board[] | undefined,
-    boardToUpdate: BoardUpdateType
+    boardToUpdate: BoardToUpdate
 ) => {
     return (currBoards || []).map((board) => {
         if (board.id === boardToUpdate.id) {

@@ -1,9 +1,10 @@
 import React from 'react';
 import LayoutSelectionCard from './layout-selection-card';
+import { BoardColumnsLayout } from 'types/board-types';
 
 interface ColumnsLayoutSectionProps {
-    layout: 'default' | 'custom';
-    setLayout: (layout: 'default' | 'custom') => void;
+    layout: BoardColumnsLayout;
+    setLayout: (layout: BoardColumnsLayout) => void;
 }
 const ColumnsLayoutSection = ({
     layout,
@@ -11,7 +12,7 @@ const ColumnsLayoutSection = ({
 }: ColumnsLayoutSectionProps) => {
     const handleLayoutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
-            setLayout(e.target.value as 'default' | 'custom');
+            setLayout(e.target.value as BoardColumnsLayout);
         }
     };
 
