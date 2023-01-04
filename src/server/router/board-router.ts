@@ -1,6 +1,7 @@
 import { t } from '@server/trpc';
 import { z } from 'zod';
 import { authedProcedure } from './auth-router';
+import { boardCeationSchema } from '@lib/schemas/board-schemas';
 
 export const boardRouter = t.router({
     getAll: authedProcedure.query(async ({ ctx }) => {
@@ -36,20 +37,7 @@ export const boardRouter = t.router({
             return board;
         }),
     create: authedProcedure
-        .input(
-            z.object({
-                title: z.string().min(2).max(30),
-                isFavourite: z.boolean(),
-                columns: z
-                    .array(
-                        z.object({
-                            title: z.string().max(25),
-                            position: z.number(),
-                        })
-                    )
-                    .max(6),
-            })
-        )
+        .input(boardCeationSchema)
         .mutation(async ({ ctx, input }) => {
             const createBoard = await ctx.prisma.board.create({
                 data: {

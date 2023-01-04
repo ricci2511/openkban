@@ -6,6 +6,19 @@ export const boardCeationSchema = z.object({
         .min(2, 'The title should contain more than 1 character')
         .max(30, 'The title cannot contain more than 30 characters'),
     isFavourite: z.boolean(),
+    columns: z
+        .array(
+            z.object({
+                title: z
+                    .string()
+                    .max(
+                        25,
+                        'The column title cannot contain more than 25 characters'
+                    ),
+                position: z.number(),
+            })
+        )
+        .max(6, 'You cannot have more than 6 columns'),
 });
 export type BoardCreation = z.infer<typeof boardCeationSchema>;
 

@@ -10,29 +10,37 @@ import { BoardColumnsLayout } from 'types/board-types';
 import { defaultBoardColumnsLayout } from '@lib/constants';
 
 const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
-    const { createBoard, isLoading, error } = useCreateBoard(toggleModal);
     const {
         register,
+        setValue,
         handleSubmit,
         reset,
         formState: { errors },
     } = useForm<BoardCreation>({
         resolver: zodResolver(boardCeationSchema),
+        defaultValues: {
+            columns: defaultBoardColumnsLayout,
+        },
     });
+
     // columns layout state
     const [layout, setLayout] = useState<BoardColumnsLayout>('default');
-    const getColumnData = () => {
-        // TODO: handle custom column layout data
-        return defaultBoardColumnsLayout;
-    };
 
-    const onSubmit = handleSubmit(({ title, isFavourite }) => {
-        createBoard({
-            title: title,
-            isFavourite: isFavourite,
-            columns: getColumnData(),
-        });
+    // close modal, reset form and column state after successful board creation
+    const onModalSubmitSuccess = () => {
+        toggleModal();
         reset();
+        setLayout('default');
+    };
+    const { createBoard, isLoading, error } =
+        useCreateBoard(onModalSubmitSuccess);
+
+    const onSubmit = handleSubmit(({ title, isFavourite, columns }) => {
+        createBoard({
+            title,
+            isFavourite,
+            columns,
+        });
     });
 
     return (
@@ -58,7 +66,11 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
                     )}
                     {...register('title')}
                 />
-                <p className="mt-2 text-error">{errors.title?.message}</p>
+                {errors.title && (
+                    <p className="mt-2 text-sm text-error">
+                        {errors.title.message}
+                    </p>
+                )}
                 <label className="label cursor-pointer">
                     <span className="label-text">
                         Add it to your favourites?
@@ -69,7 +81,11 @@ const CreateBoardModal = ({ isOpen, toggleModal }: ModalType) => {
                         {...register('isFavourite')}
                     />
                 </label>
-                <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
+                <ColumnsLayoutSection
+                    layout={layout}
+                    setLayout={setLayout}
+                    setFormValue={setValue}
+                />
                 <div className="modal-action">
                     <button
                         type="submit"

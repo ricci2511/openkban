@@ -1,14 +1,19 @@
 import React from 'react';
 import LayoutSelectionCard from './layout-selection-card';
 import { BoardColumnsLayout } from 'types/board-types';
+import CustomLayoutSection from './custom-layout-section';
+import { UseFormSetValue } from 'react-hook-form';
+import { BoardCreation } from '@lib/schemas/board-schemas';
 
 interface ColumnsLayoutSectionProps {
     layout: BoardColumnsLayout;
     setLayout: (layout: BoardColumnsLayout) => void;
+    setFormValue: UseFormSetValue<BoardCreation>;
 }
 const ColumnsLayoutSection = ({
     layout,
     setLayout,
+    setFormValue,
 }: ColumnsLayoutSectionProps) => {
     const handleLayoutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
@@ -37,6 +42,9 @@ const ColumnsLayoutSection = ({
                     Create your own column layout
                 </LayoutSelectionCard>
             </div>
+            {layout === 'custom' && (
+                <CustomLayoutSection setFormValue={setFormValue} />
+            )}
         </div>
     );
 };
