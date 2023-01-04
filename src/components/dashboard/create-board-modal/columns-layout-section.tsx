@@ -4,6 +4,7 @@ import { BoardColumnsLayout } from 'types/board-types';
 import CustomLayoutSection from './custom-layout-section';
 import { UseFormSetValue } from 'react-hook-form';
 import { BoardCreation } from '@lib/schemas/board-schemas';
+import { defaultBoardColumnsLayout } from '@lib/constants';
 
 interface ColumnsLayoutSectionProps {
     layout: BoardColumnsLayout;
@@ -16,8 +17,11 @@ const ColumnsLayoutSection = ({
     setFormValue,
 }: ColumnsLayoutSectionProps) => {
     const handleLayoutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const layoutValue = e.target.value as BoardColumnsLayout;
         if (e.target.checked) {
-            setLayout(e.target.value as BoardColumnsLayout);
+            setLayout(layoutValue);
+            const isDefault = layoutValue === 'default';
+            setFormValue('columns', isDefault ? defaultBoardColumnsLayout : []);
         }
     };
 
