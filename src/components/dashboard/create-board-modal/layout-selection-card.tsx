@@ -20,8 +20,10 @@ const LayoutSelectionCard = ({
         <label
             htmlFor={`radio-${radioButtonValue}`}
             className={cx(
-                'card w-1/2 cursor-pointer rounded-xl outline',
-                selected ? 'outline-success' : null
+                'card card-compact w-1/2 cursor-pointer rounded-xl outline',
+                selected
+                    ? 'outline-success transition-all duration-300 ease-in-out'
+                    : null
             )}
         >
             <div className="card-body">
@@ -31,7 +33,7 @@ const LayoutSelectionCard = ({
                         id={`radio-${radioButtonValue}`}
                         value={radioButtonValue}
                         className={cx(
-                            'radio',
+                            'radio hidden sm:inline-flex',
                             selected ? 'radio-success' : null
                         )}
                         checked={selected}
@@ -40,13 +42,13 @@ const LayoutSelectionCard = ({
                 </div>
                 <h2
                     className={cx(
-                        'card-title transition-colors',
+                        'card-title text-base transition-colors sm:text-xl',
                         selected ? 'text-success' : null
                     )}
                 >
                     {title}
                 </h2>
-                <p>{children}</p>
+                <p className="text-sm md:text-base">{children}</p>
             </div>
         </label>
     );
