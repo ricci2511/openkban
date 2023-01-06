@@ -36,6 +36,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.0",
     "@tailwindcss/typography": "^0.5.8",
     "@types/node": "18.11.17",
     "@types/react": "18.0.26",

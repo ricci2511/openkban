@@ -11,6 +11,10 @@ export const boardCeationSchema = z.object({
             z.object({
                 title: z
                     .string()
+                    .min(
+                        1,
+                        'The column title should contain at least 1 character'
+                    )
                     .max(
                         25,
                         'The column title cannot contain more than 25 characters'
@@ -18,6 +22,7 @@ export const boardCeationSchema = z.object({
                 position: z.number(),
             })
         )
+        .min(1, 'You must have at least 1 column')
         .max(6, 'You cannot have more than 6 columns'),
 });
 export type BoardCreation = z.infer<typeof boardCeationSchema>;
