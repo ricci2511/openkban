@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const boardCeationSchema = z.object({
     title: z
         .string()
-        .min(2, 'The title should contain more than 1 character')
+        .min(1, 'The board title cannot be empty')
         .max(30, 'The title cannot contain more than 30 characters'),
     isFavourite: z.boolean(),
     columns: z
@@ -11,10 +11,7 @@ export const boardCeationSchema = z.object({
             z.object({
                 title: z
                     .string()
-                    .min(
-                        1,
-                        'The column title should contain at least 1 character'
-                    )
+                    .min(1, 'The column title cannot be empty')
                     .max(
                         25,
                         'The column title cannot contain more than 25 characters'

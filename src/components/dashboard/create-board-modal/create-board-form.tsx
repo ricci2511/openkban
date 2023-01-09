@@ -26,6 +26,15 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     // columns layout state
     const [layout, setLayout] = useState<BoardColumnsLayout>('default');
 
+    // sanitize columns state before submitting by removing columns with invalid title/position
+    const handleSubmitClick = () => {
+        if (layout === 'default') return;
+        const cols = getValues('columns').filter(
+            ({ title, position }) => title && position !== undefined
+        );
+        setValue('columns', cols);
+    };
+
     // close modal, reset form and column layout state after successful board creation
     const onCreateBoardSuccess = () => {
         toggleModal();
@@ -43,13 +52,6 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
             columns,
         });
     });
-
-    const handleSubmitClick = () => {
-        if (layout === 'default') return;
-        // remove empty columns before submitting to avoid validation error
-        const cols = [...getValues('columns')].filter(({ title }) => title);
-        setValue('columns', cols);
-    };
 
     return (
         <form
