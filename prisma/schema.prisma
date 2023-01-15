@@ -82,7 +82,6 @@ model BoardColumn {
   title     String
   board     Board       @relation(fields: [boardId], references: [id])
   boardId   String
-  position  Int        @default(0)
   tasks     BoardTask[]
 
   @@index([boardId])

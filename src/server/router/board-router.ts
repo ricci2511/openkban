@@ -25,9 +25,6 @@ export const boardRouter = t.router({
                 },
                 include: {
                     columns: {
-                        orderBy: {
-                            position: 'asc',
-                        },
                         include: {
                             tasks: true,
                         },
@@ -45,7 +42,9 @@ export const boardRouter = t.router({
                     isFavourite: input.isFavourite,
                     userId: ctx.session.user.id,
                     columns: {
-                        create: input.columns,
+                        create: input.columnTitles.map((title) => ({
+                            title: title,
+                        })),
                     },
                 },
             });

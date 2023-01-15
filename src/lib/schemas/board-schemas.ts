@@ -6,18 +6,15 @@ export const boardCeationSchema = z.object({
         .min(1, 'The board title cannot be empty')
         .max(30, 'The title cannot contain more than 30 characters'),
     isFavourite: z.boolean(),
-    columns: z
+    columnTitles: z
         .array(
-            z.object({
-                title: z
-                    .string()
-                    .min(1, 'The column title cannot be empty')
-                    .max(
-                        25,
-                        'The column title cannot contain more than 25 characters'
-                    ),
-                position: z.number(),
-            })
+            z
+                .string()
+                .min(1, 'The column title cannot be empty')
+                .max(
+                    25,
+                    'The column title cannot contain more than 25 characters'
+                )
         )
         .min(1, 'You must have at least 1 column')
         .max(6, 'You cannot have more than 6 columns'),

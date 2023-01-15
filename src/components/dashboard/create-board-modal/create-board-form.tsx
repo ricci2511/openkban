@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import ColumnsLayoutSection from './columns-layout-section';
 import { BoardColumnsLayout } from 'types/board-types';
-import { defaultBoardColumnsLayout } from '@lib/constants';
+import { defaultBoardColumnsTitles } from '@lib/constants';
 import { BoardCreation } from '@lib/schemas/board-schemas';
 import { ModalType } from '@components/ui/modal';
 
@@ -18,21 +18,22 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
         formState: { errors },
     } = useFormContext<BoardCreation>();
 
-    // initialize columns state with default layout
+    // initialize column titles state with default layout
     useEffect(() => {
-        setValue('columns', defaultBoardColumnsLayout);
+        setValue('columnTitles', defaultBoardColumnsTitles);
     }, [setValue]);
 
     // columns layout state
     const [layout, setLayout] = useState<BoardColumnsLayout>('default');
 
-    // sanitize columns state before submitting by removing columns with invalid title/position
+    // sanitize custom columns titles state before submitting by removing invalid titles
     const handleSubmitClick = () => {
         if (layout === 'default') return;
-        const cols = getValues('columns').filter(
-            ({ title, position }) => title && position !== undefined
+        // remove empty strings and duplicates
+        const colTitles = Array.from(
+            new Set(getValues('columnTitles').filter((title) => title))
         );
-        setValue('columns', cols);
+        setValue('columnTitles', colTitles);
     };
 
     // close modal, reset form and column layout state after successful board creation
@@ -45,11 +46,11 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
         useCreateBoard(onCreateBoardSuccess);
 
     // create board after valid form submission
-    const onSubmit = handleSubmit(({ title, isFavourite, columns }) => {
+    const onSubmit = handleSubmit(({ title, isFavourite, columnTitles }) => {
         createBoard({
             title,
             isFavourite,
-            columns,
+            columnTitles,
         });
     });
 
@@ -87,9 +88,9 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
                 />
             </label>
             <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
-            {errors.columns && (
+            {errors.columnTitles && (
                 <p className="mx-auto mt-2 text-sm text-error">
-                    {errors.columns.message}
+                    {errors.columnTitles.message}
                 </p>
             )}
             <div className="modal-action">

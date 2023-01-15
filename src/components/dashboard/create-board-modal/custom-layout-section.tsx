@@ -1,8 +1,14 @@
 import { BoardCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { RiCloseFill } from 'react-icons/ri';
+import { randomId } from '@lib/helpers';
+import ColumnItemsContainer from './column-items-container';
+
+export type CustomColumn = {
+    id: string;
+    title: string;
+};
 
 const CustomLayoutSection = () => {
     const {
@@ -16,43 +22,41 @@ const CustomLayoutSection = () => {
         formState: { errors },
     } = useFormContext<BoardCreation>();
 
-    const [customColumns, setCustomColumns] = useState<
-        BoardCreation['columns']
-    >([]);
+    const [customColumns, setCustomColumns] = useState<CustomColumn[]>([]);
+    const columnTitles = useMemo(
+        () => customColumns.map((col) => col.title),
+        [customColumns]
+    );
 
     const isMaxColumns = customColumns.length === 6;
-    const titleInput: `columns.${number}.title` = `columns.${customColumns.length}.title`;
+    const titleInput: `columnTitles.${number}` = `columnTitles.${customColumns.length}`;
 
     useEffect(() => {
-        setValue('columns', customColumns);
+        setValue('columnTitles', columnTitles);
         // reset title input value after adding a column and set focus
         resetField(titleInput, { defaultValue: '' });
         setFocus(titleInput);
-    }, [setValue, customColumns, resetField, titleInput, setFocus]);
+    }, [setValue, columnTitles, resetField, titleInput, setFocus]);
 
     const handleColumnAddition = async () => {
-        clearErrors('columns');
+        clearErrors('columnTitles');
         // column title validation
         const isValid = await trigger(titleInput, { shouldFocus: true });
         if (!isValid || isMaxColumns) return;
         setCustomColumns((prevCols) => [
             ...prevCols,
             {
+                id: randomId(),
                 title: getValues(titleInput),
-                position: prevCols.length,
             },
         ]);
     };
 
-    const handleColumnDeletion = (position: number) => {
-        setCustomColumns((prevCols) =>
-            prevCols
-                .filter((col) => col.position !== position)
-                .map((col, i) => ({ ...col, position: i }))
-        );
+    const handleColumnDeletion = (id: string) => {
+        setCustomColumns((prevCols) => prevCols.filter((col) => col.id !== id));
     };
 
-    const columnErrors = errors.columns;
+    const columnErrors = errors.columnTitles;
 
     return (
         <div className="form-control mt-6 items-center">
@@ -63,7 +67,10 @@ const CustomLayoutSection = () => {
                 <input
                     type="text"
                     placeholder="Column title"
-                    className="input-bordered input input-md w-2/3"
+                    className={cx(
+                        'input-bordered input input-md w-2/3',
+                        columnErrors && 'input-error'
+                    )}
                     title={
                         isMaxColumns
                             ? 'Cannot add more than 6 columns'
@@ -87,23 +94,16 @@ const CustomLayoutSection = () => {
             </label>
             {columnErrors && columnErrors.length && (
                 <p className="mt-2 text-sm text-error">
-                    {columnErrors[columnErrors.length - 1]?.title?.message}
+                    {columnErrors[columnErrors.length - 1]?.message}
                 </p>
             )}
-            {!!customColumns.length && (
-                <ul className="mt-3 flex flex-wrap gap-2">
-                    {customColumns.map(({ title, position }) => (
-                        <li key={position} className="badge items-center gap-2">
-                            {title}
-                            <RiCloseFill
-                                className="cursor-pointer"
-                                onClick={() => handleColumnDeletion(position)}
-                                aria-label="Delete column"
-                            />
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <ul className="m-4 grid grid-flow-row grid-cols-2 gap-y-2 gap-x-4 sm:grid-cols-3">
+                <ColumnItemsContainer
+                    columns={customColumns}
+                    setColumns={setCustomColumns}
+                    handleColumnDeletion={handleColumnDeletion}
+                />
+            </ul>
         </div>
     );
 };
