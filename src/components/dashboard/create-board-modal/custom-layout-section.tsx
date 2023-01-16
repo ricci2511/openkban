@@ -35,7 +35,7 @@ const CustomLayoutSection = () => {
         setValue('columnTitles', columnTitles);
         // reset title input value after adding a column
         resetField(titleInput, { defaultValue: '' });
-    }, [setValue, columnTitles, resetField, titleInput, getValues]);
+    }, [setValue, columnTitles, resetField, titleInput]);
 
     const handleColumnAddition = async () => {
         clearErrors('columnTitles');
@@ -60,7 +60,7 @@ const CustomLayoutSection = () => {
 
     return (
         <div className="form-control mt-6">
-            <div className="w-full self-center">
+            <div className="w-full">
                 <label className="label">
                     <span className="label-text">Your Columns</span>
                 </label>
