@@ -46,7 +46,7 @@ const ColumnItem = ({
 
     return (
         <li ref={setNodeRef} style={style} {...attributes}>
-            <div className="btn-xs btn flex w-full cursor-default items-center justify-between gap-3 p-0">
+            <div className="flex w-full cursor-default items-center justify-between gap-3 rounded-lg bg-base-300 p-0">
                 <div
                     className="grid h-full flex-1 cursor-grab items-center truncate"
                     {...listeners}
@@ -57,7 +57,7 @@ const ColumnItem = ({
                 </div>
                 <button
                     type="button"
-                    className="btn-error btn-xs btn h-full rounded-md p-1"
+                    className="btn-error btn-xs btn h-full rounded-lg p-1"
                     onClick={() => handleColumnDeletion(id as string)}
                     aria-label="Delete column item"
                 >

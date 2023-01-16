@@ -33,10 +33,9 @@ const CustomLayoutSection = () => {
 
     useEffect(() => {
         setValue('columnTitles', columnTitles);
-        // reset title input value after adding a column and set focus
+        // reset title input value after adding a column
         resetField(titleInput, { defaultValue: '' });
-        setFocus(titleInput);
-    }, [setValue, columnTitles, resetField, titleInput, setFocus]);
+    }, [setValue, columnTitles, resetField, titleInput, getValues]);
 
     const handleColumnAddition = async () => {
         clearErrors('columnTitles');
@@ -50,6 +49,7 @@ const CustomLayoutSection = () => {
                 title: getValues(titleInput),
             },
         ]);
+        setFocus(titleInput);
     };
 
     const handleColumnDeletion = (id: string) => {
@@ -59,45 +59,51 @@ const CustomLayoutSection = () => {
     const columnErrors = errors.columnTitles;
 
     return (
-        <div className="form-control mt-6 items-center">
-            <label className="label">
-                <span className="label-text">Your Columns</span>
-            </label>
-            <label className="input-group-sm input-group justify-center">
-                <input
-                    type="text"
-                    placeholder="Column title"
-                    className={cx(
-                        'input-bordered input input-md w-2/3',
-                        columnErrors && 'input-error'
-                    )}
-                    title={
-                        isMaxColumns
-                            ? 'Cannot add more than 6 columns'
-                            : 'Set your column title'
-                    }
-                    onKeyDown={(e) =>
-                        e.key === 'Enter' ? handleColumnAddition() : null
-                    }
-                    autoFocus
-                    {...register(titleInput, {
-                        disabled: isMaxColumns,
-                    })}
-                />
-                <button
-                    className={cx('btn', isMaxColumns ? 'btn-disabled' : null)}
-                    type="button"
-                    onClick={handleColumnAddition}
-                >
-                    Add
-                </button>
-            </label>
+        <div className="form-control mt-6">
+            <div className="w-full self-center">
+                <label className="label">
+                    <span className="label-text">Your Columns</span>
+                </label>
+                <label className="input-group-sm input-group">
+                    <input
+                        type="text"
+                        placeholder="Column title"
+                        className={cx(
+                            'input-bordered input input-md w-full',
+                            columnErrors && 'input-error'
+                        )}
+                        title={
+                            isMaxColumns
+                                ? 'Cannot add more than 6 columns'
+                                : 'Set your column title'
+                        }
+                        onKeyDown={(e) =>
+                            e.key === 'Enter' ? handleColumnAddition() : null
+                        }
+                        autoFocus
+                        {...register(titleInput, {
+                            disabled: isMaxColumns,
+                        })}
+                    />
+                    <button
+                        className={cx(
+                            'btn',
+                            isMaxColumns ? 'btn-disabled' : null
+                        )}
+                        type="button"
+                        onClick={handleColumnAddition}
+                    >
+                        Add
+                    </button>
+                </label>
+            </div>
+
             {columnErrors && columnErrors.length && (
                 <p className="mt-2 text-sm text-error">
                     {columnErrors[columnErrors.length - 1]?.message}
                 </p>
             )}
-            <ul className="m-4 grid grid-flow-row grid-cols-2 gap-y-2 gap-x-4 sm:grid-cols-3">
+            <ul className="m-4 grid w-full grid-flow-row grid-cols-2 gap-y-2 gap-x-4 self-center sm:grid-cols-3">
                 <ColumnItemsContainer
                     columns={customColumns}
                     setColumns={setCustomColumns}

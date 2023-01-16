@@ -64,7 +64,8 @@ const ColumnItemsContainer = ({
                         id={id}
                         handleColumnDeletion={handleColumnDeletion}
                     >
-                        {`${i + 1}. ${title}`}
+                        <strong>{i + 1}. </strong>
+                        {title}
                     </ColumnItem>
                 ))}
             </SortableContext>
