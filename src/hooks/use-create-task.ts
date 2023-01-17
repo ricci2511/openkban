@@ -10,10 +10,6 @@ const useCreateTask = (boardId: string, successCb?: () => void) => {
         onSuccess: (task) => {
             utils.setData({ id: boardId }, (board) => {
                 if (!board) return;
-                const column = board.columns.find(
-                    (column) => column.id === task.columnId
-                );
-                if (!column) return board;
                 return {
                     ...board,
                     columns: board.columns.map((column) => {

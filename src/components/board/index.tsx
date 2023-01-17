@@ -15,7 +15,7 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
         <>
             <h1 className="text-2xl font-semibold uppercase">{title}</h1>
             <div
-                className={`grid grid-cols-${columns.length} mt-10 grid-flow-col gap-6`}
+                className={`grid grid-cols-${columns.length} mt-10 grid-flow-col items-start gap-6`}
             >
                 {columns.map((column) => (
                     <Column key={column.id} column={column} />
