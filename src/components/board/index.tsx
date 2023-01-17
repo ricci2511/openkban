@@ -1,5 +1,6 @@
 import { Board, BoardColumn, BoardTask } from '@prisma/client';
 import React from 'react';
+import Column from './column';
 
 interface KanbanBoardProps {
     boardData: Board & {
@@ -12,15 +13,12 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
     const { title, columns } = boardData;
     return (
         <>
-            <h1 className="text-2xl font-semibold">{title}</h1>
-            {/* TESTING */}
+            <h1 className="text-2xl font-semibold uppercase">{title}</h1>
             <div
-                className={`grid grid-cols-${columns.length} mt-8 grid-flow-col justify-between`}
+                className={`grid grid-cols-${columns.length} mt-10 grid-flow-col gap-6`}
             >
                 {columns.map((column) => (
-                    <div key={column.id}>
-                        <h3 className="text-lg">{column.title}</h3>
-                    </div>
+                    <Column key={column.id} column={column} />
                 ))}
             </div>
         </>

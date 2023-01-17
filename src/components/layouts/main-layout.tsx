@@ -15,7 +15,7 @@ const MainLayout = ({ children }: PropsWithChildren) => {
                     className="drawer-toggle"
                 />
                 <div className="drawer-content flex flex-col">
-                    <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+                    <main className="container relative mx-auto p-4 sm:p-6 lg:p-8">
                         {children}
                     </main>
                 </div>

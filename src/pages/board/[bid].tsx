@@ -7,6 +7,7 @@ import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import KanbanBoard from '@components/board';
+import KanbanBoardLayout from '@components/layouts/kanban-board-layout';
 
 export const Board: NextPageWithLayout = () => {
     const id = useRouter().query.bid as string;
@@ -41,7 +42,7 @@ export const Board: NextPageWithLayout = () => {
 };
 
 Board.getLayout = function getLayout(page: ReactElement) {
-    return <MainLayout>{page}</MainLayout>;
+    return <KanbanBoardLayout>{page}</KanbanBoardLayout>;
 };
 
 export default Board;

@@ -93,7 +93,6 @@ model BoardTask {
   title     String
   column    BoardColumn    @relation(fields: [columnId], references: [id])
   columnId  String
-  position  Int
   subtasks  BoardSubtask[]
 
   @@index([columnId])
@@ -105,7 +104,6 @@ model BoardSubtask {
   title     String
   task      BoardTask @relation(fields: [taskId], references: [id])
   taskId    String
-  position  Int
   isDone    Boolean   @default(false)
 
   @@index([taskId])
