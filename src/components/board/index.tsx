@@ -1,6 +1,7 @@
 import { Board, BoardColumn, BoardTask } from '@prisma/client';
 import React from 'react';
 import Column from './column';
+import CreateTaskModalButton from './create-task-modal-button';
 
 interface KanbanBoardProps {
     boardData: Board & {
@@ -11,6 +12,7 @@ interface KanbanBoardProps {
 }
 const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
     const { title, columns } = boardData;
+
     return (
         <>
             <h1 className="text-2xl font-semibold uppercase">{title}</h1>
@@ -21,6 +23,7 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
                     <Column key={column.id} column={column} />
                 ))}
             </div>
+            <CreateTaskModalButton />
         </>
     );
 };

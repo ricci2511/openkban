@@ -1,4 +1,4 @@
-import AuthLayout from '@components/layouts/auth-layout';
+import SignInLayout from '@components/layouts/signin-layout';
 import { signIn, getProviders, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
@@ -63,7 +63,7 @@ const SignIn = ({ providers }: AuthProviders) => {
     const providerButtons = getProviderButtons(providers);
 
     return (
-        <AuthLayout>
+        <SignInLayout>
             <article className="card m-4 mx-auto mb-8 max-w-lg items-center bg-base-200 shadow-2xl">
                 <div className="card-body">
                     <h2 className="card-title mb-3">
@@ -106,7 +106,7 @@ const SignIn = ({ providers }: AuthProviders) => {
                     )}
                 </div>
             </article>
-        </AuthLayout>
+        </SignInLayout>
     );
 };
 

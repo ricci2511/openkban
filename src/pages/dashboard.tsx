@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/dashboard/board-item';
-import DashboardLayout from '@components/layouts/dashboard-layout';
 import useGetBoards from '@hooks/use-get-boards';
+import MainLayout from '@components/layouts/main-layout';
+import CreateBoardModalButton from '@components/dashboard/create-board-modal-button';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -17,7 +18,7 @@ const Dashboard = () => {
         boards.map((board) => <BoardItem key={board.id} board={board} />);
 
     return (
-        <DashboardLayout>
+        <MainLayout>
             <>
                 <h1 className="mb-8 text-xl font-semibold">
                     {session && session.user
@@ -31,8 +32,9 @@ const Dashboard = () => {
                         {boardItems}
                     </ul>
                 )}
+                <CreateBoardModalButton />
             </>
-        </DashboardLayout>
+        </MainLayout>
     );
 };
 

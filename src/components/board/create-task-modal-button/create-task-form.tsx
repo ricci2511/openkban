@@ -8,8 +8,6 @@ import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import { useRouter } from 'next/router';
 
-interface CreateTaskFormProps extends Pick<ModalType, 'toggleModal'> {}
-
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const {
         register,

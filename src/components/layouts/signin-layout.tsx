@@ -1,12 +1,8 @@
 import Header from '@components/ui/header';
 import Head from 'next/head';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
-type AuthLayoutProps = {
-    children: JSX.Element;
-};
-
-const AuthLayout = ({ children }: AuthLayoutProps) => {
+const SignInLayout = ({ children }: PropsWithChildren) => {
     return (
         <>
             <Head>
@@ -23,4 +19,4 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
     );
 };
 
-export default AuthLayout;
+export default SignInLayout;
