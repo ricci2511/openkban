@@ -3,7 +3,14 @@ import Header from '@components/ui/header';
 import Sidebar from '@components/ui/sidebar';
 import React, { PropsWithChildren } from 'react';
 
-const MainLayout = ({ children }: PropsWithChildren) => {
+interface MainLayoutProps extends PropsWithChildren {
+    responsive?: boolean;
+}
+
+const MainLayout = ({ children, responsive = false }: MainLayoutProps) => {
+    const nonResponsiveMain = 'relative w-full p-4 sm:p-6 lg:p-8';
+    const responsiveMain = `container mx-auto ${nonResponsiveMain}`;
+
     return (
         <Auth>
             <Header withDrawerBtn />
@@ -15,7 +22,11 @@ const MainLayout = ({ children }: PropsWithChildren) => {
                     className="drawer-toggle"
                 />
                 <div className="drawer-content flex flex-col">
-                    <main className="container relative mx-auto p-4 sm:p-6 lg:p-8">
+                    <main
+                        className={`${
+                            responsive ? responsiveMain : nonResponsiveMain
+                        }`}
+                    >
                         {children}
                     </main>
                 </div>

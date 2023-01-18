@@ -8,7 +8,7 @@ const CreateTaskModalButton = () => {
     return (
         <>
             <div
-                className="tooltip tooltip-left tooltip-info absolute top-4 right-4 md:top-6 md:right-6"
+                className="tooltip tooltip-right tooltip-info"
                 data-tip="Add a new task"
             >
                 <button

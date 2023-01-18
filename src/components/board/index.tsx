@@ -15,15 +15,17 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
 
     return (
         <>
-            <h1 className="text-2xl font-semibold uppercase">{title}</h1>
-            <div
-                className={`grid grid-cols-${columns.length} mt-10 grid-flow-col items-start gap-6`}
-            >
-                {columns.map((column) => (
-                    <Column key={column.id} column={column} />
-                ))}
-            </div>
-            <CreateTaskModalButton />
+            <section className="fixed flex w-full items-center gap-x-6">
+                <h1 className="text-2xl font-semibold uppercase">{title}</h1>
+                <CreateTaskModalButton />
+            </section>
+            <section className="mt-20">
+                <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
+                    {columns.map((column) => (
+                        <Column key={column.id} column={column} />
+                    ))}
+                </ul>
+            </section>
         </>
     );
 };

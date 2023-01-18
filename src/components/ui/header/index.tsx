@@ -9,7 +9,7 @@ const Header = ({ withDrawerBtn = false }: { withDrawerBtn?: boolean }) => {
                 <div className="flex-none">
                     <label
                         htmlFor="my-drawer-2"
-                        className="btn-ghost drawer-button btn lg:hidden"
+                        className="drawer-button btn-ghost btn lg:hidden"
                         aria-label="open sidebar menu"
                     >
                         <CgMenuRightAlt size={22} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSession } from 'next-auth/react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import BoardItem from '@components/dashboard/board-item';
@@ -18,7 +18,7 @@ const Dashboard = () => {
         boards.map((board) => <BoardItem key={board.id} board={board} />);
 
     return (
-        <MainLayout>
+        <MainLayout responsive>
             <>
                 <h1 className="mb-8 text-xl font-semibold">
                     {session && session.user
