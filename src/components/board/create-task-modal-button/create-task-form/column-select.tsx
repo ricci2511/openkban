@@ -20,13 +20,14 @@ const ColumnSelect = ({ columns }: ColumnSelectProps) => {
     const selectError = errors.columnId;
 
     return (
-        <div>
-            <label className="label">
+        <span>
+            <label htmlFor="column" className="label">
                 <span className="label-text">
                     Pick the column you want to add the task to
                 </span>
             </label>
             <select
+                id="column"
                 className={cx(
                     'select-bordered select w-full max-w-xs',
                     selectError && 'select-error'
@@ -46,7 +47,7 @@ const ColumnSelect = ({ columns }: ColumnSelectProps) => {
             {selectError && (
                 <p className="mt-2 text-sm text-error">{selectError.message}</p>
             )}
-        </div>
+        </span>
     );
 };
 

@@ -7,14 +7,12 @@ import { useFormContext } from 'react-hook-form';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import { useRouter } from 'next/router';
+import TaskDateInputs from './task-date-inputs';
+import TaskTitleInput from './task-title-input';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useFormContext<BoardTaskCreation>();
+    const { handleSubmit, reset, getValues } =
+        useFormContext<BoardTaskCreation>();
 
     // get cached columns data with board id from current route
     const boardId = useRouter().query.bid as string;
@@ -31,32 +29,15 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
         onCreateTaskSuccess
     );
 
-    const onSubmit = handleSubmit(({ title, columnId }) => {
-        createTask({ title, id: columnId });
+    const onSubmit = handleSubmit(({ title, columnId, startDate, dueDate }) => {
+        createTask({ title, columnId, startDate, dueDate });
     });
-
-    const titleError = errors.title;
 
     return (
         <form className="form-control mt-2 w-full gap-2" onSubmit={onSubmit}>
-            <label className="label">
-                <span className="label-text" aria-required>
-                    Task title
-                </span>
-            </label>
-            <input
-                type="text"
-                placeholder="title"
-                className={cx(
-                    'input-bordered input w-full',
-                    titleError && 'input-error'
-                )}
-                {...register('title', { required: true })}
-            />
-            {titleError && (
-                <p className="mt-2 text-sm text-error">{titleError.message}</p>
-            )}
+            <TaskTitleInput />
             <ColumnSelect columns={columns} />
+            <TaskDateInputs />
             <div className="modal-action">
                 <button
                     type="submit"

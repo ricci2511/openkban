@@ -27,6 +27,22 @@ export const boardTaskCreationSchema = z.object({
         .string()
         .min(1, 'The task title cannot be empty')
         .max(35, 'The title cannot contain more than 35 characters'),
+    startDate: z
+        .date({
+            required_error: 'A start date must be specified',
+            invalid_type_error: 'The start date must be a valid date',
+        })
+        .min(
+            // current day is the minimum start date
+            new Date(new Date().toLocaleDateString('en-US')),
+            'The start date cannot be in the past'
+        ),
+    dueDate: z
+        .date({
+            required_error: 'A due date must be specified',
+            invalid_type_error: 'The due date must be a valid date',
+        })
+        .min(new Date(), 'The due date must be in the future'),
 });
 export type BoardTaskCreation = z.infer<typeof boardTaskCreationSchema>;
 
