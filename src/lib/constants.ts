@@ -4,3 +4,13 @@ export const defaultBoardColumnsTitles = [
     'Testing',
     'Done',
 ];
+
+export const colors = [
+    'primary',
+    'secondary',
+    'accent',
+    'success',
+    'error',
+    'warning',
+    'info',
+];

@@ -2,6 +2,8 @@ import { t } from '@server/trpc';
 import { z } from 'zod';
 import { authedProcedure } from './auth-router';
 import { boardCeationSchema } from '@lib/schemas/board-schemas';
+import { randomNoRepeats } from '@lib/helpers';
+import { colors } from '@lib/constants';
 
 export const boardRouter = t.router({
     getAll: authedProcedure.query(async ({ ctx }) => {
@@ -36,6 +38,7 @@ export const boardRouter = t.router({
     create: authedProcedure
         .input(boardCeationSchema)
         .mutation(async ({ ctx, input }) => {
+            const randomColor = randomNoRepeats(colors);
             const createBoard = await ctx.prisma.board.create({
                 data: {
                     title: input.title,
@@ -44,6 +47,7 @@ export const boardRouter = t.router({
                     columns: {
                         create: input.columnTitles.map((title) => ({
                             title: title,
+                            color: randomColor(),
                         })),
                     },
                 },

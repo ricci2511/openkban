@@ -12,7 +12,6 @@ interface KanbanBoardProps {
 }
 const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
     const { title, columns } = boardData;
-
     return (
         <>
             <section className="fixed flex w-full items-center gap-x-6">

@@ -11,8 +11,7 @@ import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
-    const { handleSubmit, reset, getValues } =
-        useFormContext<BoardTaskCreation>();
+    const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
 
     // get cached columns data with board id from current route
     const boardId = useRouter().query.bid as string;
