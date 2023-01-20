@@ -13,4 +13,4 @@ export const colors = [
     'error',
     'warning',
     'info',
-];
+] as const;

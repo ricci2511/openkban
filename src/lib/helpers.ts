@@ -10,7 +10,9 @@ export const randomId = () => {
  * @param array
  * @returns a function that returns a random element from the array, without repetition
  */
-export const randomNoRepeats = <T>(array: T[]): (() => T) => {
+export const randomNoRepeats = <T>(
+    array: ReadonlyArray<T> | T[]
+): (() => T) => {
     var copy = array.slice(0);
     return () => {
         if (copy.length < 1) {
