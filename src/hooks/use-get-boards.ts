@@ -2,6 +2,10 @@ import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
 import { Board } from '@prisma/client';
 
+/**
+ * @param sortBy object with prop and desc boolean to sort the boards by
+ * @returns sorted boards, isLoading state, error state
+ */
 const useGetBoards = (sortBy?: SortableBoard) => {
     const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery();
 

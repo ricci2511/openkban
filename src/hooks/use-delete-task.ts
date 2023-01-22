@@ -1,5 +1,9 @@
 import { trpc } from '@lib/trpc';
 
+/**
+ * @param boardId id of the board to delete the task from
+ * @returns deleteTask function, isLoading state, error state
+ */
 const useDeleteTask = (boardId: string) => {
     const utils = trpc.useContext().boardRouter.getById;
     const {

@@ -1,6 +1,8 @@
 import { trpc } from '@lib/trpc';
-import React from 'react';
 
+/**
+ * @returns deleteTask function, isLoading state, error state
+ */
 const useDeleteBoard = () => {
     const utils = trpc.useContext().boardRouter.getAll;
     const { mutate: deleteBoard, error } = trpc.boardRouter.delete.useMutation({

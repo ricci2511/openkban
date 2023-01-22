@@ -14,6 +14,9 @@ const updateBoardProps = (
     });
 };
 
+/**
+ * @returns updateBoard function, error state
+ */
 const useUpdateBoard = () => {
     const utils = trpc.useContext().boardRouter.getAll;
     const { mutate: updateBoard, error } = trpc.boardRouter.update.useMutation({

@@ -1,5 +1,9 @@
 import { trpc } from '@lib/trpc';
 
+/**
+ * @param successCb callback to run after successful board creation
+ * @returns createBoard function, isLoading state, error state
+ */
 const useCreateBoard = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
     const {
