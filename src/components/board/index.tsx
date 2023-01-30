@@ -1,8 +1,8 @@
-import { Board, BoardColumn, BoardTask } from '@prisma/client';
 import React from 'react';
 import Column from './column';
 import CreateTaskModalButton from './create-task-modal-button';
 import { BoardData } from 'types/board-types';
+import Kanban from './kanban';
 
 interface KanbanBoardProps {
     boardData: BoardData;
@@ -16,11 +16,7 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
                 <CreateTaskModalButton />
             </section>
             <section className="mt-20">
-                <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
-                    {columns.map((column) => (
-                        <Column key={column.id} column={column} />
-                    ))}
-                </ul>
+                <Kanban columns={columns} />
             </section>
         </>
     );
