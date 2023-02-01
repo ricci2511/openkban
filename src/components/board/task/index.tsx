@@ -4,7 +4,6 @@ import useDeleteTask from '@hooks/use-delete-task';
 import { BoardTask } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
 import React from 'react';
 import { HiOutlineDotsHorizontal, HiTrash } from 'react-icons/hi';
 import { BoardColumnsColors } from 'types/board-types';
@@ -17,9 +16,7 @@ export interface TaskProps {
 }
 const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
-    const { deleteTask, isLoading, error } = useDeleteTask(
-        useRouter().query.bid as string
-    );
+    const { deleteTask, isLoading, error } = useDeleteTask();
 
     const colorVariants = {
         primary: 'border-l-primary',

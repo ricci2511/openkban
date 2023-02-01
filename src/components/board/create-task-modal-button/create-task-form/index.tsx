@@ -1,32 +1,23 @@
 import { ModalType } from '@components/ui/modal';
 import useCreateTask from '@hooks/use-create-task';
-import { trpc } from '@lib/trpc';
 import React from 'react';
 import ColumnSelect from './column-select';
 import { useFormContext } from 'react-hook-form';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
-import { useRouter } from 'next/router';
 import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
+import useKanbanStore from 'store/kanban-store';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
-
-    // get cached columns data with board id from current route
-    const boardId = useRouter().query.bid as string;
-    const columns = trpc
-        .useContext()
-        .boardRouter.getById.getData({ id: boardId })?.columns;
+    const columns = Object.values(useKanbanStore((state) => state.columnTasks));
 
     const onCreateTaskSuccess = () => {
         toggleModal();
         reset();
     };
-    const { createTask, error, isLoading } = useCreateTask(
-        boardId,
-        onCreateTaskSuccess
-    );
+    const { createTask, error, isLoading } = useCreateTask(onCreateTaskSuccess);
 
     const onSubmit = handleSubmit(({ title, columnId, startDate, dueDate }) => {
         createTask({ title, columnId, startDate, dueDate });
