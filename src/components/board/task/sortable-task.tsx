@@ -2,6 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import Task, { TaskProps } from '.';
+import { animateLayoutChanges } from '@lib/helpers';
 
 const SortableTask = ({ task, color }: TaskProps) => {
     const {
@@ -11,7 +12,7 @@ const SortableTask = ({ task, color }: TaskProps) => {
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: task.id });
+    } = useSortable({ animateLayoutChanges, id: task.id });
 
     const style = {
         cursor: isDragging ? 'grabbing' : 'default',

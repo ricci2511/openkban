@@ -1,10 +1,11 @@
 import {
     DndContext,
     DragEndEvent,
+    DragOverlay,
     KeyboardSensor,
-    MeasuringStrategy,
     PointerSensor,
-    closestCenter,
+    UniqueIdentifier,
+    closestCorners,
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
@@ -13,9 +14,11 @@ import {
     arrayMove,
     sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CustomColumn } from '../custom-layout-section';
 import ColumnItem from './column-item';
+import { createPortal } from 'react-dom';
+import SortableColumnItem from './column-item/sortable-column';
 
 interface ColumnItemsContainerProps {
     columns: CustomColumn[];
@@ -29,6 +32,7 @@ const ColumnItemsContainer = ({
     handleColumnDeletion,
 }: ColumnItemsContainerProps) => {
     const columnIds = useMemo(() => columns.map((col) => col.id), [columns]);
+    const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -48,27 +52,55 @@ const ColumnItemsContainer = ({
                 return arrayMove(columns, oldIndex, newIndex);
             });
         }
+
+        setActiveId(null);
+    };
+
+    const renderColumnItem = () => {
+        if (!activeId) return null;
+        let position = 1;
+        const column = columns.find((col, i) => {
+            if (col.id === activeId) {
+                position = i + 1;
+                return true;
+            }
+        });
+        if (!column) return null;
+        return (
+            <ColumnItem
+                column={column}
+                position={position}
+                handleColumnDeletion={handleColumnDeletion}
+            />
+        );
     };
 
     return (
         <DndContext
-            collisionDetection={closestCenter}
+            collisionDetection={closestCorners}
+            onDragStart={(e) => setActiveId(e.active.id)}
+            onDragCancel={() => setActiveId(null)}
             onDragEnd={handleDragEnd}
             sensors={sensors}
-            measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
         >
             <SortableContext items={columnIds}>
-                {columns.map(({ id, title }, i) => (
-                    <ColumnItem
-                        key={id}
-                        id={id}
+                {columns.map((column, i) => (
+                    <SortableColumnItem
+                        key={column.id}
+                        column={column}
+                        position={i + 1}
                         handleColumnDeletion={handleColumnDeletion}
-                    >
-                        <strong>{i + 1}. </strong>
-                        {title}
-                    </ColumnItem>
+                    />
                 ))}
             </SortableContext>
+            {typeof window !== 'undefined'
+                ? createPortal(
+                      <DragOverlay>
+                          {activeId ? renderColumnItem() : null}
+                      </DragOverlay>,
+                      document.body
+                  )
+                : null}
         </DndContext>
     );
 };

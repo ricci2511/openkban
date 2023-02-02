@@ -1,3 +1,25 @@
+import {
+    AnimateLayoutChanges,
+    defaultAnimateLayoutChanges,
+} from '@dnd-kit/sortable';
+
+/**
+ * a function that determines whether to animate layout changes when interacting with sortable items (dnd-kit)
+ * @param args
+ * @returns boolean indicating whether to animate layout changes
+ */
+export const animateLayoutChanges = (
+    args: Parameters<AnimateLayoutChanges>[0]
+) => {
+    const { isSorting, wasDragging } = args;
+
+    if (isSorting || wasDragging) {
+        return defaultAnimateLayoutChanges(args);
+    }
+
+    return true;
+};
+
 /**
  * crypto.randomUUID() would be cleaner, but this approach is more compatible with older browsers
  * @returns a random id for client side use
