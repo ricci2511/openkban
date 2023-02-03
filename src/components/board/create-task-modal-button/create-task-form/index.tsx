@@ -7,11 +7,9 @@ import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
-import useKanbanStore from 'store/kanban-store';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
-    const columns = Object.values(useKanbanStore((state) => state.columnTasks));
 
     const onCreateTaskSuccess = () => {
         toggleModal();
@@ -26,7 +24,7 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     return (
         <form className="form-control mt-2 w-full gap-2" onSubmit={onSubmit}>
             <TaskTitleInput />
-            <ColumnSelect columns={columns} />
+            <ColumnSelect />
             <TaskDateInputs />
             <div className="modal-action">
                 <button

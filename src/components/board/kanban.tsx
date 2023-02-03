@@ -36,8 +36,10 @@ const Kanban = () => {
     );
 
     useEffect(() => {
-        setContainers(Object.keys(columns));
-    }, [columns]);
+        if (!containers) {
+            setContainers(Object.keys(columns));
+        }
+    }, [columns, containers]);
 
     const findContainer = (id: UniqueIdentifier) => {
         if (id in columns) {

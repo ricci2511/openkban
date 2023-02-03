@@ -1,23 +1,16 @@
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
-import { BoardColumn, BoardTask } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
+import useKanbanStore from 'store/kanban-store';
 
-interface ColumnSelectProps {
-    columns:
-        | (BoardColumn & {
-              tasks: BoardTask[];
-          })[]
-        | undefined;
-}
-
-const ColumnSelect = ({ columns }: ColumnSelectProps) => {
+const ColumnSelect = () => {
     const {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
     const selectError = errors.columnId;
+    const columns = Object.values(useKanbanStore((state) => state.columnTasks));
 
     return (
         <span>
@@ -38,7 +31,7 @@ const ColumnSelect = ({ columns }: ColumnSelectProps) => {
                 <option disabled value="default">
                     Which column?
                 </option>
-                {columns?.map(({ id, title }) => (
+                {columns.map(({ id, title }) => (
                     <option key={id} value={id}>
                         {title}
                     </option>
