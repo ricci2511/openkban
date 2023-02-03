@@ -4,7 +4,6 @@ import {
     DndContext,
     DragEndEvent,
     DragOverEvent,
-    DragOverlay,
     DragStartEvent,
     KeyboardSensor,
     PointerSensor,
@@ -14,9 +13,9 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { createPortal } from 'react-dom';
 import Task from './task';
 import useKanbanStore, { ColumnTasks } from 'store/kanban-store';
+import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
 
 const Kanban = () => {
     const columns = useKanbanStore((state) => state.columnTasks);
@@ -210,14 +209,7 @@ const Kanban = () => {
                         <Column key={id} column={columns[id]} />
                     ))}
             </ul>
-            {typeof window !== 'undefined'
-                ? createPortal(
-                      <DragOverlay>
-                          {activeId ? renderTask() : null}
-                      </DragOverlay>,
-                      document.body
-                  )
-                : null}
+            <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
         </DndContext>
     );
 };

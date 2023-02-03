@@ -1,7 +1,6 @@
 import {
     DndContext,
     DragEndEvent,
-    DragOverlay,
     KeyboardSensor,
     PointerSensor,
     UniqueIdentifier,
@@ -17,8 +16,8 @@ import {
 import React, { useMemo, useState } from 'react';
 import { CustomColumn } from '../custom-layout-section';
 import ColumnItem from './column-item';
-import { createPortal } from 'react-dom';
 import SortableColumnItem from './column-item/sortable-column';
+import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
 
 interface ColumnItemsContainerProps {
     columns: CustomColumn[];
@@ -93,14 +92,10 @@ const ColumnItemsContainer = ({
                     />
                 ))}
             </SortableContext>
-            {typeof window !== 'undefined'
-                ? createPortal(
-                      <DragOverlay>
-                          {activeId ? renderColumnItem() : null}
-                      </DragOverlay>,
-                      document.body
-                  )
-                : null}
+            <DndDragOverlay
+                activeId={activeId}
+                renderMethod={renderColumnItem}
+            />
         </DndContext>
     );
 };
