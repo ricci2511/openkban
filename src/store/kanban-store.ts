@@ -1,3 +1,4 @@
+import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
 import { BoardTask } from '@prisma/client';
 import { BoardColumnWithTasks } from 'types/board-types';
 import { create } from 'zustand';
@@ -10,6 +11,8 @@ const initColumnTasks = (columns: BoardColumnWithTasks[]) => {
     return columns.reduce(
         (acc: { [columnId: string]: BoardColumnWithTasks }, cur) => {
             acc[cur.id] = cur;
+            // sort tasks by rank
+            acc[cur.id].tasks.sort(sortByLexoRankAsc);
             return acc;
         },
         {}

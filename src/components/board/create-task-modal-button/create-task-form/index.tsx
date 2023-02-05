@@ -7,9 +7,12 @@ import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
+import useKanbanStore from 'store/kanban-store';
+import { LexoRank } from 'lexorank';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
+    const columns = useKanbanStore((state) => state.columnTasks);
 
     const onCreateTaskSuccess = () => {
         toggleModal();
@@ -17,8 +20,20 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     };
     const { createTask, error, isLoading } = useCreateTask(onCreateTaskSuccess);
 
+    const generateRank = (columnId: string) => {
+        const columnTasks = columns[columnId].tasks;
+        const tasksLength = columnTasks.length;
+        if (!tasksLength) {
+            return LexoRank.min().toString();
+        } else {
+            const lastTask = columnTasks[tasksLength - 1];
+            return LexoRank.parse(lastTask.rank).genNext().toString();
+        }
+    };
+
     const onSubmit = handleSubmit(({ title, columnId, startDate, dueDate }) => {
-        createTask({ title, columnId, startDate, dueDate });
+        const rank = generateRank(columnId);
+        createTask({ title, columnId, startDate, dueDate, rank });
     });
 
     return (

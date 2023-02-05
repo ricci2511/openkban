@@ -16,6 +16,11 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './task';
 import useKanbanStore, { ColumnTasks } from 'store/kanban-store';
 import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
+import { trpc } from '@lib/trpc';
+import {
+    createSortablePayloadByIndex,
+    getBetweenRankAsc,
+} from '@lib/lexorank-helpers';
 
 const Kanban = () => {
     const columns = useKanbanStore((state) => state.columnTasks);
@@ -23,6 +28,7 @@ const Kanban = () => {
     const [containers, setContainers] = useState<UniqueIdentifier[] | null>(
         null
     );
+    // id of the currently dragged task
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -33,6 +39,13 @@ const Kanban = () => {
     const [clonedColumns, setClonedColumns] = useState<ColumnTasks | null>(
         null
     );
+    // boolean to check if the dragged task is currently over a different column
+    const [draggedOver, setDraggedOver] = useState(false);
+
+    const { mutate: updateRank } =
+        trpc.boardTaskRouter.updateRank.useMutation();
+    const { mutate: updateColumnId } =
+        trpc.boardTaskRouter.updateColumnId.useMutation();
 
     useEffect(() => {
         if (!containers) {
@@ -64,6 +77,7 @@ const Kanban = () => {
 
         setActiveId(null);
         setClonedColumns(null);
+        setDraggedOver(false);
     };
 
     const onDragOver = ({ active, over }: DragOverEvent) => {
@@ -108,6 +122,7 @@ const Kanban = () => {
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
         }
 
+        setDraggedOver(true);
         setColumns({
             ...columns,
             [activeContainer]: {
@@ -165,22 +180,46 @@ const Kanban = () => {
                 (task) => task.id === overId
             );
 
-            if (activeIndex !== overIndex) {
+            const overTasks = columns[overContainer].tasks;
+            // find previous, current and next task of the dragged task
+            const sortablePayload = createSortablePayloadByIndex(
+                overTasks,
+                activeIndex,
+                overIndex
+            );
+            console.log(sortablePayload);
+
+            if (draggedOver) {
+                updateColumnId({
+                    id: activeId as string,
+                    columnId: overContainer as string,
+                });
+            }
+
+            // prevent rank update when the task is dropped in the same position
+            if (activeIndex !== overIndex || draggedOver) {
+                // calculate new rank based on the rank of the found tasks
+                const newRank = getBetweenRankAsc(sortablePayload).toString();
+                const newTasks = [...overTasks];
+                // replace the rank of the dragged task with the new rank
+                newTasks[activeIndex] = {
+                    ...newTasks[activeIndex],
+                    rank: newRank,
+                };
+
+                updateRank({ id: activeId as string, rank: newRank });
                 setColumns({
                     ...columns,
                     [overContainer]: {
                         ...columns[overContainer],
-                        tasks: arrayMove(
-                            columns[overContainer].tasks,
-                            activeIndex,
-                            overIndex
-                        ),
+                        tasks: arrayMove(newTasks, activeIndex, overIndex),
                     },
                 });
             }
         }
 
         setActiveId(null);
+        setDraggedOver(false);
     };
 
     const renderTask = () => {
