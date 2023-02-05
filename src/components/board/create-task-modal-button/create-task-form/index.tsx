@@ -24,7 +24,7 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
         const columnTasks = columns[columnId].tasks;
         const tasksLength = columnTasks.length;
         if (!tasksLength) {
-            return LexoRank.min().toString();
+            return LexoRank.middle().toString();
         } else {
             const lastTask = columnTasks[tasksLength - 1];
             return LexoRank.parse(lastTask.rank).genNext().toString();

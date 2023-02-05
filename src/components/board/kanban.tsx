@@ -187,7 +187,6 @@ const Kanban = () => {
                 activeIndex,
                 overIndex
             );
-            console.log(sortablePayload);
 
             if (draggedOver) {
                 updateColumnId({
