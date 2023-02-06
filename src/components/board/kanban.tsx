@@ -39,8 +39,6 @@ const Kanban = () => {
     const [clonedColumns, setClonedColumns] = useState<ColumnTasks | null>(
         null
     );
-    // boolean to check if the dragged task is currently over a different column
-    const [draggedOver, setDraggedOver] = useState(false);
 
     const { updateTask, error } = useUpdateTask();
 
@@ -74,7 +72,6 @@ const Kanban = () => {
 
         setActiveId(null);
         setClonedColumns(null);
-        setDraggedOver(false);
     };
 
     const onDragOver = ({ active, over }: DragOverEvent) => {
@@ -118,7 +115,6 @@ const Kanban = () => {
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
         }
 
-        setDraggedOver(true);
         setColumns({
             ...columns,
             [activeContainer]: {
@@ -176,6 +172,13 @@ const Kanban = () => {
                 (task) => task.id === overId
             );
 
+            // checks if the task is dropped on a different column
+            const draggedOver = clonedColumns
+                ? !clonedColumns[activeContainer].tasks.find(
+                      (task) => task.id === activeId
+                  )
+                : false;
+
             // prevent task update when it is dropped in the same position
             if (activeIndex !== overIndex || draggedOver) {
                 const overTasks = columns[overContainer].tasks;
@@ -213,7 +216,6 @@ const Kanban = () => {
         }
 
         setActiveId(null);
-        setDraggedOver(false);
     };
 
     const renderTask = () => {
