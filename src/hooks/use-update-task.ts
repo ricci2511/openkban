@@ -8,23 +8,13 @@ const useUpdateTask = () => {
     const { mutate: updateTask, error } =
         trpc.boardTaskRouter.update.useMutation({
             onSuccess: (task) => {
-                // also update board in cache to prevent refetching when navigating back to it
-                const column = columns[task.columnId];
-                utils.setData({ id: column.boardId }, (board) => {
+                const { boardId } = columns[task.columnId];
+                // update cached columns data with columns from the store which is up to date
+                utils.setData({ id: boardId }, (board) => {
                     if (!board) return;
                     return {
                         ...board,
-                        columns: board.columns.map((col) => {
-                            if (col.id === column.id) {
-                                return {
-                                    ...col,
-                                    tasks: col.tasks.map((t) =>
-                                        t.id === task.id ? task : t
-                                    ),
-                                };
-                            }
-                            return col;
-                        }),
+                        columns: Object.values(columns),
                     };
                 });
             },
