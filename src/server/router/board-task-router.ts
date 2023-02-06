@@ -18,41 +18,31 @@ export const boardTaskRouter = t.router({
             });
             return createTask;
         }),
-    updateRank: authedProcedure
+    update: authedProcedure
         .input(
             z.object({
                 id: z.string().cuid(),
-                rank: z.string(),
+                rank: z.string().optional(),
+                columnId: z.string().cuid().optional(),
+                title: z.string().optional(),
+                startDate: z.date().optional(),
+                dueDate: z.date().optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
-            const updateTaskRank = await ctx.prisma.boardTask.update({
+            const updateTask = await ctx.prisma.boardTask.update({
                 where: {
                     id: input.id,
                 },
                 data: {
                     rank: input.rank,
-                },
-            });
-            return updateTaskRank;
-        }),
-    updateColumnId: authedProcedure
-        .input(
-            z.object({
-                id: z.string().cuid(),
-                columnId: z.string().cuid(),
-            })
-        )
-        .mutation(async ({ ctx, input }) => {
-            const updateTaskColumnId = await ctx.prisma.boardTask.update({
-                where: {
-                    id: input.id,
-                },
-                data: {
                     columnId: input.columnId,
+                    title: input.title,
+                    startDate: input.startDate,
+                    dueDate: input.dueDate,
                 },
             });
-            return updateTaskColumnId;
+            return updateTask;
         }),
     delete: authedProcedure
         .input(

@@ -16,11 +16,11 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './task';
 import useKanbanStore, { ColumnTasks } from 'store/kanban-store';
 import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
-import { trpc } from '@lib/trpc';
 import {
     createSortablePayloadByIndex,
     getBetweenRankAsc,
 } from '@lib/lexorank-helpers';
+import useUpdateTask from '@hooks/use-update-task';
 
 const Kanban = () => {
     const columns = useKanbanStore((state) => state.columnTasks);
@@ -42,10 +42,7 @@ const Kanban = () => {
     // boolean to check if the dragged task is currently over a different column
     const [draggedOver, setDraggedOver] = useState(false);
 
-    const { mutate: updateRank } =
-        trpc.boardTaskRouter.updateRank.useMutation();
-    const { mutate: updateColumnId } =
-        trpc.boardTaskRouter.updateColumnId.useMutation();
+    const { updateTask, error } = useUpdateTask();
 
     useEffect(() => {
         if (!containers) {
@@ -98,7 +95,6 @@ const Kanban = () => {
         const activeItems = columns[activeContainer].tasks;
         const overItems = columns[overContainer].tasks;
 
-        // Find the indexes for the items
         const activeIndex = activeItems.findIndex(
             (task) => task.id === active.id
         );
@@ -106,7 +102,7 @@ const Kanban = () => {
 
         let newIndex;
         if (overId! in columns) {
-            // We're at the root droppable of a container
+            // we're at the root droppable of a container
             newIndex = overItems.length + 1;
         } else {
             const isBelowLastItem =
@@ -180,23 +176,15 @@ const Kanban = () => {
                 (task) => task.id === overId
             );
 
-            const overTasks = columns[overContainer].tasks;
-            // find previous, current and next task of the dragged task
-            const sortablePayload = createSortablePayloadByIndex(
-                overTasks,
-                activeIndex,
-                overIndex
-            );
-
-            if (draggedOver) {
-                updateColumnId({
-                    id: activeId as string,
-                    columnId: overContainer as string,
-                });
-            }
-
-            // prevent rank update when the task is dropped in the same position
+            // prevent task update when it is dropped in the same position
             if (activeIndex !== overIndex || draggedOver) {
+                const overTasks = columns[overContainer].tasks;
+                // find previous, current and next task of the dragged task
+                const sortablePayload = createSortablePayloadByIndex(
+                    overTasks,
+                    activeIndex,
+                    overIndex
+                );
                 // calculate new rank based on the rank of the found tasks
                 const newRank = getBetweenRankAsc(sortablePayload).toString();
                 const newTasks = [...overTasks];
@@ -206,7 +194,14 @@ const Kanban = () => {
                     rank: newRank,
                 };
 
-                updateRank({ id: activeId as string, rank: newRank });
+                // only update columnId if the task is dropped in a different column
+                updateTask({
+                    id: activeId as string,
+                    rank: newRank,
+                    columnId: draggedOver
+                        ? (overContainer as string)
+                        : undefined,
+                });
                 setColumns({
                     ...columns,
                     [overContainer]: {
