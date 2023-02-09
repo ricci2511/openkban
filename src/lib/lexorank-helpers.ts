@@ -51,6 +51,16 @@ export const createSortablePayloadByIndex = <T extends HasId & HasRank>(
             entity: entity,
             nextEntity: undefined,
         };
+    } else if (oldIndex === newIndex) {
+        // case where the item is moved to the same index but the items array is different
+        // e.g. when a task is moved from one column to another but the index is the same
+        const prevEntity = items[newIndex - 1];
+        const nextEntity = items[newIndex + 1];
+        input = {
+            prevEntity: prevEntity,
+            entity: entity,
+            nextEntity: nextEntity,
+        };
     } else {
         const prevEntity = items[newIndex];
         const offset = oldIndex > newIndex ? -1 : 1;
