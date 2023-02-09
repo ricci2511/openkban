@@ -10,7 +10,7 @@ const ColumnSelect = () => {
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
     const selectError = errors.columnId;
-    const columns = Object.values(useKanbanStore((state) => state.columnTasks));
+    const columns = useKanbanStore((state) => state.columns);
 
     return (
         <span>

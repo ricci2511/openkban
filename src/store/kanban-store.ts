@@ -1,63 +1,71 @@
 import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
-import { BoardTask } from '@prisma/client';
+import { BoardColumn, BoardTask } from '@prisma/client';
 import { BoardColumnWithTasks } from 'types/board-types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 export type ColumnTasks = {
-    [columnId: string]: BoardColumnWithTasks;
+    [columnId: string]: BoardTask[];
 };
 
 const initColumnTasks = (columns: BoardColumnWithTasks[]) => {
-    return columns.reduce(
-        (acc: { [columnId: string]: BoardColumnWithTasks }, cur) => {
-            acc[cur.id] = cur;
-            // sort tasks by rank
-            acc[cur.id].tasks.sort(sortByLexoRankAsc);
-            return acc;
-        },
-        {}
-    );
+    return columns.reduce((acc: { [columnId: string]: BoardTask[] }, cur) => {
+        // sort tasks by rank
+        acc[cur.id] = [...cur.tasks].sort(sortByLexoRankAsc);
+        return acc;
+    }, {});
+};
+
+const initColumns = (columns: BoardColumnWithTasks[]): BoardColumn[] => {
+    return columns.map((column) => {
+        const { tasks, ...columnWithoutTasks } = column;
+        return columnWithoutTasks;
+    });
 };
 
 type KanbanStore = {
-    columnTasks: ColumnTasks;
-    setColumnTasks: (columnTasks: ColumnTasks) => void;
-    initColumnTasks: (columns: BoardColumnWithTasks[]) => void;
-    addColumn: (column: BoardColumnWithTasks) => void;
-    updateColumnColor: (id: string, color: string) => void;
+    columns: BoardColumn[];
+    tasks: ColumnTasks;
+    init: (columns: BoardColumnWithTasks[]) => void;
+    addColumn: (column: BoardColumn) => void;
+    updateColor: (id: string, color: string) => void;
+    setTasks: (tasks: ColumnTasks) => void;
     addTask: (task: BoardTask) => void;
     deleteTask: (task: BoardTask) => void;
 };
 
 const useKanbanStore = create(
     immer<KanbanStore>((set) => ({
-        columnTasks: {},
-        setColumnTasks: (columnTasks: ColumnTasks) =>
+        columns: [],
+        tasks: {},
+        init: (columns: BoardColumnWithTasks[]) =>
             set((state) => {
-                state.columnTasks = columnTasks;
+                state.columns = initColumns(columns);
+                state.tasks = initColumnTasks(columns);
             }),
-        initColumnTasks: (columns: BoardColumnWithTasks[]) =>
+        setTasks: (tasks: ColumnTasks) =>
             set((state) => {
-                state.columnTasks = initColumnTasks(columns);
+                state.tasks = tasks;
             }),
-        addColumn: (column: BoardColumnWithTasks) =>
+        addColumn: (column: BoardColumn) =>
             set((state) => {
-                state.columnTasks[column.id] = column;
+                state.columns.push(column);
+                state.tasks[column.id] = [];
             }),
-        updateColumnColor: (id: string, color: string) =>
+        updateColor: (id: string, color: string) =>
             set((state) => {
-                state.columnTasks[id].color = color;
+                const index = state.columns.findIndex((c) => c.id === id);
+                state.columns[index].color = color;
             }),
         addTask: (task: BoardTask) =>
             set((state) => {
-                state.columnTasks[task.columnId].tasks.push(task);
+                state.tasks[task.columnId].push(task);
             }),
         deleteTask: (task: BoardTask) =>
             set((state) => {
-                state.columnTasks[task.columnId].tasks = state.columnTasks[
-                    task.columnId
-                ].tasks.filter((t) => t.id !== task.id);
+                state.tasks[task.columnId] = state.tasks[task.columnId].filter(
+                    (t) => t.id !== task.id
+                );
             }),
     }))
 );

@@ -1,4 +1,3 @@
-import { colors } from '@lib/constants';
 import { Board, BoardColumn, BoardTask } from '@prisma/client';
 
 export type BoardColumnsLayout = 'default' | 'custom';
@@ -7,10 +6,7 @@ export type BoardToUpdate = Partial<Omit<Board, 'userId' | 'createdAt'>> & {
     id: string;
 };
 
-export type BoardColumnsColors = typeof colors[number];
-
-export type BoardColumnWithTasks = Omit<BoardColumn, 'color'> & {
-    color: BoardColumnsColors;
+export type BoardColumnWithTasks = BoardColumn & {
     tasks: BoardTask[];
 };
 

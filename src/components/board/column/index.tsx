@@ -1,32 +1,39 @@
-import React, { useMemo, useState } from 'react';
-import { BoardColumnWithTasks } from 'types/board-types';
+import React, { useMemo } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import SortableTask from '../task/sortable-task';
+import PopoverPicker from '@components/ui/color-picker/popover-picker';
+import { trpc } from '@lib/trpc';
+import useKanbanStore from 'store/kanban-store';
+import { BoardColumn, BoardTask } from '@prisma/client';
 
 interface ColumnProps {
-    column: BoardColumnWithTasks;
+    column: BoardColumn;
+    tasks: BoardTask[];
 }
-const Column = ({ column }: ColumnProps) => {
-    const { id, title, tasks, color } = column;
+const Column = ({ column, tasks }: ColumnProps) => {
+    const { id, title, color } = column;
     const taskIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
     // each column is a droppable area
     const { setNodeRef } = useDroppable({
         id,
     });
 
-    // https://tailwindcss.com/docs/content-configuration#dynamic-class-names
-    const colorVariants = {
-        primary: 'border-primary text-primary',
-        secondary: 'border-secondary text-secondary',
-        accent: 'border-accent text-accent',
-        success: 'border-success text-success',
-        error: 'border-error text-error',
-        warning: 'border-warning text-warning',
-        info: 'border-info text-info',
+    const { mutate: updateColumn, error } =
+        trpc.boardColumnRouter.update.useMutation();
+
+    const updateColor = useKanbanStore((state) => state.updateColor);
+    const handleColorChange = (newColor: string) => {
+        if (color === newColor) return;
+        // update column color in kanban store and db
+        updateColor(id, newColor);
+        updateColumn({
+            id,
+            color: newColor,
+        });
     };
 
     return (
@@ -36,11 +43,18 @@ const Column = ({ column }: ColumnProps) => {
             strategy={verticalListSortingStrategy}
         >
             <li className="flex h-full flex-col last:pr-4 last:sm:pr-6 last:lg:pr-8">
-                <h2
-                    className={`mb-4 rounded-md border p-2 font-semibold uppercase ${colorVariants[color]}`}
+                <div
+                    className="mb-4 flex items-center justify-between rounded-md border p-2"
+                    style={{ borderColor: color }}
                 >
-                    {title}
-                </h2>
+                    <h2
+                        className="font-semibold uppercase"
+                        style={{ color: color }}
+                    >
+                        {title}
+                    </h2>
+                    <PopoverPicker color={color} onChange={handleColorChange} />
+                </div>
                 <ul
                     ref={setNodeRef}
                     className="grid grid-flow-row grid-rows-1 gap-2"

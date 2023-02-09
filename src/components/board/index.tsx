@@ -9,18 +9,16 @@ interface KanbanBoardProps {
 }
 const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
     const { id, title, columns } = boardData;
-    const initColumnTasks = useKanbanStore((state) => state.initColumnTasks);
-    const columnTasks = useKanbanStore((state) => state.columnTasks);
+    const cols = useKanbanStore((state) => state.columns);
+    const initKanbanStore = useKanbanStore((state) => state.init);
 
     useEffect(() => {
-        const keys = Object.keys(columnTasks);
-        const isDifferentBoard =
-            keys.length && columnTasks[keys[0]].boardId !== id;
+        const isDifferentBoard = cols.length && cols[0].boardId !== id;
         // only init store state when a different board is loaded or current store is empty
-        if (isDifferentBoard || !keys.length) {
-            initColumnTasks(columns);
+        if (isDifferentBoard || !cols.length) {
+            initKanbanStore(columns);
         }
-    }, [columnTasks, initColumnTasks, columns, id]);
+    }, [initKanbanStore, columns, cols, id]);
 
     return (
         <>

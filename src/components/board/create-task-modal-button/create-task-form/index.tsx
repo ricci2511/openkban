@@ -12,7 +12,7 @@ import { LexoRank } from 'lexorank';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
-    const columns = useKanbanStore((state) => state.columnTasks);
+    const columnTasks = useKanbanStore((state) => state.tasks);
 
     const onCreateTaskSuccess = () => {
         toggleModal();
@@ -21,12 +21,12 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { createTask, error, isLoading } = useCreateTask(onCreateTaskSuccess);
 
     const generateRank = (columnId: string) => {
-        const columnTasks = columns[columnId].tasks;
-        const tasksLength = columnTasks.length;
+        const tasks = columnTasks[columnId];
+        const tasksLength = tasks.length;
         if (!tasksLength) {
             return LexoRank.middle().toString();
         } else {
-            const lastTask = columnTasks[tasksLength - 1];
+            const lastTask = tasks[tasksLength - 1];
             return LexoRank.parse(lastTask.rank).genNext().toString();
         }
     };

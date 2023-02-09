@@ -6,11 +6,10 @@ import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import React from 'react';
 import { HiOutlineDotsHorizontal, HiTrash } from 'react-icons/hi';
-import { BoardColumnsColors } from 'types/board-types';
 
 export interface TaskProps {
     task: BoardTask;
-    color: BoardColumnsColors;
+    color: string;
     isDragging?: boolean;
     listeners?: SyntheticListenerMap | undefined;
 }
@@ -18,23 +17,13 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
     const { deleteTask, isLoading, error } = useDeleteTask();
 
-    const colorVariants = {
-        primary: 'border-l-primary',
-        secondary: 'border-l-secondary',
-        accent: 'border-l-accent',
-        success: 'border-l-success',
-        error: 'border-l-error',
-        warning: 'border-l-warning',
-        info: 'border-l-info',
-    };
     const taskClasses = cx(
         'flex flex-col bg-base-300 border-l-2',
-        colorVariants[color],
         isDragging ? 'opacity-50' : null
     );
 
     return (
-        <div className={taskClasses}>
+        <div className={taskClasses} style={{ borderLeftColor: color }}>
             <div
                 className="flex flex-1 cursor-grab flex-col space-y-4 p-3"
                 aria-roledescription="draggable"

@@ -20,14 +20,12 @@ import {
     createSortablePayloadByIndex,
     getBetweenRankAsc,
 } from '@lib/lexorank-helpers';
-import useUpdateTask from '@hooks/use-update-task';
+import { trpc } from '@lib/trpc';
 
 const Kanban = () => {
-    const columns = useKanbanStore((state) => state.columnTasks);
-    const setColumns = useKanbanStore((state) => state.setColumnTasks);
-    const [containers, setContainers] = useState<UniqueIdentifier[] | null>(
-        null
-    );
+    const tasks = useKanbanStore((state) => state.tasks);
+    const setTasks = useKanbanStore((state) => state.setTasks);
+    const columns = useKanbanStore((state) => state.columns);
     // id of the currently dragged task
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
     const sensors = useSensors(
@@ -36,47 +34,40 @@ const Kanban = () => {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
-    const [clonedColumns, setClonedColumns] = useState<ColumnTasks | null>(
-        null
-    );
+    const [clonedTasks, setClonedTasks] = useState<ColumnTasks | null>(null);
 
-    const { updateTask, error } = useUpdateTask();
-
-    useEffect(() => {
-        if (!containers) {
-            setContainers(Object.keys(columns));
-        }
-    }, [columns, containers]);
+    const { mutate: updateTask, error } =
+        trpc.boardTaskRouter.update.useMutation();
 
     const findContainer = (id: UniqueIdentifier) => {
-        if (id in columns) {
+        if (id in tasks) {
             return id;
         }
 
-        return Object.keys(columns).find((key) =>
-            columns[key].tasks.find((task) => task.id === id)
+        return Object.keys(tasks).find((key) =>
+            tasks[key].find((task) => task.id === id)
         );
     };
 
     const onDragStart = ({ active }: DragStartEvent) => {
         setActiveId(active.id);
-        setClonedColumns(columns);
+        setClonedTasks(tasks);
     };
 
     const onDragCancel = () => {
-        if (clonedColumns) {
+        if (clonedTasks) {
             // Reset items to their original state in case items have been
             // Dragged across containers
-            setColumns(clonedColumns);
+            setTasks(clonedTasks);
         }
 
         setActiveId(null);
-        setClonedColumns(null);
+        setClonedTasks(null);
     };
 
     const onDragOver = ({ active, over }: DragOverEvent) => {
         const overId = over?.id;
-        if (overId === null || active.id in columns) return;
+        if (overId === null || active.id in tasks) return;
 
         const activeContainer = findContainer(active.id);
         const overContainer = findContainer(overId!);
@@ -89,8 +80,8 @@ const Kanban = () => {
             return;
         }
 
-        const activeItems = columns[activeContainer].tasks;
-        const overItems = columns[overContainer].tasks;
+        const activeItems = tasks[activeContainer];
+        const overItems = tasks[overContainer];
 
         const activeIndex = activeItems.findIndex(
             (task) => task.id === active.id
@@ -98,7 +89,7 @@ const Kanban = () => {
         const overIndex = overItems.findIndex((task) => task.id === overId);
 
         let newIndex;
-        if (overId! in columns) {
+        if (overId! in tasks) {
             // we're at the root droppable of a container
             newIndex = overItems.length + 1;
         } else {
@@ -115,39 +106,23 @@ const Kanban = () => {
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
         }
 
-        setColumns({
-            ...columns,
-            [activeContainer]: {
-                ...columns[activeContainer],
-                tasks: columns[activeContainer].tasks.filter(
-                    (item) => item.id !== active.id
+        setTasks({
+            ...tasks,
+            [activeContainer]: tasks[activeContainer].filter(
+                (item) => item.id !== active.id
+            ),
+            [overContainer]: [
+                ...tasks[overContainer].slice(0, newIndex),
+                tasks[activeContainer][activeIndex],
+                ...tasks[overContainer].slice(
+                    newIndex,
+                    tasks[overContainer].length
                 ),
-            },
-            [overContainer]: {
-                ...columns[overContainer],
-                tasks: [
-                    ...columns[overContainer].tasks.slice(0, newIndex),
-                    columns[activeContainer].tasks[activeIndex],
-                    ...columns[overContainer].tasks.slice(
-                        newIndex,
-                        columns[overContainer].tasks.length
-                    ),
-                ],
-            },
+            ],
         });
     };
 
     const onDragEnd = ({ active, over }: DragEndEvent) => {
-        if (active.id in columns && over?.id) {
-            setContainers((containers) => {
-                if (!containers) return null;
-                const activeIndex = containers.indexOf(active.id);
-                const overIndex = containers.indexOf(over.id);
-
-                return arrayMove(containers, activeIndex, overIndex);
-            });
-        }
-
         const activeContainer = findContainer(active.id);
 
         if (!activeContainer) {
@@ -165,23 +140,23 @@ const Kanban = () => {
         const overContainer = findContainer(overId);
 
         if (overContainer) {
-            const activeIndex = columns[activeContainer].tasks.findIndex(
+            const activeIndex = tasks[activeContainer].findIndex(
                 (task) => task.id === active.id
             );
-            const overIndex = columns[overContainer].tasks.findIndex(
+            const overIndex = tasks[overContainer].findIndex(
                 (task) => task.id === overId
             );
 
             // checks if the task is dropped on a different column
-            const draggedOver = clonedColumns
-                ? !clonedColumns[activeContainer].tasks.find(
+            const draggedOver = clonedTasks
+                ? !clonedTasks[activeContainer].find(
                       (task) => task.id === activeId
                   )
                 : false;
 
             // prevent task update when it is dropped in the same position
             if (activeIndex !== overIndex || draggedOver) {
-                const overTasks = columns[overContainer].tasks;
+                const overTasks = tasks[overContainer];
                 // find previous, current and next task of the dragged task
                 const sortablePayload = createSortablePayloadByIndex(
                     overTasks,
@@ -205,12 +180,13 @@ const Kanban = () => {
                         ? (overContainer as string)
                         : undefined,
                 });
-                setColumns({
-                    ...columns,
-                    [overContainer]: {
-                        ...columns[overContainer],
-                        tasks: arrayMove(newTasks, activeIndex, overIndex),
-                    },
+                setTasks({
+                    ...tasks,
+                    [overContainer]: arrayMove(
+                        newTasks,
+                        activeIndex,
+                        overIndex
+                    ),
                 });
             }
         }
@@ -222,10 +198,8 @@ const Kanban = () => {
         if (!activeId) return null;
         const activeContainer = findContainer(activeId);
         if (!activeContainer) return null;
-        const task = columns[activeContainer].tasks.find(
-            (t) => t.id === activeId
-        );
-        const color = columns[activeContainer].color;
+        const task = tasks[activeContainer].find((t) => t.id === activeId);
+        const color = columns.find((col) => col.id === activeContainer)?.color!;
         return task ? <Task task={task} color={color} /> : null;
     };
 
@@ -239,10 +213,13 @@ const Kanban = () => {
             onDragCancel={onDragCancel}
         >
             <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
-                {containers &&
-                    containers.map((id) => (
-                        <Column key={id} column={columns[id]} />
-                    ))}
+                {columns.map((column) => (
+                    <Column
+                        key={column.id}
+                        column={column}
+                        tasks={tasks[column.id]}
+                    />
+                ))}
             </ul>
             <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
         </DndContext>

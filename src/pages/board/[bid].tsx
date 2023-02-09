@@ -10,7 +10,10 @@ import KanbanBoard from '@components/board';
 
 export const Board: NextPageWithLayout = () => {
     const id = useRouter().query.bid as string;
-    const { data, error, status } = trpc.boardRouter.getById.useQuery({ id });
+    const { data, error, status } = trpc.boardRouter.getById.useQuery(
+        { id },
+        { cacheTime: 0 }
+    );
     const { updateBoard } = useUpdateBoard();
 
     // Update the board's lastInteractedAt field
