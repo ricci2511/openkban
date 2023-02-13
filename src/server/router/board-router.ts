@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { authedProcedure } from './auth-router';
 import { boardCeationSchema } from '@lib/schemas/board-schemas';
 import { randomNoRepeats } from '@lib/helpers';
-import { presetColors } from '@lib/constants';
+import { PRESET_COLORS } from '@lib/constants';
 import { BoardData } from 'types/board-types';
 
 export const boardRouter = t.router({
@@ -39,7 +39,7 @@ export const boardRouter = t.router({
     create: authedProcedure
         .input(boardCeationSchema)
         .mutation(async ({ ctx, input }) => {
-            const randomColor = randomNoRepeats(presetColors);
+            const randomColor = randomNoRepeats(PRESET_COLORS);
             const createBoard = await ctx.prisma.board.create({
                 data: {
                     title: input.title,
