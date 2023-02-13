@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import ColumnsLayoutSection from './columns-layout-section';
 import { BoardColumnsLayout } from 'types/board-types';
-import { defaultBoardColumnsTitles } from '@lib/constants';
+import { DEFAULT_COLUMN_TITLES } from '@lib/constants';
 import { BoardCreation } from '@lib/schemas/board-schemas';
 import { ModalType } from '@components/ui/modal';
 
@@ -20,7 +20,7 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
 
     // initialize column titles state with default layout
     useEffect(() => {
-        setValue('columnTitles', defaultBoardColumnsTitles);
+        setValue('columnTitles', DEFAULT_COLUMN_TITLES);
     }, [setValue]);
 
     // columns layout state

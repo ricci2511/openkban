@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { randomId } from '@lib/helpers';
 import ColumnItemsContainer from './column-items-container';
+import { MAX_COLUMNS } from '@lib/constants';
 
 export type CustomColumn = {
     id: string;
@@ -28,7 +29,7 @@ const CustomLayoutSection = () => {
         [customColumns]
     );
 
-    const isMaxColumns = customColumns.length === 6;
+    const isMaxColumns = customColumns.length === MAX_COLUMNS;
     const titleInput: `columnTitles.${number}` = `columnTitles.${customColumns.length}`;
 
     useEffect(() => {
@@ -74,7 +75,7 @@ const CustomLayoutSection = () => {
                         )}
                         title={
                             isMaxColumns
-                                ? 'Cannot add more than 6 columns'
+                                ? `Cannot add more than ${MAX_COLUMNS} columns`
                                 : 'Set your column title'
                         }
                         onKeyDown={(e) =>

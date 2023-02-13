@@ -1,11 +1,13 @@
-export const defaultBoardColumnsTitles = [
+export const MAX_COLUMNS = 8;
+
+export const DEFAULT_COLUMN_TITLES = [
     'To Do',
     'In Progress',
     'Testing',
     'Done',
 ];
 
-export const presetColors = [
+export const PRESET_COLORS = [
     '#570df8',
     '#f000b8',
     '#22c55e',

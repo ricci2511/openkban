@@ -1,8 +1,28 @@
 import { t } from '@server/trpc';
 import { authedProcedure } from './auth-router';
 import { z } from 'zod';
+import { boardColumnCreationSchema } from '@lib/schemas/board-schemas';
 
 export const boardColumnRouter = t.router({
+    create: authedProcedure
+        .input(boardColumnCreationSchema)
+        .mutation(async ({ ctx, input }) => {
+            const createColumn = await ctx.prisma.boardColumn.create({
+                data: {
+                    title: input.title,
+                    color: input.color,
+                    tasks: {
+                        create: [],
+                    },
+                    board: {
+                        connect: {
+                            id: input.boardId,
+                        },
+                    },
+                },
+            });
+            return createColumn;
+        }),
     update: authedProcedure
         .input(
             z.object({

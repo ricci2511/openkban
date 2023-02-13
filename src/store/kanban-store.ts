@@ -26,6 +26,7 @@ const initColumns = (columns: BoardColumnWithTasks[]): BoardColumn[] => {
 type KanbanStore = {
     columns: BoardColumn[];
     tasks: ColumnTasks;
+    boardId: string;
     init: (columns: BoardColumnWithTasks[]) => void;
     addColumn: (column: BoardColumn) => void;
     updateColor: (id: string, color: string) => void;
@@ -38,10 +39,12 @@ const useKanbanStore = create(
     immer<KanbanStore>((set) => ({
         columns: [],
         tasks: {},
+        boardId: '',
         init: (columns: BoardColumnWithTasks[]) =>
             set((state) => {
                 state.columns = initColumns(columns);
                 state.tasks = initColumnTasks(columns);
+                state.boardId = columns[0].boardId;
             }),
         setTasks: (tasks: ColumnTasks) =>
             set((state) => {

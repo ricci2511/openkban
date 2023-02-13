@@ -42,7 +42,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="flex h-full flex-col last:pr-4 last:sm:pr-6 last:lg:pr-8">
+            <li className="flex h-full flex-col">
                 <div
                     className="mb-4 flex items-center justify-between rounded-md border p-2"
                     style={{ borderColor: color }}
@@ -53,7 +53,10 @@ const Column = ({ column, tasks }: ColumnProps) => {
                     >
                         {title}
                     </h2>
-                    <PopoverPicker color={color} onChange={handleColorChange} />
+                    <PopoverPicker
+                        color={color}
+                        changeColor={handleColorChange}
+                    />
                 </div>
                 <ul
                     ref={setNodeRef}

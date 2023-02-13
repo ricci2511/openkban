@@ -4,7 +4,7 @@ import { BoardColumnsLayout } from 'types/board-types';
 import CustomLayoutSection from './custom-layout-section';
 import { useFormContext } from 'react-hook-form';
 import { BoardCreation } from '@lib/schemas/board-schemas';
-import { defaultBoardColumnsTitles } from '@lib/constants';
+import { DEFAULT_COLUMN_TITLES } from '@lib/constants';
 
 interface ColumnsLayoutSectionProps {
     layout: BoardColumnsLayout;
@@ -22,10 +22,7 @@ const ColumnsLayoutSection = ({
             setLayout(layoutValue);
             const isDefault = layoutValue === 'default';
             // set the columns state depending on the layout
-            setValue(
-                'columnTitles',
-                isDefault ? defaultBoardColumnsTitles : []
-            );
+            setValue('columnTitles', isDefault ? DEFAULT_COLUMN_TITLES : []);
             // clear column validation errors if any
             clearErrors('columnTitles');
         }

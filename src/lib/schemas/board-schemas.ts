@@ -46,6 +46,16 @@ export const boardTaskCreationSchema = z.object({
 });
 export type BoardTaskCreation = z.infer<typeof boardTaskCreationSchema>;
 
+export const boardColumnCreationSchema = z.object({
+    boardId: z.string().cuid(),
+    title: z
+        .string()
+        .min(1, 'The column title cannot be empty')
+        .max(25, 'The column title cannot contain more than 25 characters'),
+    color: z.string(),
+});
+export type BoardColumnCreation = z.infer<typeof boardColumnCreationSchema>;
+
 // Boards can currently be sorted by createdAt, title and lastInteractedAt props
 const sortableBoardSchema = z.object({
     prop: z.enum(['createdAt', 'title', 'lastInteractedAt']),

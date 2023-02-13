@@ -21,6 +21,8 @@ import {
     getBetweenRankAsc,
 } from '@lib/lexorank-helpers';
 import { trpc } from '@lib/trpc';
+import CreateColumnButton from './create-column-button';
+import { MAX_COLUMNS } from '@lib/constants';
 
 const Kanban = () => {
     const tasks = useKanbanStore((state) => state.tasks);
@@ -212,16 +214,19 @@ const Kanban = () => {
             onDragOver={onDragOver}
             onDragCancel={onDragCancel}
         >
-            <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
-                {columns.map((column) => (
-                    <Column
-                        key={column.id}
-                        column={column}
-                        tasks={tasks[column.id]}
-                    />
-                ))}
-            </ul>
-            <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
+            <div className="flex gap-7">
+                <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
+                    {columns.map((column) => (
+                        <Column
+                            key={column.id}
+                            column={column}
+                            tasks={tasks[column.id]}
+                        />
+                    ))}
+                </ul>
+                {columns.length < MAX_COLUMNS && <CreateColumnButton />}
+                <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
+            </div>
         </DndContext>
     );
 };
