@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Column from './column';
 import {
     DndContext,
@@ -214,19 +214,17 @@ const Kanban = () => {
             onDragOver={onDragOver}
             onDragCancel={onDragCancel}
         >
-            <div className="flex gap-7">
-                <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col items-start gap-7">
-                    {columns.map((column) => (
-                        <Column
-                            key={column.id}
-                            column={column}
-                            tasks={tasks[column.id]}
-                        />
-                    ))}
-                </ul>
+            <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col gap-6 pl-4 after:w-px sm:pl-6 lg:gap-8 lg:pl-8">
+                {columns.map((column) => (
+                    <Column
+                        key={column.id}
+                        column={column}
+                        tasks={tasks[column.id]}
+                    />
+                ))}
                 {columns.length < MAX_COLUMNS && <CreateColumnButton />}
-                <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
-            </div>
+            </ul>
+            <DndDragOverlay activeId={activeId} renderMethod={renderTask} />
         </DndContext>
     );
 };

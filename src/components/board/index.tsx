@@ -9,24 +9,23 @@ interface KanbanBoardProps {
 }
 const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
     const { id, title, columns } = boardData;
-    const cols = useKanbanStore((state) => state.columns);
+    const boardId = useKanbanStore((state) => state.boardId);
     const initKanbanStore = useKanbanStore((state) => state.init);
 
     useEffect(() => {
-        const isDifferentBoard = cols.length && cols[0].boardId !== id;
         // only init store state when a different board is loaded or current store is empty
-        if (isDifferentBoard || !cols.length) {
+        if (boardId !== id || !boardId) {
             initKanbanStore(columns);
         }
-    }, [initKanbanStore, columns, cols, id]);
+    }, [initKanbanStore, columns, id, boardId]);
 
     return (
         <>
-            <section className="fixed flex w-full items-center gap-x-6">
+            <section className="fixed flex w-full items-center gap-x-6 p-4 sm:p-6 lg:p-8">
                 <h1 className="text-2xl font-semibold uppercase">{title}</h1>
                 <CreateTaskModalButton />
             </section>
-            <section className="mt-20">
+            <section className="mt-32">
                 <Kanban />
             </section>
         </>

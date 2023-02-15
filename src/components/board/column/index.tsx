@@ -42,15 +42,12 @@ const Column = ({ column, tasks }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="flex h-full flex-col">
+            <li className="flex flex-col">
                 <div
                     className="mb-4 flex items-center justify-between rounded-md border p-2"
                     style={{ borderColor: color }}
                 >
-                    <h2
-                        className="font-semibold uppercase"
-                        style={{ color: color }}
-                    >
+                    <h2 className="font-semibold uppercase" style={{ color }}>
                         {title}
                     </h2>
                     <PopoverPicker
@@ -60,7 +57,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
                 </div>
                 <ul
                     ref={setNodeRef}
-                    className="grid grid-flow-row grid-rows-1 gap-2"
+                    className="mb-4 grid grid-flow-row grid-rows-1 gap-2"
                 >
                     {tasks.map((task) => (
                         <SortableTask key={task.id} task={task} color={color} />

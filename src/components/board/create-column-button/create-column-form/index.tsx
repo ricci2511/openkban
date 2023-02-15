@@ -52,7 +52,7 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
                     )}
                     {...register('title', { required: true })}
                 />
-                <span>
+                <span className="px-2">
                     <PopoverPicker
                         color={color}
                         changeColor={setColor}
@@ -66,19 +66,19 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
                     {errors.title.message}
                 </p>
             )}
-            <div className="mt-4 flex justify-center gap-2">
+            <div className="mt-4 flex gap-2">
                 <button
                     type="submit"
                     className={cx(
-                        'btn-primary btn',
+                        'btn-primary btn w-1/2',
                         isLoading ? 'btn-disabled loading' : null
                     )}
                 >
-                    {isLoading ? 'Creating...' : 'Create Column'}
+                    {isLoading ? 'Creating...' : 'Create'}
                 </button>
                 <button
                     type="button"
-                    className="btn-error btn"
+                    className="btn-error btn w-1/2"
                     onClick={() => setCreating(false)}
                 >
                     Cancel

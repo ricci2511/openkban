@@ -8,8 +8,8 @@ interface MainLayoutProps extends PropsWithChildren {
 }
 
 const MainLayout = ({ children, responsive = false }: MainLayoutProps) => {
-    const nonResponsiveMain = 'relative w-full p-4 sm:p-6 lg:p-8';
-    const responsiveMain = `container mx-auto ${nonResponsiveMain}`;
+    const nonResponsiveMain = 'relative w-full';
+    const responsiveMain = `container mx-auto p-4 sm:p-6 lg:p-8 ${nonResponsiveMain}`;
 
     return (
         <Auth>
