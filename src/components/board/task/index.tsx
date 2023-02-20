@@ -18,7 +18,7 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { deleteTask, isLoading, error } = useDeleteTask();
 
     const taskClasses = cx(
-        'flex flex-col bg-base-300 border-l-2',
+        'flex flex-col bg-base-200 border-l-2',
         isDragging ? 'opacity-50' : null
     );
 

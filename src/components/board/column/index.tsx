@@ -9,6 +9,8 @@ import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import { trpc } from '@lib/trpc';
 import useKanbanStore from 'store/kanban-store';
 import { BoardColumn, BoardTask } from '@prisma/client';
+import { useTheme } from 'next-themes';
+import { cx } from 'class-variance-authority';
 
 interface ColumnProps {
     column: BoardColumn;
@@ -21,6 +23,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
     const { setNodeRef } = useDroppable({
         id,
     });
+    const { theme } = useTheme();
 
     const { mutate: updateColumn, error } =
         trpc.boardColumnRouter.update.useMutation();
@@ -55,14 +58,25 @@ const Column = ({ column, tasks }: ColumnProps) => {
                         changeColor={handleColorChange}
                     />
                 </div>
-                <ul
-                    ref={setNodeRef}
-                    className="mb-4 grid grid-flow-row grid-rows-1 gap-2"
+                <div
+                    className={cx(
+                        'h-[610px] overflow-y-auto rounded-lg',
+                        theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
+                    )}
                 >
-                    {tasks.map((task) => (
-                        <SortableTask key={task.id} task={task} color={color} />
-                    ))}
-                </ul>
+                    <ul
+                        ref={setNodeRef}
+                        className="grid grid-flow-row grid-rows-1 gap-3 p-2.5"
+                    >
+                        {tasks.map((task) => (
+                            <SortableTask
+                                key={task.id}
+                                task={task}
+                                color={color}
+                            />
+                        ))}
+                    </ul>
+                </div>
             </li>
         </SortableContext>
     );

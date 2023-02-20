@@ -1,13 +1,19 @@
 import Auth from '@components/auth';
 import Header from '@components/ui/header';
 import Sidebar from '@components/ui/sidebar';
-import React, { PropsWithChildren } from 'react';
+import React, { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
-interface MainLayoutProps extends PropsWithChildren {
+interface MainLayoutProps
+    extends PropsWithChildren,
+        ComponentPropsWithoutRef<'main'> {
     responsive?: boolean;
 }
 
-const MainLayout = ({ children, responsive = false }: MainLayoutProps) => {
+const MainLayout = ({
+    children,
+    responsive = false,
+    ...rest
+}: MainLayoutProps) => {
     const nonResponsiveMain = 'relative w-full';
     const responsiveMain = `container mx-auto p-4 sm:p-6 lg:p-8 ${nonResponsiveMain}`;
 
@@ -26,6 +32,7 @@ const MainLayout = ({ children, responsive = false }: MainLayoutProps) => {
                         className={`${
                             responsive ? responsiveMain : nonResponsiveMain
                         }`}
+                        {...rest}
                     >
                         {children}
                     </main>

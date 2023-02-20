@@ -146,7 +146,7 @@ const Kanban = () => {
                 (task) => task.id === active.id
             );
             const overIndex = tasks[overContainer].findIndex(
-                (task) => task.id === overId
+                (task) => task.id === overId || task.columnId === overId
             );
 
             // checks if the task is dropped on a different column
@@ -214,7 +214,7 @@ const Kanban = () => {
             onDragOver={onDragOver}
             onDragCancel={onDragCancel}
         >
-            <ul className="grid auto-cols-[minmax(225px,_1fr)] grid-flow-col gap-6 pl-4 after:w-px sm:pl-6 lg:gap-8 lg:pl-8">
+            <ul className="grid auto-cols-[minmax(250px,_1fr)] grid-flow-col gap-6 pl-4 after:w-px sm:pl-6 lg:gap-8 lg:pl-8">
                 {columns.map((column) => (
                     <Column
                         key={column.id}

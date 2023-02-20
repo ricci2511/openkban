@@ -44,7 +44,7 @@ export const Board: NextPageWithLayout = () => {
 };
 
 Board.getLayout = function getLayout(page: ReactElement) {
-    return <MainLayout>{page}</MainLayout>;
+    return <MainLayout className="overflow-y-hidden">{page}</MainLayout>;
 };
 
 export default Board;

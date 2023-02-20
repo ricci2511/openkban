@@ -9,7 +9,7 @@ export type ColumnTasks = {
 };
 
 const initColumnTasks = (columns: BoardColumnWithTasks[]) => {
-    return columns.reduce((acc: { [columnId: string]: BoardTask[] }, cur) => {
+    return columns.reduce((acc: ColumnTasks, cur) => {
         // sort tasks by rank
         acc[cur.id] = [...cur.tasks].sort(sortByLexoRankAsc);
         return acc;
