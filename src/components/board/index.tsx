@@ -3,6 +3,7 @@ import CreateTaskModalButton from './create-task-modal-button';
 import { BoardData } from 'types/board-types';
 import Kanban from './kanban';
 import useKanbanStore from 'store/kanban-store';
+import TaskDetailsModal from './task-details-modal';
 
 interface KanbanBoardProps {
     boardData: BoardData;
@@ -27,6 +28,7 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
             </section>
             <section className="overflow-y-clip pt-28">
                 <Kanban />
+                <TaskDetailsModal />
             </section>
         </>
     );

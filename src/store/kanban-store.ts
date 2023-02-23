@@ -33,10 +33,11 @@ type KanbanStore = {
     setTasks: (tasks: ColumnTasks) => void;
     addTask: (task: BoardTask) => void;
     deleteTask: (task: BoardTask) => void;
+    getTaskById: (id: string) => BoardTask | undefined;
 };
 
 const useKanbanStore = create(
-    immer<KanbanStore>((set) => ({
+    immer<KanbanStore>((set, get) => ({
         columns: [],
         tasks: {},
         boardId: '',
@@ -70,6 +71,10 @@ const useKanbanStore = create(
                     (t) => t.id !== task.id
                 );
             }),
+        getTaskById: (id: string) => {
+            const tasks = Object.values(get().tasks).flat();
+            return tasks.find((t) => t.id === id);
+        },
     }))
 );
 

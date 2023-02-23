@@ -4,6 +4,20 @@ import { boardTaskCreationSchema } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
 
 export const boardTaskRouter = t.router({
+    getById: authedProcedure
+        .input(
+            z.object({
+                id: z.string().cuid(),
+            })
+        )
+        .query(async ({ ctx, input }) => {
+            const task = await ctx.prisma.boardTask.findUnique({
+                where: {
+                    id: input.id,
+                },
+            });
+            return task;
+        }),
     create: authedProcedure
         .input(boardTaskCreationSchema.extend({ rank: z.string() }))
         .mutation(async ({ ctx, input }) => {

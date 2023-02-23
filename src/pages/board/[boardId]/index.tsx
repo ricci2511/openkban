@@ -8,8 +8,8 @@ import useUpdateBoard from '@hooks/use-update-board';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import KanbanBoard from '@components/board';
 
-export const Board: NextPageWithLayout = () => {
-    const id = useRouter().query.bid as string;
+export const BoardPage: NextPageWithLayout = () => {
+    const id = useRouter().query.boardId as string;
     const { data, error, status } = trpc.boardRouter.getById.useQuery(
         { id },
         { cacheTime: 0 }
@@ -43,8 +43,8 @@ export const Board: NextPageWithLayout = () => {
     return <KanbanBoard boardData={data} />;
 };
 
-Board.getLayout = function getLayout(page: ReactElement) {
+BoardPage.getLayout = function getLayout(page: ReactElement) {
     return <MainLayout className="overflow-y-hidden">{page}</MainLayout>;
 };
 
-export default Board;
+export default BoardPage;
