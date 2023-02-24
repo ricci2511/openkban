@@ -1,7 +1,8 @@
 import { BoardTask } from '@prisma/client';
+import { TaskWithSubTasks } from 'types/board-types';
 import React from 'react';
 
-const TaskDetails = ({ task }: { task: BoardTask }) => {
+const TaskDetails = ({ task }: { task: TaskWithSubTasks }) => {
     // TODO
     return (
         <div>

@@ -15,6 +15,9 @@ export const boardTaskRouter = t.router({
                 where: {
                     id: input.id,
                 },
+                include: {
+                    subtasks: true,
+                },
             });
             return task;
         }),
