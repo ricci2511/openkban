@@ -1,24 +1,32 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import useOnClickOutside from 'use-onclickoutside';
 import ColorPicker, { ColorPickerProps } from '.';
 
-const PopoverPicker = ({ color, changeColor, ...rest }: ColorPickerProps) => {
+interface PopoverPickerProps extends ColorPickerProps {
+    isOpen: boolean;
+    toggle: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const PopoverPicker = ({
+    isOpen,
+    toggle,
+    color,
+    changeColor,
+    ...rest
+}: PopoverPickerProps) => {
     const popoverRef = useRef<HTMLDivElement>(null);
-    const [isOpen, toggle] = useState(false);
 
-    const close = useCallback(() => toggle(false), []);
+    const close = useCallback(() => toggle(false), [toggle]);
     useOnClickOutside(popoverRef, close);
 
     return (
-        <div className="relative z-10" {...rest}>
+        <div className="relative z-10">
             <div
-                role="button"
-                className="h-5 w-5 rounded-lg"
+                className="h-4 w-4 rounded-lg"
                 style={{ backgroundColor: color }}
                 onClick={() => toggle(true)}
             />
             {isOpen && (
-                <div ref={popoverRef} className="absolute right-0 top-8">
+                <div ref={popoverRef} {...rest}>
                     <ColorPicker color={color} changeColor={changeColor} />
                 </div>
             )}

@@ -19,8 +19,7 @@ const ColorPicker = ({ color, changeColor, ...rest }: ColorPickerProps) => {
             <HexColorPicker color={color} onChange={setValue} />
             <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 p-3">
                 {PRESET_COLORS.map((presetColor) => (
-                    <button
-                        type="button"
+                    <span
                         key={presetColor}
                         className="mt-2 h-5 w-5 rounded-full"
                         style={{ background: presetColor }}

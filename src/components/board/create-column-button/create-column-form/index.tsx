@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useKanbanStore from 'store/kanban-store';
 import { cx } from 'class-variance-authority';
-import { boardColumnCreationSchema } from '@lib/schemas/board-schemas';
+import { ColumnTitle, columnTitleSchema } from '@lib/schemas/board-schemas';
 import useCreateColumn from '@hooks/use-create-column';
 
 interface CreateColumnFormProps {
@@ -17,12 +17,13 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<{ title: string }>({
-        resolver: zodResolver(boardColumnCreationSchema.pick({ title: true })),
+    } = useForm<ColumnTitle>({
+        resolver: zodResolver(columnTitleSchema),
     });
     const [color, setColor] = useState(
         PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)]
     );
+    const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
     const { createColumn, isLoading, error } = useCreateColumn(() =>
         setCreating(false)
@@ -54,8 +55,11 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
                 />
                 <span className="px-2">
                     <PopoverPicker
+                        isOpen={colorPickerOpen}
+                        toggle={setColorPickerOpen}
                         color={color}
                         changeColor={setColor}
+                        className="absolute top-8 right-0"
                         aria-label="Choose a color for your new column"
                         title="Choose a color for your new column"
                     />

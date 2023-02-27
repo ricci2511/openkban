@@ -29,7 +29,8 @@ type KanbanStore = {
     boardId: string;
     init: (columns: BoardColumnWithTasks[]) => void;
     addColumn: (column: BoardColumn) => void;
-    updateColor: (id: string, color: string) => void;
+    deleteColumn: (id: string) => void;
+    updateColumn: (column: BoardColumn) => void;
     setTasks: (tasks: ColumnTasks) => void;
     addTask: (task: BoardTask) => void;
     deleteTask: (task: BoardTask) => void;
@@ -56,10 +57,17 @@ const useKanbanStore = create(
                 state.columns.push(column);
                 state.tasks[column.id] = [];
             }),
-        updateColor: (id: string, color: string) =>
+        deleteColumn: (id: string) =>
             set((state) => {
-                const index = state.columns.findIndex((c) => c.id === id);
-                state.columns[index].color = color;
+                state.columns = state.columns.filter((c) => c.id !== id);
+                delete state.tasks[id];
+            }),
+        updateColumn: (column: BoardColumn) =>
+            set((state) => {
+                const index = state.columns.findIndex(
+                    (c) => c.id === column.id
+                );
+                state.columns[index] = column;
             }),
         addTask: (task: BoardTask) =>
             set((state) => {

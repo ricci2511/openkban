@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import {
     SortableContext,
@@ -11,6 +11,8 @@ import useKanbanStore from 'store/kanban-store';
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
 import { cx } from 'class-variance-authority';
+import ColumnOptionsDropdown from './column-options-dropdown';
+import EditTitleInput from './edit-title-input';
 
 interface ColumnProps {
     column: BoardColumn;
@@ -23,21 +25,9 @@ const Column = ({ column, tasks }: ColumnProps) => {
     const { setNodeRef } = useDroppable({
         id,
     });
+    const [editTitle, setEditTitle] = useState(false);
+    const toggleEdit = () => setEditTitle(!editTitle);
     const { theme } = useTheme();
-
-    const { mutate: updateColumn, error } =
-        trpc.boardColumnRouter.update.useMutation();
-
-    const updateColor = useKanbanStore((state) => state.updateColor);
-    const handleColorChange = (newColor: string) => {
-        if (color === newColor) return;
-        // update column color in kanban store and db
-        updateColor(id, newColor);
-        updateColumn({
-            id,
-            color: newColor,
-        });
-    };
 
     return (
         <SortableContext
@@ -46,18 +36,25 @@ const Column = ({ column, tasks }: ColumnProps) => {
             strategy={verticalListSortingStrategy}
         >
             <li className="flex flex-col">
-                <div
-                    className="mb-4 flex items-center justify-between rounded-md border p-2"
-                    style={{ borderColor: color }}
-                >
-                    <h2 className="font-semibold uppercase" style={{ color }}>
-                        {title}
-                    </h2>
-                    <PopoverPicker
-                        color={color}
-                        changeColor={handleColorChange}
-                    />
-                </div>
+                {editTitle ? (
+                    <EditTitleInput column={column} toggleEdit={toggleEdit} />
+                ) : (
+                    <div
+                        className="mb-4 flex items-center justify-between rounded-md border p-2"
+                        style={{ borderColor: color }}
+                    >
+                        <h2
+                            className="font-semibold uppercase"
+                            style={{ color }}
+                        >
+                            {title}
+                        </h2>
+                        <ColumnOptionsDropdown
+                            column={column}
+                            toggleEdit={toggleEdit}
+                        />
+                    </div>
+                )}
                 <div
                     className={cx(
                         'h-[610px] overflow-y-auto rounded-lg',
