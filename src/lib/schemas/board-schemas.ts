@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
+const columnTitle = z
+    .string()
+    .min(1, 'The column title cannot be empty')
+    .max(25, 'The column title cannot contain more than 25 characters');
+
 export const columnTitleSchema = z.object({
-    title: z
-        .string()
-        .min(1, 'The column title cannot be empty')
-        .max(25, 'The column title cannot contain more than 25 characters'),
+    title: columnTitle,
 });
 export type ColumnTitle = z.infer<typeof columnTitleSchema>;
 
@@ -15,7 +17,7 @@ export const boardCeationSchema = z.object({
         .max(30, 'The title cannot contain more than 30 characters'),
     isFavourite: z.boolean(),
     columnTitles: z
-        .array(columnTitleSchema.pick({ title: true }))
+        .array(columnTitle)
         .min(1, 'You must have at least 1 column')
         .max(6, 'You cannot have more than 6 columns'),
 });
