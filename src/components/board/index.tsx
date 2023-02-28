@@ -26,7 +26,7 @@ const KanbanBoard = ({ boardData }: KanbanBoardProps) => {
                 <h1 className="text-2xl font-semibold uppercase">{title}</h1>
                 <CreateTaskModalButton />
             </section>
-            <section className="overflow-y-clip pt-28">
+            <section className="h-full overflow-y-clip pt-28">
                 <Kanban />
                 <TaskDetailsModal />
             </section>

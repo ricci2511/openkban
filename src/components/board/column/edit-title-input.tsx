@@ -49,7 +49,7 @@ const EditTitleInput = ({ column, toggleEdit }: EditTitleInputProps) => {
                     type="text"
                     placeholder="Column title…"
                     className={cx(
-                        'input-bordered input w-full',
+                        'input-bordered input w-full uppercase',
                         errors.title && 'input-error',
                         isLoading ? 'disabled' : null
                     )}

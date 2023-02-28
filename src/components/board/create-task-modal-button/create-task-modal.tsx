@@ -18,7 +18,7 @@ const CreateTaskModal = ({ isOpen, toggleModal }: ModalType) => {
             title="Create a new task"
             isOpen={isOpen}
             toggleModal={toggleModal}
-            maxWidth="xl"
+            maxWidth="twoXl"
         >
             <FormProvider {...formMethods}>
                 <CreateTaskForm toggleModal={toggleModal} />

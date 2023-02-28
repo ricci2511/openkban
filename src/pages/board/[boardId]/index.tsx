@@ -44,7 +44,7 @@ export const BoardPage: NextPageWithLayout = () => {
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
-    return <MainLayout className="overflow-y-hidden">{page}</MainLayout>;
+    return <MainLayout className="h-full">{page}</MainLayout>;
 };
 
 export default BoardPage;

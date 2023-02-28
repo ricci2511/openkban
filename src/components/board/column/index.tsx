@@ -35,7 +35,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="flex flex-col">
+            <li className="flex h-full flex-col">
                 {editTitle ? (
                     <EditTitleInput column={column} toggleEdit={toggleEdit} />
                 ) : (
@@ -57,7 +57,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
                 )}
                 <div
                     className={cx(
-                        'h-[610px] overflow-y-auto rounded-lg',
+                        'h-[calc(100vh-250px)] overflow-y-auto rounded-lg',
                         theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
                     )}
                 >
