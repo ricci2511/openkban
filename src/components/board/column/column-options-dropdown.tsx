@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import useKanbanStore from 'store/kanban-store';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import PopoverPicker from '@components/ui/color-picker/popover-picker';
-import { cx } from 'class-variance-authority';
 import DeleteWarningModal from './delete-warning-modal';
 
 interface ColumnOptionsDropdownProps {
@@ -34,7 +33,6 @@ const ColumnOptionsDropdown = ({
     const [warningModalOpen, setWarningModalOpen] = useState(false);
     const toggleWarningModal = () => setWarningModalOpen(!warningModalOpen);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
-    const isFirstCol = useKanbanStore((state) => state.columns[0].id === id);
 
     return (
         <>
@@ -66,10 +64,7 @@ const ColumnOptionsDropdown = ({
                             toggle={setColorPickerOpen}
                             color={color}
                             changeColor={handleColorChange}
-                            className={cx(
-                                'absolute top-8',
-                                isFirstCol ? '-left-3' : 'right-0'
-                            )}
+                            className="absolute top-9 -left-9"
                         />
                         Change color
                     </button>
