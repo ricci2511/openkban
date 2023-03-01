@@ -1,4 +1,3 @@
-import DropdownButton from '@components/ui/buttons/dropdown-button';
 import { trpc } from '@lib/trpc';
 import { BoardColumn } from '@prisma/client';
 import React, { useState } from 'react';
@@ -6,6 +5,7 @@ import useKanbanStore from 'store/kanban-store';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import DeleteWarningModal from './delete-warning-modal';
+import { Button, Dropdown } from 'react-daisyui';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
@@ -36,51 +36,55 @@ const ColumnOptionsDropdown = ({
 
     return (
         <>
-            <DropdownButton
-                position="end"
-                labelIcon={<HiOutlineDotsHorizontal size={20} />}
-                labelClassName="cursor-pointer"
-                contentClassName="rounded-box gap-2 w-44 mt-2 bg-base-200 p-2 shadow"
-            >
-                <li>
-                    <button
-                        type="button"
-                        aria-label="Delete task"
-                        className="btn-outline btn-md font-medium"
-                        onClick={toggleEdit}
-                    >
-                        <HiPencil size={18} />
-                        Rename
-                    </button>
-                </li>
-                <li>
-                    <button
-                        type="button"
-                        className="btn-outline btn-md font-medium"
-                        onClick={() => setColorPickerOpen(true)}
-                    >
-                        <PopoverPicker
-                            isOpen={colorPickerOpen}
-                            toggle={setColorPickerOpen}
-                            color={color}
-                            changeColor={handleColorChange}
-                            className="absolute top-9 -left-9"
-                        />
-                        Change color
-                    </button>
-                </li>
-                <li>
-                    <button
-                        type="button"
-                        aria-label="Delete task"
-                        className="btn-outline btn-error btn-md font-medium"
-                        onClick={() => setWarningModalOpen(true)}
-                    >
-                        <HiTrash size={18} />
-                        Delete
-                    </button>
-                </li>
-            </DropdownButton>
+            <Dropdown vertical="end">
+                <Button color="ghost" size="xs">
+                    <HiOutlineDotsHorizontal size={20} />
+                </Button>
+                <Dropdown.Menu className="w-48 gap-1 bg-base-300">
+                    <li>
+                        <Button
+                            variant="outline"
+                            className="justify-start border-0"
+                            startIcon={<HiPencil size={18} />}
+                            aria-label={`Rename ${title} column`}
+                            onClick={toggleEdit}
+                        >
+                            Rename
+                        </Button>
+                    </li>
+                    <li>
+                        <Button
+                            variant="outline"
+                            className="justify-start border-0"
+                            startIcon={
+                                <PopoverPicker
+                                    isOpen={colorPickerOpen}
+                                    toggle={setColorPickerOpen}
+                                    color={color}
+                                    changeColor={handleColorChange}
+                                    className="absolute top-9 -left-7"
+                                />
+                            }
+                            aria-label={`Change color of ${title} column`}
+                            onClick={() => setColorPickerOpen(true)}
+                        >
+                            Change color
+                        </Button>
+                    </li>
+                    <li>
+                        <Button
+                            variant="outline"
+                            className="justify-start border-0"
+                            color="error"
+                            startIcon={<HiTrash size={18} />}
+                            aria-label={`Delete ${title} column`}
+                            onClick={() => setWarningModalOpen(true)}
+                        >
+                            Delete
+                        </Button>
+                    </li>
+                </Dropdown.Menu>
+            </Dropdown>
             {warningModalOpen && (
                 <DeleteWarningModal
                     title={title}

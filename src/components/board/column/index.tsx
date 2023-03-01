@@ -57,7 +57,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
                 )}
                 <div
                     className={cx(
-                        'h-[calc(100vh-250px)] overflow-y-auto rounded-lg',
+                        'h-[calc(100vh-250px)] overflow-y-auto overflow-x-hidden rounded-lg',
                         theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
                     )}
                 >

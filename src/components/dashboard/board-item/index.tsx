@@ -79,6 +79,7 @@ const BoardItem = ({ board }: BoardProps) => {
             />
             {!editMode && (
                 <OptionsDropdown
+                    boardTitle={title}
                     handleEditMode={handleEditMode}
                     deleteItem={deleteItem}
                 />

@@ -1,46 +1,49 @@
-import DropdownButton from '@components/ui/buttons/dropdown-button';
 import React from 'react';
+import { Button, Dropdown } from 'react-daisyui';
 import { HiOutlineDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
 
 interface OptionsDropdownProps {
+    boardTitle: string;
     handleEditMode: () => void;
     deleteItem: () => void;
 }
 
 const OptionsDropdown = ({
+    boardTitle,
     handleEditMode,
     deleteItem,
 }: OptionsDropdownProps) => {
     return (
-        <DropdownButton
-            position="end"
-            labelIcon={<HiOutlineDotsVertical size={19} />}
-            labelClassName="cursor-pointer btn px-1 btn-ghost flex-none"
-            contentClassName="rounded-box mt-4 w-36 gap-2 bg-base-200 p-2 shadow"
-        >
-            <li>
-                <button
-                    type="button"
-                    aria-describedby="Click this to edit the selected board title"
-                    className="btn-outline btn-md font-medium"
-                    onClick={handleEditMode}
-                >
-                    <HiPencil size={18} />
-                    Rename
-                </button>
-            </li>
-            <li>
-                <button
-                    type="button"
-                    aria-describedby="Click this to delete the selected board"
-                    className="btn-outline btn-error btn-md font-medium"
-                    onClick={deleteItem}
-                >
-                    <HiTrash size={18} />
-                    Delete
-                </button>
-            </li>
-        </DropdownButton>
+        <Dropdown vertical="end">
+            <Button color="ghost" className="px-1">
+                <HiOutlineDotsVertical size={19} />
+            </Button>
+            <Dropdown.Menu className="w-36 gap-1 bg-base-200">
+                <li>
+                    <Button
+                        variant="outline"
+                        className="justify-start border-0"
+                        startIcon={<HiPencil size={18} />}
+                        aria-label={`Rename ${boardTitle} board`}
+                        onClick={handleEditMode}
+                    >
+                        Rename
+                    </Button>
+                </li>
+                <li>
+                    <Button
+                        variant="outline"
+                        className="justify-start border-0"
+                        color="error"
+                        startIcon={<HiTrash size={18} />}
+                        aria-label={`Delete ${boardTitle} board`}
+                        onClick={deleteItem}
+                    >
+                        Delete
+                    </Button>
+                </li>
+            </Dropdown.Menu>
+        </Dropdown>
     );
 };
 

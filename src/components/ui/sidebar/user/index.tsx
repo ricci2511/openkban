@@ -3,8 +3,8 @@ import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
 import { RiSettings3Fill, RiUserSettingsFill } from 'react-icons/ri';
-import DropdownButton from '@components/ui/buttons/dropdown-button';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md';
+import { Button, Dropdown } from 'react-daisyui';
 
 const User = ({ session }: { session: Session }) => {
     if (!session.user) {
@@ -41,35 +41,38 @@ const User = ({ session }: { session: Session }) => {
                     </p>
                 </div>
                 <div>
-                    <DropdownButton
-                        position="topEnd"
-                        labelIcon={<MdOutlineKeyboardArrowUp size={16} />}
-                        labelClassName="btn btn-outline btn-circle btn-xs btn-active"
-                        contentClassName="rounded-box mb-3 w-52 bg-base-100 p-2 shadow"
-                    >
-                        <li>
-                            <a>
+                    <Dropdown vertical="top" className="dropdown-end">
+                        <Button
+                            variant="outline"
+                            color="ghost"
+                            size="xs"
+                            shape="circle"
+                        >
+                            <MdOutlineKeyboardArrowUp size={16} />
+                        </Button>
+                        <Dropdown.Menu className="mb-2 w-52 gap-2 bg-base-100">
+                            <Dropdown.Item>
                                 <RiUserSettingsFill size={18} />
                                 Account settings
-                            </a>
-                        </li>
-                        <li>
-                            <a>
+                            </Dropdown.Item>
+                            <Dropdown.Item>
                                 <RiSettings3Fill size={18} />
                                 App settings
-                            </a>
-                        </li>
-                        <li className="mt-3">
-                            <button
-                                className="btn-outline btn-error btn"
-                                onClick={() =>
-                                    signOut({ callbackUrl: '/auth/signin' })
-                                }
-                            >
-                                Sign out
-                            </button>
-                        </li>
-                    </DropdownButton>
+                            </Dropdown.Item>
+                            <li className="mt-1">
+                                <Button
+                                    variant="outline"
+                                    color="error"
+                                    aria-label="Sign out of your account"
+                                    onClick={() =>
+                                        signOut({ callbackUrl: '/auth/signin' })
+                                    }
+                                >
+                                    Sign out
+                                </Button>
+                            </li>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
             </div>
         </article>

@@ -1,4 +1,3 @@
-import { BoardTask } from '@prisma/client';
 import { TaskWithSubTasks } from 'types/board-types';
 import React from 'react';
 
