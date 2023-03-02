@@ -3,7 +3,7 @@ import useUpdateBoard from '@hooks/use-update-board';
 import { Board } from '@prisma/client';
 import React, { useState } from 'react';
 import FavouriteButton from './favourite-button';
-import OptionsDropdown from './options-dropdown';
+import BoardOptionsDropdown from './board-options-dropdown';
 import { HiPencil } from 'react-icons/hi';
 import Link from 'next/link';
 
@@ -78,7 +78,7 @@ const BoardItem = ({ board }: BoardProps) => {
                 handleFavouriteClick={handleFavouriteClick}
             />
             {!editMode && (
-                <OptionsDropdown
+                <BoardOptionsDropdown
                     boardTitle={title}
                     handleEditMode={handleEditMode}
                     deleteItem={deleteItem}

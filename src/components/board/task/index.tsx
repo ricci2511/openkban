@@ -1,14 +1,13 @@
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import useDeleteTask from '@hooks/use-delete-task';
 import { BoardTask } from '@prisma/client';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import React from 'react';
-import { HiOutlineDotsHorizontal, HiTrash } from 'react-icons/hi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
 import useKanbanStore from 'store/kanban-store';
 import { Button, Dropdown } from 'react-daisyui';
+import TaskOptionsDropdown from './task-options-dropdown';
 
 export interface TaskProps {
     task: BoardTask;
@@ -19,7 +18,6 @@ export interface TaskProps {
 const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
     const boardId = useKanbanStore((state) => state.boardId);
-    const { deleteTask, isLoading, error } = useDeleteTask();
 
     const taskClasses = cx(
         'flex bg-base-200 border-l-2',
@@ -55,25 +53,7 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
                     </Button>
                 </span>
                 <span className="pr-1">
-                    <Dropdown vertical="end">
-                        <Button color="ghost" size="xs">
-                            <HiOutlineDotsHorizontal size={18} />
-                        </Button>
-                        <Dropdown.Menu className="w-36">
-                            <li>
-                                <Button
-                                    variant="outline"
-                                    color="error"
-                                    startIcon={<HiTrash size={18} />}
-                                    aria-label={`Delete ${title} task`}
-                                    loading={isLoading}
-                                    onClick={() => deleteTask({ id })}
-                                >
-                                    Delete
-                                </Button>
-                            </li>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <TaskOptionsDropdown task={task} />
                 </span>
             </div>
         </div>

@@ -5,9 +5,6 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import SortableTask from '../task/sortable-task';
-import PopoverPicker from '@components/ui/color-picker/popover-picker';
-import { trpc } from '@lib/trpc';
-import useKanbanStore from 'store/kanban-store';
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
 import { cx } from 'class-variance-authority';

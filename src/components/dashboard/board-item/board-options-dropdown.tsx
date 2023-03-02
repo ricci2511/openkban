@@ -1,3 +1,4 @@
+import DropdownButton from '@components/ui/buttons/dropdown-button';
 import React from 'react';
 import { Button, Dropdown } from 'react-daisyui';
 import { HiOutlineDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
@@ -8,7 +9,7 @@ interface OptionsDropdownProps {
     deleteItem: () => void;
 }
 
-const OptionsDropdown = ({
+const BoardOptionsDropdown = ({
     boardTitle,
     handleEditMode,
     deleteItem,
@@ -20,31 +21,25 @@ const OptionsDropdown = ({
             </Button>
             <Dropdown.Menu className="w-36 gap-1 bg-base-200">
                 <li>
-                    <Button
-                        variant="outline"
-                        className="justify-start border-0"
+                    <DropdownButton
+                        text="Rename"
                         startIcon={<HiPencil size={18} />}
                         aria-label={`Rename ${boardTitle} board`}
                         onClick={handleEditMode}
-                    >
-                        Rename
-                    </Button>
+                    />
                 </li>
                 <li>
-                    <Button
-                        variant="outline"
-                        className="justify-start border-0"
+                    <DropdownButton
+                        text="Delete"
                         color="error"
                         startIcon={<HiTrash size={18} />}
-                        aria-label={`Delete ${boardTitle} board`}
+                        ariaLabel={`Delete ${boardTitle} task`}
                         onClick={deleteItem}
-                    >
-                        Delete
-                    </Button>
+                    />
                 </li>
             </Dropdown.Menu>
         </Dropdown>
     );
 };
 
-export default OptionsDropdown;
+export default BoardOptionsDropdown;

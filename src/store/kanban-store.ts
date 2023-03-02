@@ -34,6 +34,7 @@ type KanbanStore = {
     setTasks: (tasks: ColumnTasks) => void;
     addTask: (task: BoardTask) => void;
     deleteTask: (task: BoardTask) => void;
+    updateTask: (task: BoardTask) => void;
     getTaskById: (id: string) => BoardTask | undefined;
 };
 
@@ -78,6 +79,12 @@ const useKanbanStore = create(
                 state.tasks[task.columnId] = state.tasks[task.columnId].filter(
                     (t) => t.id !== task.id
                 );
+            }),
+        updateTask: (task: BoardTask) =>
+            set((state) => {
+                const tasks = state.tasks[task.columnId];
+                const index = tasks.findIndex((t) => t.id === task.id);
+                tasks[index] = task;
             }),
         getTaskById: (id: string) => {
             const tasks = Object.values(get().tasks).flat();

@@ -6,6 +6,7 @@ import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import DeleteWarningModal from './delete-warning-modal';
 import { Button, Dropdown } from 'react-daisyui';
+import DropdownButton from '@components/ui/buttons/dropdown-button';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
@@ -42,20 +43,16 @@ const ColumnOptionsDropdown = ({
                 </Button>
                 <Dropdown.Menu className="w-48 gap-1 bg-base-300">
                     <li>
-                        <Button
-                            variant="outline"
-                            className="justify-start border-0"
+                        <DropdownButton
+                            text="Rename"
                             startIcon={<HiPencil size={18} />}
-                            aria-label={`Rename ${title} column`}
+                            ariaLabel={`Rename ${title} column`}
                             onClick={toggleEdit}
-                        >
-                            Rename
-                        </Button>
+                        />
                     </li>
                     <li>
-                        <Button
-                            variant="outline"
-                            className="justify-start border-0"
+                        <DropdownButton
+                            text="Change color"
                             startIcon={
                                 <PopoverPicker
                                     isOpen={colorPickerOpen}
@@ -65,23 +62,19 @@ const ColumnOptionsDropdown = ({
                                     className="absolute top-9 -left-7"
                                 />
                             }
-                            aria-label={`Change color of ${title} column`}
+                            animation={false}
+                            ariaLabel={`Change color of ${title} column`}
                             onClick={() => setColorPickerOpen(true)}
-                        >
-                            Change color
-                        </Button>
+                        />
                     </li>
                     <li>
-                        <Button
-                            variant="outline"
-                            className="justify-start border-0"
+                        <DropdownButton
+                            text="Delete"
                             color="error"
                             startIcon={<HiTrash size={18} />}
-                            aria-label={`Delete ${title} column`}
+                            ariaLabel={`Delete ${title} column`}
                             onClick={() => setWarningModalOpen(true)}
-                        >
-                            Delete
-                        </Button>
+                        />
                     </li>
                 </Dropdown.Menu>
             </Dropdown>
