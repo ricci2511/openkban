@@ -29,6 +29,10 @@ export const boardTaskCreationSchema = z.object({
         .string()
         .min(1, 'The task title cannot be empty')
         .max(35, 'The title cannot contain more than 35 characters'),
+    description: z
+        .string()
+        .max(500, 'The description cannot contain more than 500 characters')
+        .optional(),
     startDate: z
         .date({
             required_error: 'A start date must be specified',

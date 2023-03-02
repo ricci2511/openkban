@@ -89,15 +89,16 @@ model BoardColumn {
 }
 
 model BoardTask {
-  id        String         @id @default(cuid())
-  createdAt DateTime       @default(now())
-  startDate DateTime       @default(now())
-  dueDate   DateTime       @default(now())
-  rank      String         @default("0|000000:")          
-  title     String
-  column    BoardColumn    @relation(fields: [columnId], references: [id])
-  columnId  String
-  subtasks  BoardSubtask[]
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  startDate   DateTime       @default(now())
+  dueDate     DateTime       @default(now())
+  rank        String         @default("0|000000:")
+  title       String
+  description String?
+  column      BoardColumn    @relation(fields: [columnId], references: [id])
+  columnId    String
+  subtasks    BoardSubtask[]
 
   @@index([columnId])
 }

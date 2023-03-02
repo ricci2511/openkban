@@ -9,6 +9,7 @@ import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
 import useKanbanStore from 'store/kanban-store';
 import { LexoRank } from 'lexorank';
+import TaskDescriptionTextarea from './task-description-textarea';
 
 const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     const { handleSubmit, reset } = useFormContext<BoardTaskCreation>();
@@ -31,14 +32,24 @@ const CreateTaskForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
         }
     };
 
-    const onSubmit = handleSubmit(({ title, columnId, startDate, dueDate }) => {
-        const rank = generateRank(columnId);
-        createTask({ title, columnId, startDate, dueDate, rank });
-    });
+    const onSubmit = handleSubmit(
+        ({ title, description, columnId, startDate, dueDate }) => {
+            const rank = generateRank(columnId);
+            createTask({
+                title,
+                description,
+                columnId,
+                startDate,
+                dueDate,
+                rank,
+            });
+        }
+    );
 
     return (
         <form className="form-control mt-2 w-full gap-2" onSubmit={onSubmit}>
             <TaskTitleInput />
+            <TaskDescriptionTextarea />
             <ColumnSelect />
             <TaskDateInputs />
             <div className="modal-action">
