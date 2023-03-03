@@ -7,15 +7,12 @@ import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import DeleteWarningModal from './delete-warning-modal';
 import { Button, Dropdown } from 'react-daisyui';
 import DropdownButton from '@components/ui/buttons/dropdown-button';
+import ColumnEditTitleModal from './column-edit-title-modal';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
-    toggleEdit: () => void;
 }
-const ColumnOptionsDropdown = ({
-    column,
-    toggleEdit,
-}: ColumnOptionsDropdownProps) => {
+const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
     const { id, color, title } = column;
     const { mutate: updateColumn, error: updateErr } =
         trpc.boardColumnRouter.update.useMutation();
@@ -33,7 +30,11 @@ const ColumnOptionsDropdown = ({
 
     const [warningModalOpen, setWarningModalOpen] = useState(false);
     const toggleWarningModal = () => setWarningModalOpen(!warningModalOpen);
+
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
+
+    const [isEditting, setIsEditting] = useState(false);
+    const toggleEditting = () => setIsEditting(!isEditting);
 
     return (
         <>
@@ -47,7 +48,7 @@ const ColumnOptionsDropdown = ({
                             text="Rename"
                             startIcon={<HiPencil size={18} />}
                             ariaLabel={`Rename ${title} column`}
-                            onClick={toggleEdit}
+                            onClick={toggleEditting}
                         />
                     </li>
                     <li>
@@ -78,6 +79,13 @@ const ColumnOptionsDropdown = ({
                     </li>
                 </Dropdown.Menu>
             </Dropdown>
+            {isEditting && (
+                <ColumnEditTitleModal
+                    column={column}
+                    isEditting={isEditting}
+                    toggleEditting={toggleEditting}
+                />
+            )}
             {warningModalOpen && (
                 <DeleteWarningModal
                     title={title}

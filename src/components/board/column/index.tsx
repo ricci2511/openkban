@@ -9,7 +9,6 @@ import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
 import { cx } from 'class-variance-authority';
 import ColumnOptionsDropdown from './column-options-dropdown';
-import EditTitleInput from './edit-title-input';
 
 interface ColumnProps {
     column: BoardColumn;
@@ -22,8 +21,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
     const { setNodeRef } = useDroppable({
         id,
     });
-    const [editTitle, setEditTitle] = useState(false);
-    const toggleEdit = () => setEditTitle(!editTitle);
+
     const { theme } = useTheme();
 
     return (
@@ -33,30 +31,18 @@ const Column = ({ column, tasks }: ColumnProps) => {
             strategy={verticalListSortingStrategy}
         >
             <li className="flex h-full flex-col">
-                {editTitle ? (
-                    <EditTitleInput column={column} toggleEdit={toggleEdit} />
-                ) : (
-                    <div
-                        className="mb-4 flex items-center justify-between rounded-md border p-2"
-                        style={{ borderColor: color }}
-                    >
-                        <h2
-                            className="font-semibold uppercase"
-                            style={{ color }}
-                        >
-                            {title}
-                        </h2>
-                        <ColumnOptionsDropdown
-                            column={column}
-                            toggleEdit={toggleEdit}
-                        />
-                    </div>
-                )}
                 <div
-                    className={cx(
-                        'h-[calc(100vh-250px)] overflow-y-auto overflow-x-hidden rounded-lg',
-                        theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
-                    )}
+                    className="mb-4 flex items-center justify-between rounded-md border p-2"
+                    style={{ borderColor: color }}
+                >
+                    <h2 className="font-semibold uppercase" style={{ color }}>
+                        {title}
+                    </h2>
+                    <ColumnOptionsDropdown column={column} />
+                </div>
+                <div
+                    className={`h-[calc(100vh-250px)] overflow-y-auto overflow-x-hidden rounded-lg
+                        ${theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'}`}
                 >
                     <ul
                         ref={setNodeRef}

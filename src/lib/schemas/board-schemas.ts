@@ -1,20 +1,36 @@
 import { z } from 'zod';
 
-const columnTitle = z
+export const boardTitle = z
     .string()
-    .min(1, 'The column title cannot be empty')
-    .max(25, 'The column title cannot contain more than 25 characters');
+    .min(1, 'Board title cannot be empty')
+    .max(30, 'Board title cannot contain more than 30 characters');
 
-export const columnTitleSchema = z.object({
-    title: columnTitle,
-});
-export type ColumnTitle = z.infer<typeof columnTitleSchema>;
+export const columnTitle = z
+    .string()
+    .min(1, 'Column title cannot be empty')
+    .max(25, 'Column title cannot contain more than 25 characters');
 
+export const taskTitle = z
+    .string()
+    .min(1, 'Task title cannot be empty')
+    .max(35, 'Task title cannot contain more than 35 characters');
+
+/**
+ *
+ * @param zodString zod string used to validate the title input field
+ * @returns a zod schema that can be used to validate the input of title editing
+ */
+export const titleSchema = <TZodString extends z.ZodString>(
+    zodString: TZodString
+) => {
+    return z.object({ title: zodString });
+};
+
+export type TitleInput = { title: string };
+
+// Schema for creating a new kanban board
 export const boardCeationSchema = z.object({
-    title: z
-        .string()
-        .min(1, 'The board title cannot be empty')
-        .max(30, 'The title cannot contain more than 30 characters'),
+    title: boardTitle,
     isFavourite: z.boolean(),
     columnTitles: z
         .array(columnTitle)
@@ -23,12 +39,18 @@ export const boardCeationSchema = z.object({
 });
 export type BoardCreation = z.infer<typeof boardCeationSchema>;
 
+// Schema for creating a new kanban column
+export const boardColumnCreationSchema = z.object({
+    boardId: z.string().cuid(),
+    title: columnTitle,
+    color: z.string(),
+});
+export type BoardColumnCreation = z.infer<typeof boardColumnCreationSchema>;
+
+// Schema for creating a new kanban task
 export const boardTaskCreationSchema = z.object({
     columnId: z.string().cuid('A column must be specified'),
-    title: z
-        .string()
-        .min(1, 'The task title cannot be empty')
-        .max(35, 'The title cannot contain more than 35 characters'),
+    title: taskTitle,
     description: z
         .string()
         .max(500, 'The description cannot contain more than 500 characters')
@@ -51,16 +73,6 @@ export const boardTaskCreationSchema = z.object({
         .min(new Date(), 'The due date must be in the future'),
 });
 export type BoardTaskCreation = z.infer<typeof boardTaskCreationSchema>;
-
-export const boardColumnCreationSchema = z.object({
-    boardId: z.string().cuid(),
-    title: z
-        .string()
-        .min(1, 'The column title cannot be empty')
-        .max(25, 'The column title cannot contain more than 25 characters'),
-    color: z.string(),
-});
-export type BoardColumnCreation = z.infer<typeof boardColumnCreationSchema>;
 
 // Boards can currently be sorted by createdAt, title and lastInteractedAt props
 const sortableBoardSchema = z.object({

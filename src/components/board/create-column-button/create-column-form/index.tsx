@@ -5,7 +5,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import useKanbanStore from 'store/kanban-store';
 import { cx } from 'class-variance-authority';
-import { ColumnTitle, columnTitleSchema } from '@lib/schemas/board-schemas';
+import {
+    TitleInput,
+    columnTitle,
+    titleSchema,
+} from '@lib/schemas/board-schemas';
 import useCreateColumn from '@hooks/use-create-column';
 
 interface CreateColumnFormProps {
@@ -17,8 +21,8 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<ColumnTitle>({
-        resolver: zodResolver(columnTitleSchema),
+    } = useForm<TitleInput>({
+        resolver: zodResolver(titleSchema(columnTitle)),
     });
     const [color, setColor] = useState(
         PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)]
