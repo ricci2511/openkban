@@ -1,6 +1,8 @@
+import FormInput from '@components/ui/form/form-input';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import { cx } from 'class-variance-authority';
 import React from 'react';
+import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
 
 const TaskDateInputs = () => {
@@ -8,63 +10,43 @@ const TaskDateInputs = () => {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const startDateError = errors.startDate;
-    const dueDateError = errors.dueDate;
     const minDate = new Date().toISOString().split('T')[0];
 
     return (
         <div className="flex w-full gap-3">
             <span className="w-1/2">
-                <label htmlFor="startDate" className="label">
-                    <span className="label-text" aria-required>
-                        Start Date
-                    </span>
-                </label>
-                <input
+                <Form.Label title="Start date" htmlFor="start-date" />
+                <FormInput<BoardTaskCreation>
+                    id="start-date"
                     type="date"
-                    id="startDate"
                     defaultValue={minDate}
                     min={minDate}
-                    className={cx(
-                        'input-bordered input w-full',
-                        startDateError && 'input-error'
-                    )}
-                    {...register('startDate', {
-                        valueAsDate: true,
-                        required: true,
-                    })}
+                    className="w-full"
+                    color={errors.startDate ? 'error' : undefined}
+                    bordered
+                    borderOffset
+                    register={register}
+                    registerName={register('startDate').name}
+                    registerRules={{ valueAsDate: true, required: true }}
+                    errors={errors}
                 />
-                {startDateError && (
-                    <p className="mt-2 text-sm text-error">
-                        {startDateError.message}
-                    </p>
-                )}
             </span>
             <span className="w-1/2">
-                <label htmlFor="dueDate" className="label">
-                    <span className="label-text" aria-required>
-                        Due Date
-                    </span>
-                </label>
-                <input
+                <Form.Label title="Due date" htmlFor="due-date" />
+                <FormInput<BoardTaskCreation>
+                    id="due-date"
                     type="date"
-                    id="dueDate"
                     defaultValue={minDate}
                     min={minDate}
-                    className={cx(
-                        'input-bordered input w-full',
-                        dueDateError && 'input-error'
-                    )}
-                    {...register('dueDate', {
-                        valueAsDate: true,
-                        required: true,
-                    })}
+                    className="w-full"
+                    color={errors.dueDate ? 'error' : undefined}
+                    bordered
+                    borderOffset
+                    register={register}
+                    registerName={register('dueDate').name}
+                    registerRules={{ valueAsDate: true, required: true }}
+                    errors={errors}
                 />
-                {dueDateError && (
-                    <p className="mt-2 text-sm text-error">
-                        {dueDateError.message}
-                    </p>
-                )}
             </span>
         </div>
     );

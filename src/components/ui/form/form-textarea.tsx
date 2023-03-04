@@ -1,24 +1,24 @@
 import React, { ComponentProps } from 'react';
 import { FieldValues } from 'react-hook-form';
-import { Input } from 'react-daisyui';
+import { Textarea } from 'react-daisyui';
 import { FormElementProps } from 'types/form-types';
 
-interface FormInputProps<TFormValues extends FieldValues>
+interface FormTextareaProps<TFormValues extends FieldValues>
     extends FormElementProps<TFormValues>,
-        ComponentProps<typeof Input> {}
+        ComponentProps<typeof Textarea> {}
 
-const FormInput = <TFormValues extends Record<string, unknown>>({
+const FormTextarea = <TFormValues extends Record<string, unknown>>({
     register,
     registerName,
     registerRules,
     errors,
     ...rest
-}: FormInputProps<TFormValues>) => {
+}: FormTextareaProps<TFormValues>) => {
     const errorMessages = errors && errors[registerName];
 
     return (
         <>
-            <Input
+            <Textarea
                 aria-invalid={!!(errors && errorMessages)}
                 {...rest}
                 {...(register && register(registerName, registerRules))}
@@ -32,4 +32,4 @@ const FormInput = <TFormValues extends Record<string, unknown>>({
     );
 };
 
-export default FormInput;
+export default FormTextarea;

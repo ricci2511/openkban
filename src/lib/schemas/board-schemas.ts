@@ -20,9 +20,7 @@ export const taskTitle = z
  * @param zodString zod string used to validate the title input field
  * @returns a zod schema that can be used to validate the input of title editing
  */
-export const titleSchema = <TZodString extends z.ZodString>(
-    zodString: TZodString
-) => {
+export const titleSchema = (zodString: z.ZodString) => {
     return z.object({ title: zodString });
 };
 

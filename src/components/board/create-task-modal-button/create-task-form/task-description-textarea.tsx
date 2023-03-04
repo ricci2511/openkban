@@ -1,6 +1,7 @@
+import FormTextarea from '@components/ui/form/form-textarea';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import React from 'react';
-import { Textarea } from 'react-daisyui';
+import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
 
 const TaskDescriptionTextarea = () => {
@@ -8,27 +9,21 @@ const TaskDescriptionTextarea = () => {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const descriptionError = errors.description;
 
     return (
         <span>
-            <label htmlFor="taskDescription" className="label">
-                <span className="label-text">Task description</span>
-            </label>
-            <Textarea
-                id="taskDescription"
-                placeholder="This is a task description"
-                color={descriptionError ? 'error' : undefined}
+            <Form.Label title="Task description" htmlFor="task-description" />
+            <FormTextarea<BoardTaskCreation>
+                id="task-description"
+                placeholder="description..."
+                className="w-full"
+                color={errors.description ? 'error' : undefined}
                 bordered
                 borderOffset
-                className="w-full"
-                {...register('description')}
+                register={register}
+                registerName="description"
+                errors={errors}
             />
-            {descriptionError && (
-                <p className="mt-2 text-sm text-error">
-                    {descriptionError.message}
-                </p>
-            )}
         </span>
     );
 };

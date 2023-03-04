@@ -1,23 +1,25 @@
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
-import { cx } from 'class-variance-authority';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import useKanbanStore from 'store/kanban-store';
 import { HiOutlineInformationCircle } from 'react-icons/hi';
-import { Tooltip } from 'react-daisyui';
+import { Form, Tooltip } from 'react-daisyui';
+import FormSelect from '@components/ui/form/form-select';
 
 const ColumnSelect = () => {
     const {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const selectError = errors.columnId;
     const columns = useKanbanStore((state) => state.columns);
 
     return (
         <span>
-            <label htmlFor="column" className="label justify-start gap-2">
-                <span className="label-text">Column</span>
+            <Form.Label
+                title="Column"
+                htmlFor="column"
+                className="justify-start gap-2"
+            >
                 <Tooltip
                     message="Pick the column you want to add the task to"
                     position="right"
@@ -26,28 +28,30 @@ const ColumnSelect = () => {
                 >
                     <HiOutlineInformationCircle size={18} />
                 </Tooltip>
-            </label>
-            <select
+            </Form.Label>
+            <FormSelect<BoardTaskCreation>
                 id="column"
-                className={cx(
-                    'select-bordered select w-full max-w-xs',
-                    selectError && 'select-error'
-                )}
                 defaultValue="default"
-                {...register('columnId', { required: true })}
+                className="w-full max-w-xs"
+                color={errors.columnId ? 'error' : undefined}
+                bordered
+                borderOffset
+                register={register}
+                registerName="columnId"
+                errors={errors}
             >
-                <option disabled value="default">
-                    Which column?
-                </option>
-                {columns.map(({ id, title }) => (
-                    <option key={id} value={id}>
-                        {title}
-                    </option>
-                ))}
-            </select>
-            {selectError && (
-                <p className="mt-2 text-sm text-error">{selectError.message}</p>
-            )}
+                {[
+                    <option key="default" value="default" disabled>
+                        Which column?
+                    </option>,
+                ].concat(
+                    columns.map(({ id, title }) => (
+                        <option key={id} value={id}>
+                            {title}
+                        </option>
+                    ))
+                )}
+            </FormSelect>
         </span>
     );
 };

@@ -1,6 +1,7 @@
+import FormInput from '@components/ui/form/form-input';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
-import { cx } from 'class-variance-authority';
 import React from 'react';
+import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
 
 const TaskTitleInput = () => {
@@ -8,28 +9,23 @@ const TaskTitleInput = () => {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const titleError = errors.title;
 
     return (
         <span>
-            <label htmlFor="taskTitle" className="label">
-                <span className="label-text" aria-required>
-                    Task title
-                </span>
-            </label>
-            <input
+            <Form.Label title="Task title" htmlFor="task-title" />
+            <FormInput<BoardTaskCreation>
+                id="task-title"
                 type="text"
-                id="taskTitle"
-                placeholder="title"
-                className={cx(
-                    'input-bordered input w-full',
-                    titleError && 'input-error'
-                )}
-                {...register('title', { required: true })}
+                placeholder="title..."
+                className="w-full"
+                color={errors.title ? 'error' : undefined}
+                bordered
+                borderOffset
+                register={register}
+                registerName="title"
+                registerRules={{ required: true }}
+                errors={errors}
             />
-            {titleError && (
-                <p className="mt-2 text-sm text-error">{titleError.message}</p>
-            )}
         </span>
     );
 };
