@@ -17,15 +17,20 @@ const updateBoardProps = (
 /**
  * @returns updateBoard function, error state
  */
-const useUpdateBoard = () => {
+const useUpdateBoard = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
-    const { mutate: updateBoard, error } = trpc.boardRouter.update.useMutation({
+    const {
+        mutate: updateBoard,
+        isLoading,
+        error,
+    } = trpc.boardRouter.update.useMutation({
         onMutate: async (boardToUpdate) => {
             utils.cancel();
             const previousBoards = utils.getData();
             utils.setData(undefined, (currBoards) =>
                 updateBoardProps(currBoards, boardToUpdate)
             );
+            successCb?.();
             return { previousBoards };
         },
         onError: (err, boardToUpdate, context) => {
@@ -36,7 +41,7 @@ const useUpdateBoard = () => {
         },
     });
 
-    return { updateBoard, error };
+    return { updateBoard, isLoading, error };
 };
 
 export default useUpdateBoard;

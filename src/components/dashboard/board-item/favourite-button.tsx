@@ -1,14 +1,15 @@
-import React from 'react';
+import useUpdateBoard from '@hooks/use-update-board';
+import { Board } from '@prisma/client';
+import React, { useState } from 'react';
 import { HiOutlineStar } from 'react-icons/hi';
 
 interface FavouriteButtonProps {
     favourite: boolean;
-    handleFavouriteClick: () => void;
+    updateFavourite: () => void;
 }
-
 const FavouriteButton = ({
     favourite,
-    handleFavouriteClick,
+    updateFavourite,
 }: FavouriteButtonProps) => {
     return (
         <div
@@ -23,7 +24,7 @@ const FavouriteButton = ({
                 type="button"
                 aria-describedby="Click this to add the selected board to your favourites"
                 className="btn-ghost btn-xs btn"
-                onClick={handleFavouriteClick}
+                onClick={updateFavourite}
             >
                 <HiOutlineStar
                     fill={favourite ? '#FFD100' : 'white'}
