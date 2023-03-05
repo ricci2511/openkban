@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import { BoardCreation } from '@lib/schemas/board-schemas';
 import { DEFAULT_COLUMN_TITLES } from '@lib/constants';
 
-interface ColumnsLayoutSectionProps {
+export interface ColumnsLayoutSectionProps {
     layout: BoardColumnsLayout;
     setLayout: (layout: BoardColumnsLayout) => void;
 }

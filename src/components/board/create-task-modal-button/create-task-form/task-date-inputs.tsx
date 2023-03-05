@@ -1,6 +1,5 @@
 import FormInput from '@components/ui/form/form-input';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
-import { cx } from 'class-variance-authority';
 import React from 'react';
 import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
@@ -26,7 +25,7 @@ const TaskDateInputs = () => {
                     bordered
                     borderOffset
                     register={register}
-                    registerName={register('startDate').name}
+                    registerName="startDate"
                     registerRules={{ valueAsDate: true, required: true }}
                     errors={errors}
                 />
@@ -43,7 +42,7 @@ const TaskDateInputs = () => {
                     bordered
                     borderOffset
                     register={register}
-                    registerName={register('dueDate').name}
+                    registerName="dueDate"
                     registerRules={{ valueAsDate: true, required: true }}
                     errors={errors}
                 />

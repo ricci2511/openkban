@@ -5,12 +5,13 @@ import {
     UseFormRegister,
     Path,
     UnPackAsyncDefaultValues,
-    FieldValues,
 } from 'react-hook-form';
 
-export type FormElementProps<TFormValues extends FieldValues> = {
+export type FormErrors<TFormValues> = Partial<DeepMap<TFormValues, FieldError>>;
+
+export type FormElementProps<TFormValues> = {
     register?: UseFormRegister<TFormValues>;
     registerName: Path<UnPackAsyncDefaultValues<TFormValues>>;
     registerRules?: RegisterOptions;
-    errors?: Partial<DeepMap<TFormValues, FieldError>>;
+    errors?: FormErrors<TFormValues>;
 };

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { RiAddFill } from 'react-icons/ri';
 import CreateColumnForm from './create-column-form';
-import { cx } from 'class-variance-authority';
 
 const CreateColumnButton = () => {
     const [creating, setCreating] = useState(false);

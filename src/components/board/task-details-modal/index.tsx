@@ -1,13 +1,12 @@
 import TaskDetails from '@components/task-details';
-import Modal from '@components/ui/modal';
 import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import useKanbanStore from 'store/kanban-store';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
+import Dialog from '@components/ui/dialog';
 
 /**
- *
  * @returns Modal with task details using the route as modal pattern (used in apps like Instagram and Reddit)
  */
 const TaskDetailsModal = () => {
@@ -29,16 +28,16 @@ const TaskDetailsModal = () => {
     );
 
     return (
-        <Modal
-            isOpen={!!id}
-            toggleModal={() => router.back()}
-            maxWidth="threeXl"
+        <Dialog
+            open={!!id}
+            closeDialog={() => router.back()}
+            className="max-w-4xl"
         >
             {isLoading && <CustomLoadingSpinner />}
             {taskWithSubtasks && !!id && (
                 <TaskDetails task={taskWithSubtasks} />
             )}
-        </Modal>
+        </Dialog>
     );
 };
 

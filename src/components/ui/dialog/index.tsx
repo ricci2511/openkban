@@ -2,29 +2,26 @@ import ClientOnlyPortal from '@components/client-only-portal';
 import React, { PropsWithChildren } from 'react';
 import { Button, Modal } from 'react-daisyui';
 
-interface PortalModalProps extends PropsWithChildren {
+export type DialogType = {
     open: boolean;
-    closeModal: () => void;
+    closeDialog: () => void | React.Dispatch<React.SetStateAction<boolean>>;
+};
+interface DialogProps extends DialogType, PropsWithChildren {
     className?: string;
 }
-const PortalModal = ({
-    open,
-    closeModal,
-    className,
-    children,
-}: PortalModalProps) => {
+const Dialog = ({ open, closeDialog, className, children }: DialogProps) => {
     return (
         <ClientOnlyPortal selector="#modal">
             <Modal
                 open={open}
-                onClickBackdrop={closeModal}
+                onClickBackdrop={closeDialog}
                 className={className}
             >
                 <Button
                     size="sm"
                     shape="circle"
                     className="absolute right-2 top-2"
-                    onClick={closeModal}
+                    onClick={closeDialog}
                 >
                     ✕
                 </Button>
@@ -34,4 +31,4 @@ const PortalModal = ({
     );
 };
 
-export default PortalModal;
+export default Dialog;

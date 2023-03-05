@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { Textarea } from 'react-daisyui';
 import { FormElementProps } from 'types/form-types';
+import get from 'lodash.get';
 
 interface FormTextareaProps<TFormValues extends FieldValues>
     extends FormElementProps<TFormValues>,
@@ -14,7 +15,8 @@ const FormTextarea = <TFormValues extends Record<string, unknown>>({
     errors,
     ...rest
 }: FormTextareaProps<TFormValues>) => {
-    const errorMessages = errors && errors[registerName];
+    // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
+    const errorMessages = get(errors, registerName);
 
     return (
         <>

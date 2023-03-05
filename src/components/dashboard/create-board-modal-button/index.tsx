@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import CreateBoardModal from './create-board-modal';
 
 const CreateBoardModalButton = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const toggleModal = () => setIsModalOpen((open) => !open);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     return (
         <>
-            <button className="btn-primary btn" onClick={toggleModal}>
+            <button
+                className="btn-primary btn"
+                onClick={() => setIsDialogOpen(true)}
+            >
                 Add Board
             </button>
-            <CreateBoardModal isOpen={isModalOpen} toggleModal={toggleModal} />
+            <CreateBoardModal
+                open={isDialogOpen}
+                closeDialog={() => setIsDialogOpen(false)}
+            />
         </>
     );
 };

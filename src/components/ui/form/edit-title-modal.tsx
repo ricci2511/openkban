@@ -1,13 +1,11 @@
 import React from 'react';
-import PortalModal from '../modal/portal-modal';
+import Dialog, { DialogType } from '../dialog';
 import { Button, Form, Input, Modal } from 'react-daisyui';
 import { FieldErrorsImpl, UseFormRegister } from 'react-hook-form';
 import { TitleInput } from '@lib/schemas/board-schemas';
 import FormInput from './form-input';
 
-interface EditTitleModalProps {
-    open: boolean;
-    closeModal: () => void;
+interface EditTitleModalProps extends DialogType {
     name: string;
     formRegister: UseFormRegister<TitleInput>;
     errors: Partial<FieldErrorsImpl<TitleInput>>;
@@ -20,7 +18,7 @@ interface EditTitleModalProps {
 
 const EditTitleModal = ({
     open,
-    closeModal,
+    closeDialog,
     name,
     formRegister,
     errors,
@@ -29,34 +27,34 @@ const EditTitleModal = ({
     oldTitle,
 }: EditTitleModalProps) => {
     return (
-        <PortalModal open={open} closeModal={closeModal} className="max-w-2xl">
+        <Dialog open={open} closeDialog={closeDialog} className="max-w-2xl">
             <Modal.Header className="mt-3 text-2xl font-bold">
                 Edit {name} title
             </Modal.Header>
             <Modal.Body>
                 <Form className="mb-4 w-full" onSubmit={onSubmit}>
                     <div className="flex flex-col gap-4 md:flex-row">
-                        <span className="w-1/2">
+                        <span className="w-full md:w-1/2">
                             <Form.Label title={`Old ${name} title`} />
                             <Input
                                 type="text"
                                 name="old-title"
-                                className="w-full max-w-sm"
+                                className="w-full"
                                 defaultValue={oldTitle}
                                 size="lg"
                                 disabled
                             />
                         </span>
-                        <span className="w-1/2">
+                        <span className="w-full md:w-1/2">
                             <Form.Label title={`New ${name} title`} />
                             <FormInput<TitleInput>
                                 register={formRegister}
-                                registerName={formRegister('title').name}
+                                registerName="title"
                                 registerRules={{ required: true }}
                                 errors={errors}
                                 type="text"
                                 placeholder={`${name} title...`}
-                                className="w-full max-w-sm"
+                                className="w-full"
                                 color={errors.title ? 'error' : undefined}
                                 size="lg"
                                 bordered
@@ -78,7 +76,7 @@ const EditTitleModal = ({
                     Update title
                 </Button>
             </Modal.Actions>
-        </PortalModal>
+        </Dialog>
     );
 };
 

@@ -1,20 +1,28 @@
 import useCreateBoard from '@hooks/use-create-board';
-import { cx } from 'class-variance-authority';
-import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import ColumnsLayoutSection from './columns-layout-section';
-import { BoardColumnsLayout } from 'types/board-types';
+import React, { useEffect } from 'react';
+import ColumnsLayoutSection, {
+    ColumnsLayoutSectionProps,
+} from './columns-layout-section';
 import { DEFAULT_COLUMN_TITLES } from '@lib/constants';
 import { BoardCreation } from '@lib/schemas/board-schemas';
-import { ModalType } from '@components/ui/modal';
+import FormInput from '@components/ui/form/form-input';
+import { Form } from 'react-daisyui';
+import { FormErrors } from 'types/form-types';
+import { useFormContext } from 'react-hook-form';
 
-const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
+interface CreateBoardFormProps extends ColumnsLayoutSectionProps {
+    createBoard: ReturnType<typeof useCreateBoard>['createBoard'];
+}
+
+const CreateBoardForm = ({
+    createBoard,
+    layout,
+    setLayout,
+}: CreateBoardFormProps) => {
     const {
         register,
-        getValues,
         setValue,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useFormContext<BoardCreation>();
 
@@ -22,28 +30,6 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     useEffect(() => {
         setValue('columnTitles', DEFAULT_COLUMN_TITLES);
     }, [setValue]);
-
-    // columns layout state
-    const [layout, setLayout] = useState<BoardColumnsLayout>('default');
-
-    // sanitize custom columns titles state before submitting by removing invalid titles
-    const handleSubmitClick = () => {
-        if (layout === 'default') return;
-        // remove empty strings and duplicates
-        const colTitles = Array.from(
-            new Set(getValues('columnTitles').filter((title) => title))
-        );
-        setValue('columnTitles', colTitles);
-    };
-
-    // close modal, reset form and column layout state after successful board creation
-    const onCreateBoardSuccess = () => {
-        toggleModal();
-        reset();
-        setLayout('default');
-    };
-    const { createBoard, isLoading, error } =
-        useCreateBoard(onCreateBoardSuccess);
 
     // create board after valid form submission
     const onSubmit = handleSubmit(({ title, isFavourite, columnTitles }) => {
@@ -55,64 +41,51 @@ const CreateBoardForm = ({ toggleModal }: Pick<ModalType, 'toggleModal'>) => {
     });
 
     return (
-        <form
-            className="form-control mt-2 w-full"
+        <Form
+            className="mt-2 w-full gap-2"
             onSubmit={onSubmit}
             onKeyDown={(e) => (e.key === 'Enter' ? e.preventDefault() : null)}
+            id="create-board-form"
         >
-            <label className="label">
-                <span className="label-text" aria-required>
-                    Board title
-                </span>
-            </label>
-            <input
-                type="text"
-                placeholder="Type here"
-                className={cx(
-                    'input-bordered input w-full',
-                    errors.title && 'input-error'
-                )}
-                {...register('title', { required: true })}
-            />
-            {errors.title && (
-                <p className="mt-2 text-sm text-error">
-                    {errors.title.message}
-                </p>
-            )}
-            <label className="label cursor-pointer">
-                <span className="label-text">Add it to your favourites?</span>
-                <input
-                    type="checkbox"
-                    className="checkbox-primary checkbox"
-                    {...register('isFavourite')}
+            <span>
+                <Form.Label title="Board title" htmlFor="board-title" />
+                <FormInput<BoardCreation>
+                    id="board-title"
+                    type="text"
+                    placeholder="title..."
+                    className="w-full"
+                    color={errors.title ? 'error' : undefined}
+                    bordered
+                    borderOffset
+                    register={register}
+                    registerName="title"
+                    registerRules={{ required: true }}
+                    errors={errors as FormErrors<BoardCreation>}
                 />
-            </label>
-            <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
-            {errors.columnTitles && (
-                <p className="mx-auto mt-2 text-sm text-error">
-                    {errors.columnTitles.message}
-                </p>
-            )}
-            <div className="modal-action">
-                <button
-                    type="submit"
-                    className={cx(
-                        'btn-primary btn',
-                        isLoading ? 'btn-disabled loading' : null
-                    )}
-                    onClick={handleSubmitClick}
-                >
-                    {isLoading ? 'Creating...' : 'Create Board'}
-                </button>
-                <button
-                    type="button"
-                    className="btn-error btn"
-                    onClick={toggleModal}
-                >
-                    Cancel
-                </button>
-            </div>
-        </form>
+            </span>
+            <span>
+                <Form.Label title="Columns layout" />
+                <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
+                {errors.columnTitles && (
+                    <p className="mx-auto mt-2 text-sm text-error">
+                        {errors.columnTitles.message}
+                    </p>
+                )}
+            </span>
+            <Form.Label
+                title="Add it to your favourites?"
+                className="justify-start gap-3"
+            >
+                <FormInput<BoardCreation>
+                    type="checkbox"
+                    size="xs"
+                    className="checkbox-primary checkbox"
+                    color="primary"
+                    register={register}
+                    registerName="isFavourite"
+                />
+            </Form.Label>
+        </Form>
     );
 };
 

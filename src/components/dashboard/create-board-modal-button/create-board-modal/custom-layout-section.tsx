@@ -1,10 +1,13 @@
 import { BoardCreation } from '@lib/schemas/board-schemas';
-import { cx } from 'class-variance-authority';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { randomId } from '@lib/helpers';
 import ColumnItemsContainer from './column-items-container';
 import { MAX_COLUMNS } from '@lib/constants';
+import { FormErrors } from 'types/form-types';
+import { Button } from 'react-daisyui';
+import FormInputGroup from '@components/ui/form/form-input-group';
+import InfoTooltip from '@components/ui/tooltip/info-tooltip';
 
 export type CustomColumn = {
     id: string;
@@ -57,53 +60,49 @@ const CustomLayoutSection = () => {
         setCustomColumns((prevCols) => prevCols.filter((col) => col.id !== id));
     };
 
-    const columnErrors = errors.columnTitles;
-
     return (
         <div className="form-control mt-6">
-            <div className="w-full">
-                <label className="label">
-                    <span className="label-text">Your Columns</span>
-                </label>
-                <label className="input-group-sm input-group">
-                    <input
-                        type="text"
-                        placeholder="Column title"
-                        className={cx(
-                            'input-bordered input input-md w-full',
-                            columnErrors && 'input-error'
-                        )}
-                        title={
-                            isMaxColumns
-                                ? `Cannot add more than ${MAX_COLUMNS} columns`
-                                : 'Set your column title'
-                        }
-                        onKeyDown={(e) =>
-                            e.key === 'Enter' ? handleColumnAddition() : null
-                        }
-                        autoFocus
-                        {...register(titleInput, {
-                            disabled: isMaxColumns,
-                        })}
+            <span className="w-full">
+                <label
+                    className="label cursor-pointer justify-start gap-2"
+                    htmlFor="column-title"
+                >
+                    <span className="label-text">Column title</span>
+                    <InfoTooltip
+                        message={`${MAX_COLUMNS} columns can be added, sorted left to right`}
+                        position="right"
                     />
-                    <button
-                        className={cx(
-                            'btn',
-                            isMaxColumns ? 'btn-disabled' : null
-                        )}
+                </label>
+                <FormInputGroup<BoardCreation>
+                    id="column-title"
+                    placeholder="title..."
+                    className="w-full"
+                    title={
+                        isMaxColumns
+                            ? `Cannot add more than ${MAX_COLUMNS} columns`
+                            : 'Set your column title'
+                    }
+                    color={errors.columnTitles ? 'error' : undefined}
+                    bordered
+                    borderOffset
+                    register={register}
+                    registerName={titleInput}
+                    registerRules={{ disabled: isMaxColumns }}
+                    errors={errors as FormErrors<BoardCreation>}
+                    onKeyDown={(e) =>
+                        e.key === 'Enter' ? handleColumnAddition() : null
+                    }
+                    autoFocus
+                >
+                    <Button
+                        disabled={isMaxColumns}
                         type="button"
                         onClick={handleColumnAddition}
                     >
                         Add
-                    </button>
-                </label>
-            </div>
-
-            {columnErrors && columnErrors.length && (
-                <p className="mt-2 text-sm text-error">
-                    {columnErrors[columnErrors.length - 1]?.message}
-                </p>
-            )}
+                    </Button>
+                </FormInputGroup>
+            </span>
             <ul className="m-4 grid w-full grid-flow-row grid-cols-2 gap-y-2 gap-x-4 self-center sm:grid-cols-3">
                 <ColumnItemsContainer
                     columns={customColumns}

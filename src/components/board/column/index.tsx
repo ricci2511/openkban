@@ -7,7 +7,6 @@ import {
 import SortableTask from '../task/sortable-task';
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
-import { cx } from 'class-variance-authority';
 import ColumnOptionsDropdown from './column-options-dropdown';
 
 interface ColumnProps {

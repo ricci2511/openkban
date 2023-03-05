@@ -28,11 +28,8 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
         });
     };
 
-    const [warningModalOpen, setWarningModalOpen] = useState(false);
-    const toggleWarningModal = () => setWarningModalOpen(!warningModalOpen);
-
+    const [warningDialogOpen, setWarningDialogOpen] = useState(false);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
-
     const [isEditting, setIsEditting] = useState(false);
     const toggleEditting = () => setIsEditting(!isEditting);
 
@@ -74,7 +71,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                             color="error"
                             startIcon={<HiTrash size={18} />}
                             ariaLabel={`Delete ${title} column`}
-                            onClick={() => setWarningModalOpen(true)}
+                            onClick={() => setWarningDialogOpen(true)}
                         />
                     </li>
                 </Dropdown.Menu>
@@ -86,12 +83,12 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                     toggleEditting={toggleEditting}
                 />
             )}
-            {warningModalOpen && (
+            {warningDialogOpen && (
                 <DeleteWarningModal
                     title={title}
                     columnId={id}
-                    isOpen={warningModalOpen}
-                    toggleModal={toggleWarningModal}
+                    open={warningDialogOpen}
+                    closeDialog={() => setWarningDialogOpen(false)}
                 />
             )}
         </>

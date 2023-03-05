@@ -3,8 +3,7 @@ import { MdLibraryAdd } from 'react-icons/md';
 import CreateTaskModal from './create-task-modal';
 
 const CreateTaskModalButton = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const toggleModal = () => setIsModalOpen((open) => !open);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     return (
         <>
             <div
@@ -13,13 +12,16 @@ const CreateTaskModalButton = () => {
             >
                 <button
                     className="btn-outline btn-circle btn"
-                    onClick={toggleModal}
+                    onClick={() => setIsDialogOpen(true)}
                     aria-label="Open modal to create a new task"
                 >
                     <MdLibraryAdd size={18} />
                 </button>
             </div>
-            <CreateTaskModal isOpen={isModalOpen} toggleModal={toggleModal} />
+            <CreateTaskModal
+                open={isDialogOpen}
+                closeDialog={() => setIsDialogOpen(false)}
+            />
         </>
     );
 };

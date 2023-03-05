@@ -45,7 +45,7 @@ const TaskEditTitleModal = ({
     return (
         <EditTitleModal
             open={isEditting}
-            closeModal={toggleEditting}
+            closeDialog={toggleEditting}
             name="task"
             formRegister={register}
             errors={errors}

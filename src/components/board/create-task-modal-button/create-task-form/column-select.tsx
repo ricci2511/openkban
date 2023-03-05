@@ -2,9 +2,9 @@ import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import useKanbanStore from 'store/kanban-store';
-import { HiOutlineInformationCircle } from 'react-icons/hi';
-import { Form, Tooltip } from 'react-daisyui';
+import { Form } from 'react-daisyui';
 import FormSelect from '@components/ui/form/form-select';
+import InfoTooltip from '@components/ui/tooltip/info-tooltip';
 
 const ColumnSelect = () => {
     const {
@@ -20,14 +20,10 @@ const ColumnSelect = () => {
                 htmlFor="column"
                 className="justify-start gap-2"
             >
-                <Tooltip
+                <InfoTooltip
                     message="Pick the column you want to add the task to"
                     position="right"
-                    color="info"
-                    className="text-xs"
-                >
-                    <HiOutlineInformationCircle size={18} />
-                </Tooltip>
+                />
             </Form.Label>
             <FormSelect<BoardTaskCreation>
                 id="column"

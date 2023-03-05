@@ -1,3 +1,4 @@
+import { MAX_COLUMNS } from '@lib/constants';
 import { z } from 'zod';
 
 export const boardTitle = z
@@ -33,7 +34,7 @@ export const boardCeationSchema = z.object({
     columnTitles: z
         .array(columnTitle)
         .min(1, 'You must have at least 1 column')
-        .max(6, 'You cannot have more than 6 columns'),
+        .max(MAX_COLUMNS, `You cannot have more than ${MAX_COLUMNS} columns`),
 });
 export type BoardCreation = z.infer<typeof boardCeationSchema>;
 

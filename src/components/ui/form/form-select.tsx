@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { FieldValues } from 'react-hook-form';
 import { Select } from 'react-daisyui';
 import { FormElementProps } from 'types/form-types';
+import get from 'lodash.get';
 
 type SelectType = ComponentProps<typeof Select>;
 
@@ -19,7 +20,8 @@ const FormSelect = <TFormValues extends Record<string, unknown>>({
     children,
     ...rest
 }: FormSelectProps<TFormValues>) => {
-    const errorMessages = errors && errors[registerName];
+    // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
+    const errorMessages = get(errors, registerName);
 
     return (
         <>

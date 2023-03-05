@@ -1,6 +1,5 @@
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { BoardTask } from '@prisma/client';
-import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import React from 'react';
 import { RxDragHandleDots2 } from 'react-icons/rx';
@@ -19,10 +18,8 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
     const boardId = useKanbanStore((state) => state.boardId);
 
-    const taskClasses = cx(
-        'flex bg-base-200 border-l-2',
-        isDragging ? 'opacity-50' : null
-    );
+    const taskClasses = `flex bg-base-200 border-l-2
+        ${isDragging && 'opacity-50'}`;
 
     return (
         <div className={taskClasses} style={{ borderLeftColor: color }}>

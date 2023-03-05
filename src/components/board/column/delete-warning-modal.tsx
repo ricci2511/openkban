@@ -1,16 +1,16 @@
-import Modal, { ModalType } from '@components/ui/modal';
+import { Button, Modal } from 'react-daisyui';
+import Dialog, { DialogType } from '@components/ui/dialog';
 import { trpc } from '@lib/trpc';
-import { cx } from 'class-variance-authority';
 import React from 'react';
 import useKanbanStore from 'store/kanban-store';
 
-interface DeleteWarningModalProps extends ModalType {
+interface DeleteWarningModalProps extends DialogType {
     columnId: string;
     title: string;
 }
 const DeleteWarningModal = ({
-    isOpen,
-    toggleModal,
+    open,
+    closeDialog,
     columnId,
     title,
 }: DeleteWarningModalProps) => {
@@ -21,43 +21,40 @@ const DeleteWarningModal = ({
         error: deleteErr,
     } = trpc.boardColumnRouter.delete.useMutation({
         onSuccess: () => {
-            toggleModal();
+            closeDialog();
             deleteStoreCol(columnId);
         },
     });
 
     return (
-        <Modal
-            isOpen={isOpen}
-            toggleModal={toggleModal}
-            title={`Delete column '${title}'`}
-        >
-            <p className="py-4">
+        <Dialog open={open} closeDialog={closeDialog}>
+            <Modal.Header className="mt-2 text-2xl font-bold">
+                {`Delete column '${title}'`}
+            </Modal.Header>
+            <Modal.Body>
                 Are you sure you want do delete this column and all the tasks
                 within it?
-            </p>
-            <div className="modal-action">
-                <button
+            </Modal.Body>
+            <Modal.Actions>
+                <Button
                     type="button"
-                    className={cx(
-                        'btn-error btn',
-                        isLoading ? 'btn-disabled loading' : null
-                    )}
+                    color="error"
+                    disabled={isLoading}
+                    loading={isLoading}
                     aria-label={`Delete ${title} column`}
                     onClick={() => deleteColumn({ id: columnId })}
                 >
                     {isLoading ? 'Deleting...' : 'Delete Column'}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
-                    className="btn"
-                    onClick={toggleModal}
+                    onClick={closeDialog}
                     aria-label="Cancel column deletion and close modal"
                 >
                     Cancel
-                </button>
-            </div>
-        </Modal>
+                </Button>
+            </Modal.Actions>
+        </Dialog>
     );
 };
 

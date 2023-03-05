@@ -50,7 +50,7 @@ const ColumnEditTitleModal = ({
     return (
         <EditTitleModal
             open={isEditting}
-            closeModal={toggleEditting}
+            closeDialog={toggleEditting}
             name="column"
             formRegister={register}
             errors={errors}
