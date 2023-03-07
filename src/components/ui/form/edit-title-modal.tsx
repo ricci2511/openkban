@@ -1,31 +1,59 @@
 import React from 'react';
 import Dialog, { DialogType } from '../dialog';
 import { Button, Form, Input, Modal } from 'react-daisyui';
-import { FieldErrorsImpl, UseFormRegister } from 'react-hook-form';
-import { TitleInput } from '@lib/schemas/board-schemas';
+import { useForm } from 'react-hook-form';
+import { TitleInput, titleSchema } from '@lib/schemas/board-schemas';
 import FormInput from './form-input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { TRPCClientErrorLike } from '@trpc/client';
+import { AppRouter } from '@server/router';
+import { UseTRPCMutationResult } from '@trpc/react-query/shared';
 
-interface EditTitleModalProps extends DialogType {
+type HasIdAndTitle = { id: string } & TitleInput;
+
+interface EditTitleModalProps<TEntity extends HasIdAndTitle>
+    extends DialogType {
+    entity: TEntity;
+    // TODO: fix type
+    updateMutation: UseTRPCMutationResult<
+        TEntity,
+        TRPCClientErrorLike<AppRouter>,
+        Optional<HasIdAndTitle, 'title'>,
+        unknown
+    >;
+    zodString: z.ZodString;
     name: string;
-    formRegister: UseFormRegister<TitleInput>;
-    errors: Partial<FieldErrorsImpl<TitleInput>>;
-    onSubmit: (
-        e?: React.BaseSyntheticEvent<object, any, any> | undefined
-    ) => Promise<void>;
-    isLoading: boolean;
     oldTitle: string;
 }
 
-const EditTitleModal = ({
+const EditTitleModal = <TEntity extends HasIdAndTitle>({
+    entity,
+    updateMutation,
+    zodString,
+    name,
+    oldTitle,
     open,
     closeDialog,
-    name,
-    formRegister,
-    errors,
-    onSubmit,
-    isLoading,
-    oldTitle,
-}: EditTitleModalProps) => {
+}: EditTitleModalProps<TEntity>) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<TitleInput>({
+        resolver: zodResolver(titleSchema(zodString)),
+    });
+
+    const { mutate: updateTitle, isLoading } = updateMutation;
+
+    const onSubmit = handleSubmit(({ title }) => {
+        if (title === entity.title) {
+            closeDialog();
+            return;
+        }
+        updateTitle({ id: entity.id, title });
+    });
+
     return (
         <Dialog open={open} closeDialog={closeDialog} className="max-w-2xl">
             <Modal.Header className="mt-3 text-2xl font-bold">
@@ -48,7 +76,7 @@ const EditTitleModal = ({
                         <span className="w-full md:w-1/2">
                             <Form.Label title={`New ${name} title`} />
                             <FormInput<TitleInput>
-                                register={formRegister}
+                                register={register}
                                 registerName="title"
                                 registerRules={{ required: true }}
                                 errors={errors}

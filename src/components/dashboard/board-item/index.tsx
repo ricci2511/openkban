@@ -16,7 +16,7 @@ const BoardItem = ({ board }: BoardProps) => {
     const { deleteBoard } = useDeleteBoard();
     const removeBoard = () => deleteBoard({ id });
 
-    const { updateBoard } = useUpdateBoard();
+    const { mutate: updateBoard } = useUpdateBoard();
     const [favourite, setFavourite] = useState(isFavourite);
     const updateFavourite = () => {
         setFavourite((favourite) => !favourite);

@@ -14,7 +14,7 @@ export const BoardPage: NextPageWithLayout = () => {
         { id },
         { cacheTime: 0 }
     );
-    const { updateBoard } = useUpdateBoard();
+    const { mutate: updateBoard } = useUpdateBoard();
 
     // Update the board's lastInteractedAt field
     useEffect(() => {

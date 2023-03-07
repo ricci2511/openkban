@@ -1,28 +1,32 @@
-import { trpc } from '@lib/trpc';
 import { BoardColumn } from '@prisma/client';
 import React, { useState } from 'react';
-import useKanbanStore from 'store/kanban-store';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import DeleteWarningModal from './delete-warning-modal';
 import { Button, Dropdown } from 'react-daisyui';
 import DropdownButton from '@components/ui/buttons/dropdown-button';
-import ColumnEditTitleModal from './column-edit-title-modal';
+import EditTitleModal from '@components/ui/form/edit-title-modal';
+import { columnTitle } from '@lib/schemas/board-schemas';
+import useUpdateColumn from '@hooks/use-update-column';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
 }
 const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
     const { id, color, title } = column;
-    const { mutate: updateColumn, error: updateErr } =
-        trpc.boardColumnRouter.update.useMutation();
 
-    const updateStoreCol = useKanbanStore((state) => state.updateColumn);
+    const [isEditting, setIsEditting] = useState(false);
+    const stopEditting = () => setIsEditting(false);
+    // same mutation is used for updating title and color, stopEditting cb is only passed when updating title
+    const updateColumnMutation = useUpdateColumn(
+        isEditting ? stopEditting : undefined
+    );
+
     const handleColorChange = (newColor: string) => {
-        if (color === newColor) return;
-        // update column color in kanban store and db
-        updateStoreCol({ ...column, color: newColor });
-        updateColumn({
+        const { mutate: updateCol, isLoading } = updateColumnMutation;
+        // prevent updating if color is the same or if already mutating
+        if (color === newColor || isLoading) return;
+        updateCol({
             id,
             color: newColor,
         });
@@ -30,8 +34,6 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
 
     const [warningDialogOpen, setWarningDialogOpen] = useState(false);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
-    const [isEditting, setIsEditting] = useState(false);
-    const toggleEditting = () => setIsEditting(!isEditting);
 
     return (
         <>
@@ -45,7 +47,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                             text="Rename"
                             startIcon={<HiPencil size={18} />}
                             ariaLabel={`Rename ${title} column`}
-                            onClick={toggleEditting}
+                            onClick={() => setIsEditting(true)}
                         />
                     </li>
                     <li>
@@ -77,10 +79,14 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                 </Dropdown.Menu>
             </Dropdown>
             {isEditting && (
-                <ColumnEditTitleModal
-                    column={column}
-                    isEditting={isEditting}
-                    toggleEditting={toggleEditting}
+                <EditTitleModal
+                    entity={column}
+                    updateMutation={updateColumnMutation}
+                    zodString={columnTitle}
+                    name="column"
+                    oldTitle={title}
+                    open={isEditting}
+                    closeDialog={stopEditting}
                 />
             )}
             {warningDialogOpen && (

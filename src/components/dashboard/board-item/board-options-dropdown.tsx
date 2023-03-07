@@ -2,8 +2,10 @@ import DropdownButton from '@components/ui/buttons/dropdown-button';
 import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-daisyui';
 import { HiOutlineDotsVertical, HiPencil, HiTrash } from 'react-icons/hi';
-import BoardEditTitleModal from './board-edit-title-modal';
 import { Board } from '@prisma/client';
+import EditTitleModal from '@components/ui/form/edit-title-modal';
+import useUpdateBoard from '@hooks/use-update-board';
+import { boardTitle } from '@lib/schemas/board-schemas';
 
 interface OptionsDropdownProps {
     board: Board;
@@ -13,6 +15,7 @@ interface OptionsDropdownProps {
 const BoardOptionsDropdown = ({ board, removeBoard }: OptionsDropdownProps) => {
     const [isEditting, setIsEditting] = useState(false);
     const toggleEditting = () => setIsEditting(!isEditting);
+    const updateBoardMutation = useUpdateBoard(toggleEditting);
 
     return (
         <>
@@ -41,10 +44,14 @@ const BoardOptionsDropdown = ({ board, removeBoard }: OptionsDropdownProps) => {
                 </Dropdown.Menu>
             </Dropdown>
             {isEditting && (
-                <BoardEditTitleModal
-                    board={board}
-                    isEditting={isEditting}
-                    toggleEditting={toggleEditting}
+                <EditTitleModal
+                    entity={board}
+                    updateMutation={updateBoardMutation}
+                    zodString={boardTitle}
+                    name="board"
+                    oldTitle={board.title}
+                    open={isEditting}
+                    closeDialog={toggleEditting}
                 />
             )}
         </>

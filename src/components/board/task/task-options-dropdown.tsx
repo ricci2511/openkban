@@ -4,17 +4,22 @@ import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-daisyui';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
-import TaskEditTitleModal from './task-edit-title-modal';
+import { taskTitle } from '@lib/schemas/board-schemas';
+import useUpdateTask from '@hooks/use-update-task';
+import EditTitleModal from '@components/ui/form/edit-title-modal';
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
 }
 
 const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
+    const { id, title } = task;
+
     const { deleteTask, isLoading: deleteLoading } = useDeleteTask();
 
     const [isEditting, setIsEditting] = useState(false);
-    const toggleEditting = () => setIsEditting(!isEditting);
+    const stopEditting = () => setIsEditting(false);
+    const updateTaskMutation = useUpdateTask(stopEditting);
 
     return (
         <>
@@ -27,8 +32,8 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                         <DropdownButton
                             text="Rename"
                             startIcon={<HiPencil size={18} />}
-                            ariaLabel={`Rename ${task.title} task`}
-                            onClick={toggleEditting}
+                            ariaLabel={`Rename ${title} task`}
+                            onClick={() => setIsEditting(true)}
                         />
                     </li>
                     <li>
@@ -37,17 +42,21 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                             color="error"
                             startIcon={<HiTrash size={18} />}
                             loading={deleteLoading}
-                            ariaLabel={`Delete ${task.title} task`}
-                            onClick={() => deleteTask({ id: task.id })}
+                            ariaLabel={`Delete ${title} task`}
+                            onClick={() => deleteTask({ id })}
                         />
                     </li>
                 </Dropdown.Menu>
             </Dropdown>
             {isEditting && (
-                <TaskEditTitleModal
-                    task={task}
-                    isEditting={isEditting}
-                    toggleEditting={toggleEditting}
+                <EditTitleModal
+                    entity={task}
+                    updateMutation={updateTaskMutation}
+                    zodString={taskTitle}
+                    name="task"
+                    oldTitle={title}
+                    open={isEditting}
+                    closeDialog={stopEditting}
                 />
             )}
         </>
