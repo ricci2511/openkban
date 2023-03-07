@@ -54,9 +54,6 @@ const CreateBoardForm = ({
                     type="text"
                     placeholder="title..."
                     className="w-full"
-                    color={errors.title ? 'error' : undefined}
-                    bordered
-                    borderOffset
                     register={register}
                     registerName="title"
                     registerRules={{ required: true }}

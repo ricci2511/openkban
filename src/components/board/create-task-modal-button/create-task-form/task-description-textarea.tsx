@@ -17,9 +17,6 @@ const TaskDescriptionTextarea = () => {
                 id="task-description"
                 placeholder="description..."
                 className="w-full"
-                color={errors.description ? 'error' : undefined}
-                bordered
-                borderOffset
                 register={register}
                 registerName="description"
                 errors={errors}

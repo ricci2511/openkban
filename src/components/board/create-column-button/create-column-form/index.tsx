@@ -49,9 +49,6 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
                 type="text"
                 placeholder="title..."
                 className="w-full"
-                color={errors.title ? 'error' : undefined}
-                bordered
-                borderOffset
                 register={register}
                 registerName="title"
                 errors={errors}

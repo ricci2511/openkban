@@ -21,9 +21,6 @@ const TaskDateInputs = () => {
                     defaultValue={minDate}
                     min={minDate}
                     className="w-full"
-                    color={errors.startDate ? 'error' : undefined}
-                    bordered
-                    borderOffset
                     register={register}
                     registerName="startDate"
                     registerRules={{ valueAsDate: true, required: true }}
@@ -38,9 +35,6 @@ const TaskDateInputs = () => {
                     defaultValue={minDate}
                     min={minDate}
                     className="w-full"
-                    color={errors.dueDate ? 'error' : undefined}
-                    bordered
-                    borderOffset
                     register={register}
                     registerName="dueDate"
                     registerRules={{ valueAsDate: true, required: true }}

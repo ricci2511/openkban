@@ -29,9 +29,6 @@ const ColumnSelect = () => {
                 id="column"
                 defaultValue="default"
                 className="w-full max-w-xs"
-                color={errors.columnId ? 'error' : undefined}
-                bordered
-                borderOffset
                 register={register}
                 registerName="columnId"
                 errors={errors}

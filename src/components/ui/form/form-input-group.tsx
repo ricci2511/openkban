@@ -12,6 +12,7 @@ const FormInputGroup = <TFormValues extends Record<string, unknown>>({
     registerName,
     registerRules,
     errors,
+    color,
     children,
     ...rest
 }: FormInputGroupProps<TFormValues>) => {
@@ -23,6 +24,9 @@ const FormInputGroup = <TFormValues extends Record<string, unknown>>({
             <InputGroup>
                 <Input
                     aria-invalid={!!(errors && errorMessages)}
+                    color={errorMessages ? 'error' : color}
+                    bordered
+                    borderOffset
                     {...rest}
                     {...(register && register(registerName, registerRules))}
                 />

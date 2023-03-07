@@ -17,6 +17,7 @@ const FormSelect = <TFormValues extends Record<string, unknown>>({
     registerName,
     registerRules,
     errors,
+    color,
     children,
     ...rest
 }: FormSelectProps<TFormValues>) => {
@@ -27,6 +28,9 @@ const FormSelect = <TFormValues extends Record<string, unknown>>({
         <>
             <Select
                 aria-invalid={!!(errors && errorMessages)}
+                color={errorMessages ? 'error' : color}
+                bordered
+                borderOffset
                 {...rest}
                 {...(register && register(registerName, registerRules))}
             >

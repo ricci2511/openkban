@@ -83,10 +83,7 @@ const EditTitleModal = <TEntity extends HasIdAndTitle>({
                                 type="text"
                                 placeholder={`${name} title...`}
                                 className="w-full"
-                                color={errors.title ? 'error' : undefined}
                                 size="lg"
-                                bordered
-                                borderOffset
                                 disabled={isLoading}
                                 autoFocus
                             />

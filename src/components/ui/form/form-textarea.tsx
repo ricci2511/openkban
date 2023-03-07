@@ -13,6 +13,7 @@ const FormTextarea = <TFormValues extends Record<string, unknown>>({
     registerName,
     registerRules,
     errors,
+    color,
     ...rest
 }: FormTextareaProps<TFormValues>) => {
     // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
@@ -22,6 +23,9 @@ const FormTextarea = <TFormValues extends Record<string, unknown>>({
         <>
             <Textarea
                 aria-invalid={!!(errors && errorMessages)}
+                color={errorMessages ? 'error' : color}
+                bordered
+                borderOffset
                 {...rest}
                 {...(register && register(registerName, registerRules))}
             />

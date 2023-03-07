@@ -82,9 +82,6 @@ const CustomLayoutSection = () => {
                             ? `Cannot add more than ${MAX_COLUMNS} columns`
                             : 'Set your column title'
                     }
-                    color={errors.columnTitles ? 'error' : undefined}
-                    bordered
-                    borderOffset
                     register={register}
                     registerName={titleInput}
                     registerRules={{ disabled: isMaxColumns }}
