@@ -43,7 +43,7 @@ export const boardTaskRouter = t.router({
                 rank: z.string().optional(),
                 columnId: z.string().cuid().optional(),
                 title: z.string().optional(),
-                description: z.string().nullable(),
+                description: z.string().optional(),
                 startDate: z.date().optional(),
                 dueDate: z.date().optional(),
             })
