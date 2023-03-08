@@ -47,23 +47,29 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
             />
             <FormInputGroup<TitleInput>
                 type="text"
+                id="column-title"
                 placeholder="title..."
                 className="w-full"
                 register={register}
                 registerName="title"
                 errors={errors}
             >
-                <span className="px-2">
+                <Button
+                    type="button"
+                    shape="square"
+                    animation={false}
+                    onClick={() => setColorPickerOpen(true)}
+                    aria-label="Choose a color for your new column"
+                    title="Choose a color for your new column"
+                >
                     <PopoverPicker
                         isOpen={colorPickerOpen}
                         toggle={setColorPickerOpen}
                         color={color}
                         changeColor={setColor}
                         className="absolute top-8 right-0"
-                        aria-label="Choose a color for your new column"
-                        title="Choose a color for your new column"
                     />
-                </span>
+                </Button>
             </FormInputGroup>
             <div className="mt-4 flex gap-2">
                 <Button

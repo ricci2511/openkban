@@ -74,18 +74,22 @@ const EditTitleModal = <TEntity extends HasIdAndTitle>({
                             />
                         </span>
                         <span className="w-full md:w-1/2">
-                            <Form.Label title={`New ${name} title`} />
+                            <Form.Label
+                                title={`New ${name} title`}
+                                htmlFor={`new-${name}-title`}
+                            />
                             <FormInput<TitleInput>
-                                register={register}
-                                registerName="title"
-                                registerRules={{ required: true }}
-                                errors={errors}
                                 type="text"
+                                id={`new-${name}-title`}
                                 placeholder={`${name} title...`}
                                 className="w-full"
                                 size="lg"
                                 disabled={isLoading}
                                 autoFocus
+                                register={register}
+                                registerName="title"
+                                registerRules={{ required: true }}
+                                errors={errors}
                             />
                         </span>
                     </div>

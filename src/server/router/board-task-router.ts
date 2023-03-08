@@ -27,6 +27,7 @@ export const boardTaskRouter = t.router({
             const createTask = await ctx.prisma.boardTask.create({
                 data: {
                     title: input.title,
+                    description: input.description,
                     column: { connect: { id: input.columnId } },
                     startDate: input.startDate,
                     dueDate: input.dueDate,
@@ -42,6 +43,7 @@ export const boardTaskRouter = t.router({
                 rank: z.string().optional(),
                 columnId: z.string().cuid().optional(),
                 title: z.string().optional(),
+                description: z.string().nullable(),
                 startDate: z.date().optional(),
                 dueDate: z.date().optional(),
             })
@@ -55,6 +57,7 @@ export const boardTaskRouter = t.router({
                     rank: input.rank,
                     columnId: input.columnId,
                     title: input.title,
+                    description: input.description,
                     startDate: input.startDate,
                     dueDate: input.dueDate,
                 },
