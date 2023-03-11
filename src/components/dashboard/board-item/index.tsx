@@ -1,7 +1,6 @@
-import useDeleteBoard from '@hooks/use-delete-board';
 import useUpdateBoard from '@hooks/use-update-board';
 import { Board } from '@prisma/client';
-import React, { useState } from 'react';
+import React from 'react';
 import FavouriteButton from './favourite-button';
 import BoardOptionsDropdown from './board-options-dropdown';
 import Link from 'next/link';
@@ -13,14 +12,9 @@ interface BoardProps {
 const BoardItem = ({ board }: BoardProps) => {
     const { id, title, isFavourite } = board;
 
-    const { deleteBoard } = useDeleteBoard();
-    const removeBoard = () => deleteBoard({ id });
-
     const { mutate: updateBoard } = useUpdateBoard();
-    const [favourite, setFavourite] = useState(isFavourite);
     const updateFavourite = () => {
-        setFavourite((favourite) => !favourite);
-        updateBoard({ id: board.id, isFavourite: !favourite });
+        updateBoard({ id: board.id, isFavourite: !isFavourite });
     };
 
     return (
@@ -35,10 +29,10 @@ const BoardItem = ({ board }: BoardProps) => {
                 {title}
             </Link>
             <FavouriteButton
-                favourite={favourite}
+                favourite={isFavourite}
                 updateFavourite={updateFavourite}
             />
-            <BoardOptionsDropdown board={board} removeBoard={removeBoard} />
+            <BoardOptionsDropdown board={board} />
         </li>
     );
 };

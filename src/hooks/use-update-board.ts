@@ -1,39 +1,24 @@
 import { trpc } from '@lib/trpc';
-import { Board } from '@prisma/client';
-import { BoardToUpdate } from 'types/board-types';
-
-const updateBoardProps = (
-    currBoards: Board[] | undefined,
-    boardToUpdate: BoardToUpdate
-) => {
-    return (currBoards || []).map((board) => {
-        if (board.id === boardToUpdate.id) {
-            return { ...board, ...boardToUpdate };
-        }
-        return board;
-    });
-};
+import useBoardStore from 'store/board-store';
 
 /**
  * @returns updateBoard function, error state
  */
 const useUpdateBoard = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
+    const updateBoard = useBoardStore((state) => state.updateBoard);
+    const boards = useBoardStore((state) => state.boards);
+
     const updateBoardMutation = trpc.boardRouter.update.useMutation({
         onMutate: async (boardToUpdate) => {
             utils.cancel();
-            const previousBoards = utils.getData();
-            utils.setData(undefined, (currBoards) =>
-                updateBoardProps(currBoards, boardToUpdate)
-            );
+            updateBoard(boardToUpdate);
             successCb?.();
-            return { previousBoards };
+            // store the previous board in case the mutation fails
+            return boards.find((b) => b.id === boardToUpdate.id);
         },
-        onError: (err, boardToUpdate, context) => {
-            utils.setData(undefined, context?.previousBoards);
-        },
-        onSettled: () => {
-            utils.invalidate();
+        onError: (err, boardToUpdate, oldBoard) => {
+            updateBoard(oldBoard!);
         },
     });
 

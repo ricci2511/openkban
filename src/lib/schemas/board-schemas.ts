@@ -76,6 +76,15 @@ export type BoardTaskCreation = z.infer<typeof boardTaskCreationSchema>;
 // Boards can currently be sorted by createdAt, title and lastInteractedAt props
 const sortableBoardSchema = z.object({
     prop: z.enum(['createdAt', 'title', 'lastInteractedAt']),
-    desc: z.boolean().default(false).optional(),
+    order: z.enum(['asc', 'desc']),
 });
 export type SortableBoard = z.infer<typeof sortableBoardSchema>;
+
+// Schema for updating a kanban board
+export const boardUpdateSchema = z.object({
+    id: z.string().cuid(),
+    title: z.string().min(2).max(30).optional(),
+    isFavourite: z.boolean().optional(),
+    lastInteractedAt: z.date().optional(),
+});
+export type BoardUpdate = z.infer<typeof boardUpdateSchema>;

@@ -1,30 +1,19 @@
 import { trpc } from '@lib/trpc';
+import useBoardStore from 'store/board-store';
 
 /**
- * @returns deleteTask function, isLoading state, error state
+ * @returns deleteTask mutation object
  */
 const useDeleteBoard = () => {
-    const utils = trpc.useContext().boardRouter.getAll;
-    const { mutate: deleteBoard, error } = trpc.boardRouter.delete.useMutation({
-        onMutate: async (boardToDelete) => {
-            await utils.cancel();
-            const previousBoards = utils.getData();
-            utils.setData(undefined, (oldBoards) =>
-                (oldBoards || []).filter(
-                    (board) => board.id !== boardToDelete.id
-                )
-            );
-            return { previousBoards };
-        },
-        onError: (err, boardToDelete, context) => {
-            utils.setData(undefined, context?.previousBoards);
-        },
-        onSettled: () => {
-            utils.invalidate();
+    const removeBoard = useBoardStore((state) => state.removeBoard);
+
+    const deleteBoardMutation = trpc.boardRouter.delete.useMutation({
+        onSuccess: async ({ id }) => {
+            removeBoard(id);
         },
     });
 
-    return { deleteBoard, error };
+    return deleteBoardMutation;
 };
 
 export default useDeleteBoard;

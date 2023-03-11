@@ -1,57 +1,58 @@
 import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
 import { Board } from '@prisma/client';
+import { useEffect } from 'react';
+import useBoardStore from 'store/board-store';
 
 /**
- * @param sortBy object with prop and desc boolean to sort the boards by
+ * @param sortBy object with prop and order enums to sort the boards by
  * @returns sorted boards, isLoading state, error state
  */
 const useGetBoards = (sortBy?: SortableBoard) => {
-    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery();
+    const storeBoards = useBoardStore((state) => state.boards);
+    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery(
+        undefined,
+        {
+            // If there are boards in the store, don't fetch them again
+            enabled: !storeBoards.length,
+        }
+    );
 
-    // I decided to sort on the client instead of the server to avoid too many server calls (just in case)
-    // If I would make a big bag with this project and be able to pay for servers, I would maybe move this action to the server
-    const getSortedBoards = (
-        boards: Board[] | undefined,
-        sort: SortableBoard
-    ) => {
-        if (!boards) return;
-        const { prop, desc } = sort;
+    const setBoards = useBoardStore((state) => state.setBoards);
+    useEffect(() => {
+        // only set the boards if it is empty, on initial dashboard page load
+        if (!storeBoards.length && data) setBoards(data);
+    }, [data, setBoards, storeBoards]);
+
+    const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
+        const { prop, order } = sort;
         switch (prop) {
             case 'lastInteractedAt':
-                if (desc) {
-                    return boards.sort(
-                        (a, b) =>
-                            Number(b.lastInteractedAt) -
-                            Number(a.lastInteractedAt)
-                    );
-                }
-                return boards.sort(
-                    (a, b) =>
-                        Number(a.lastInteractedAt) - Number(b.lastInteractedAt)
+                return boards.sort((a, b) =>
+                    order === 'desc'
+                        ? Number(b.lastInteractedAt) -
+                          Number(a.lastInteractedAt)
+                        : Number(a.lastInteractedAt) -
+                          Number(b.lastInteractedAt)
                 );
             case 'title':
-                if (desc) {
-                    return boards.sort((a, b) =>
-                        b.title.localeCompare(a.title)
-                    );
-                }
-                return boards.sort((a, b) => a.title.localeCompare(b.title));
+                return boards.sort((a, b) =>
+                    order === 'desc'
+                        ? b.title.localeCompare(a.title)
+                        : a.title.localeCompare(b.title)
+                );
             case 'createdAt':
-                if (desc) {
-                    return boards.sort(
-                        (a, b) => Number(b.createdAt) - Number(a.createdAt)
-                    );
-                }
-                return boards.sort(
-                    (a, b) => Number(a.createdAt) - Number(b.createdAt)
+                return boards.sort((a, b) =>
+                    order === 'desc'
+                        ? Number(b.createdAt) - Number(a.createdAt)
+                        : Number(a.createdAt) - Number(b.createdAt)
                 );
             default:
                 return boards;
         }
     };
 
-    const boards = sortBy ? getSortedBoards(data, sortBy) : data;
+    const boards = sortBy ? getSortedBoards(storeBoards, sortBy) : storeBoards;
     return { boards, isLoading, error };
 };
 

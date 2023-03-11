@@ -7,7 +7,7 @@ import useGetBoards from '@hooks/use-get-boards';
 const SidebarLinks = () => {
     const { boards } = useGetBoards({
         prop: 'lastInteractedAt',
-        desc: true,
+        order: 'desc',
     });
     const boardLinks =
         boards &&

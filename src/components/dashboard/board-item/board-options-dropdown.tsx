@@ -6,15 +6,19 @@ import { Board } from '@prisma/client';
 import EditTitleModal from '@components/ui/form/edit-title-modal';
 import useUpdateBoard from '@hooks/use-update-board';
 import { boardTitle } from '@lib/schemas/board-schemas';
+import useDeleteBoard from '@hooks/use-delete-board';
 
 interface OptionsDropdownProps {
     board: Board;
-    removeBoard: () => void;
 }
 
-const BoardOptionsDropdown = ({ board, removeBoard }: OptionsDropdownProps) => {
+const BoardOptionsDropdown = ({ board }: OptionsDropdownProps) => {
     const [isEditting, setIsEditting] = useState(false);
     const toggleEditting = () => setIsEditting(!isEditting);
+
+    const { mutate, isLoading } = useDeleteBoard();
+    const deleteBoard = () => (!isLoading ? mutate({ id: board.id }) : null);
+
     const updateBoardMutation = useUpdateBoard(toggleEditting);
 
     return (
@@ -38,7 +42,8 @@ const BoardOptionsDropdown = ({ board, removeBoard }: OptionsDropdownProps) => {
                             color="error"
                             startIcon={<HiTrash size={18} />}
                             ariaLabel={`Delete ${board.title} board`}
-                            onClick={removeBoard}
+                            loading={isLoading}
+                            onClick={deleteBoard}
                         />
                     </li>
                 </Dropdown.Menu>

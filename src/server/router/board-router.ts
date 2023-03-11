@@ -1,7 +1,10 @@
 import { t } from '@server/trpc';
 import { z } from 'zod';
 import { authedProcedure } from './auth-router';
-import { boardCeationSchema } from '@lib/schemas/board-schemas';
+import {
+    boardCeationSchema,
+    boardUpdateSchema,
+} from '@lib/schemas/board-schemas';
 import { randomNoRepeats } from '@lib/helpers';
 import { PRESET_COLORS } from '@lib/constants';
 import { BoardData } from 'types/board-types';
@@ -56,14 +59,7 @@ export const boardRouter = t.router({
             return createBoard;
         }),
     update: authedProcedure
-        .input(
-            z.object({
-                id: z.string().cuid(),
-                title: z.string().min(2).max(30).optional(),
-                isFavourite: z.boolean().optional(),
-                lastInteractedAt: z.date().optional(),
-            })
-        )
+        .input(boardUpdateSchema)
         .mutation(async ({ ctx, input }) => {
             const updateBoard = await ctx.prisma.board.update({
                 where: {

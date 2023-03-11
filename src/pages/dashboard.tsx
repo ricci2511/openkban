@@ -10,7 +10,7 @@ const Dashboard = () => {
     const { data: session } = useSession();
     const { boards, isLoading } = useGetBoards({
         prop: 'createdAt',
-        desc: true,
+        order: 'desc',
     });
 
     const boardItems =
