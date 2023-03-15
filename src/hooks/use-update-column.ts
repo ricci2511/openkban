@@ -1,13 +1,15 @@
 import { trpc } from '@lib/trpc';
-import useKanbanStore from 'store/kanban-store';
+import { useColumnsActions } from 'store/columns-tasks-store';
 
+/**
+ * @returns update column trpc mutation object
+ */
 const useUpdateColumn = (successCb?: () => void) => {
-    const updateStoreCol = useKanbanStore((state) => state.updateColumn);
+    const { updateColumn } = useColumnsActions();
 
     const updateColumnMutation = trpc.boardColumnRouter.update.useMutation({
         onSuccess: (column) => {
-            updateStoreCol(column);
-            console.log(successCb);
+            updateColumn(column);
             successCb?.();
         },
     });

@@ -3,7 +3,6 @@ import { PRESET_COLORS } from '@lib/constants';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import useKanbanStore from 'store/kanban-store';
 import {
     TitleInput,
     columnTitle,
@@ -12,6 +11,7 @@ import {
 import useCreateColumn from '@hooks/use-create-column';
 import { Button, Form } from 'react-daisyui';
 import FormInputGroup from '@components/ui/form/form-input-group';
+import { useBoardId } from 'store/board-store';
 
 interface CreateColumnFormProps {
     setCreating: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,10 +30,10 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
     );
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
-    const { createColumn, isLoading } = useCreateColumn(() =>
+    const { mutate: createColumn, isLoading } = useCreateColumn(() =>
         setCreating(false)
     );
-    const boardId = useKanbanStore((state) => state.boardId);
+    const boardId = useBoardId()!;
     const onSubmit = handleSubmit(({ title }) => {
         createColumn({ boardId, title, color });
     });

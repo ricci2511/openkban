@@ -33,7 +33,8 @@ const CreateBoardModal = ({ open, closeDialog }: DialogType) => {
         formMethods.reset();
         setLayout('default');
     };
-    const { createBoard, isLoading } = useCreateBoard(onCreateBoardSuccess);
+    const { mutate: createBoard, isLoading } =
+        useCreateBoard(onCreateBoardSuccess);
 
     return (
         <Dialog open={open} closeDialog={closeDialog} className="max-w-3xl">

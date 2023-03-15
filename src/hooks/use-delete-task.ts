@@ -1,23 +1,19 @@
 import { trpc } from '@lib/trpc';
-import useKanbanStore from 'store/kanban-store';
+import { useTasksActions } from 'store/columns-tasks-store';
 
 /**
- * @returns deleteTask function, isLoading state, error state
+ * @returns delete task trpc mutation object
  */
 const useDeleteTask = () => {
-    const removeTask = useKanbanStore((state) => state.deleteTask);
+    const { removeTask } = useTasksActions();
 
-    const {
-        mutate: deleteTask,
-        isLoading,
-        error,
-    } = trpc.boardTaskRouter.delete.useMutation({
-        onSuccess: (task) => {
+    const deleteTaskMutation = trpc.boardTaskRouter.delete.useMutation({
+        onSuccess: ({ id, columnId }) => {
             // after successful deletion remove task from kanban store
-            removeTask(task);
+            removeTask(id, columnId);
         },
     });
-    return { deleteTask, isLoading, error };
+    return deleteTaskMutation;
 };
 
 export default useDeleteTask;

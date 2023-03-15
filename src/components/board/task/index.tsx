@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
-import useKanbanStore from 'store/kanban-store';
 import { Button, Dropdown } from 'react-daisyui';
 import TaskOptionsDropdown from './task-options-dropdown';
+import { useBoardId } from 'store/board-store';
 
 export interface TaskProps {
     task: BoardTask;
@@ -16,7 +16,7 @@ export interface TaskProps {
 }
 const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
-    const boardId = useKanbanStore((state) => state.boardId);
+    const boardId = useBoardId();
 
     const taskClasses = `flex bg-base-200 border-l-2
         ${isDragging && 'opacity-50'}`;

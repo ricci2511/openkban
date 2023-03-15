@@ -1,8 +1,7 @@
 import { Button, Modal } from 'react-daisyui';
 import Dialog, { DialogType } from '@components/ui/dialog';
-import { trpc } from '@lib/trpc';
 import React from 'react';
-import useKanbanStore from 'store/kanban-store';
+import useDeleteColumn from '@hooks/use-delete-column';
 
 interface DeleteWarningModalProps extends DialogType {
     columnId: string;
@@ -14,17 +13,7 @@ const DeleteWarningModal = ({
     columnId,
     title,
 }: DeleteWarningModalProps) => {
-    const deleteStoreCol = useKanbanStore((state) => state.deleteColumn);
-    const {
-        mutate: deleteColumn,
-        isLoading,
-        error: deleteErr,
-    } = trpc.boardColumnRouter.delete.useMutation({
-        onSuccess: () => {
-            closeDialog();
-            deleteStoreCol(columnId);
-        },
-    });
+    const { mutate: deleteColumn, isLoading, error } = useDeleteColumn();
 
     return (
         <Dialog open={open} closeDialog={closeDialog}>

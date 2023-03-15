@@ -1,11 +1,11 @@
 import { trpc } from '@lib/trpc';
-import useBoardStore from 'store/board-store';
+import { useBoardActions } from 'store/board-store';
 
 /**
- * @returns deleteTask mutation object
+ * @returns delete task trpc mutation object
  */
 const useDeleteBoard = () => {
-    const removeBoard = useBoardStore((state) => state.removeBoard);
+    const { removeBoard } = useBoardActions();
 
     const deleteBoardMutation = trpc.boardRouter.delete.useMutation({
         onSuccess: async ({ id }) => {

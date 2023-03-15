@@ -12,9 +12,8 @@ import {
     useSensor,
     useSensors,
 } from '@dnd-kit/core';
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './task';
-import useKanbanStore, { ColumnTasks } from 'store/kanban-store';
 import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
 import {
     createSortablePayloadByIndex,
@@ -23,11 +22,16 @@ import {
 import { trpc } from '@lib/trpc';
 import CreateColumnButton from './create-column-button';
 import { MAX_COLUMNS } from '@lib/constants';
+import { BoardColumn } from '@prisma/client';
+import { TasksMap, useTasksActions } from 'store/columns-tasks-store';
 
-const Kanban = () => {
-    const tasks = useKanbanStore((state) => state.tasks);
-    const setTasks = useKanbanStore((state) => state.setTasks);
-    const columns = useKanbanStore((state) => state.columns);
+interface KanbanBoardProps {
+    columns: BoardColumn[];
+    tasks: TasksMap;
+}
+
+const KanbanBoard = ({ columns, tasks }: KanbanBoardProps) => {
+    const { setTasks, dropTaskInColumn } = useTasksActions();
     // id of the currently dragged task
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
     const sensors = useSensors(
@@ -36,7 +40,7 @@ const Kanban = () => {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
-    const [clonedTasks, setClonedTasks] = useState<ColumnTasks | null>(null);
+    const [clonedTasks, setClonedTasks] = useState<TasksMap | null>(null);
 
     const { mutate: updateTask, error } =
         trpc.boardTaskRouter.update.useMutation();
@@ -108,6 +112,7 @@ const Kanban = () => {
                 overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
         }
 
+        // TODO: move this to its own tasks action
         setTasks({
             ...tasks,
             [activeContainer]: tasks[activeContainer].filter(
@@ -182,14 +187,12 @@ const Kanban = () => {
                         ? (overContainer as string)
                         : undefined,
                 });
-                setTasks({
-                    ...tasks,
-                    [overContainer]: arrayMove(
-                        newTasks,
-                        activeIndex,
-                        overIndex
-                    ),
-                });
+                dropTaskInColumn(
+                    overContainer as string,
+                    newTasks,
+                    activeIndex,
+                    overIndex
+                );
             }
         }
 
@@ -229,4 +232,4 @@ const Kanban = () => {
     );
 };
 
-export default Kanban;
+export default KanbanBoard;

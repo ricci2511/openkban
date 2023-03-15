@@ -4,6 +4,19 @@ import { z } from 'zod';
 import { boardColumnCreationSchema } from '@lib/schemas/board-schemas';
 
 export const boardColumnRouter = t.router({
+    getAllByBoardId: authedProcedure
+        .input(z.object({ boardId: z.string().cuid() }))
+        .query(async ({ ctx, input }) => {
+            const columns = await ctx.prisma.boardColumn.findMany({
+                where: {
+                    boardId: input.boardId,
+                },
+                include: {
+                    tasks: true,
+                },
+            });
+            return columns;
+        }),
     create: authedProcedure
         .input(boardColumnCreationSchema)
         .mutation(async ({ ctx, input }) => {

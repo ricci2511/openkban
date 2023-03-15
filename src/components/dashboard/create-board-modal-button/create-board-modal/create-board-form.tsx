@@ -11,7 +11,7 @@ import { FormErrors } from 'types/form-types';
 import { useFormContext } from 'react-hook-form';
 
 interface CreateBoardFormProps extends ColumnsLayoutSectionProps {
-    createBoard: ReturnType<typeof useCreateBoard>['createBoard'];
+    createBoard: ReturnType<typeof useCreateBoard>['mutate'];
 }
 
 const CreateBoardForm = ({

@@ -5,20 +5,20 @@ import { useFormContext } from 'react-hook-form';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import TaskDateInputs from './task-date-inputs';
 import TaskTitleInput from './task-title-input';
-import useKanbanStore from 'store/kanban-store';
 import { LexoRank } from 'lexorank';
 import TaskDescriptionTextarea from './task-description-textarea';
 import { Form } from 'react-daisyui';
+import { useAllTasks } from 'store/columns-tasks-store';
 
 interface CreateTaskFormProps {
-    createTask: ReturnType<typeof useCreateTask>['createTask'];
+    createTask: ReturnType<typeof useCreateTask>['mutate'];
 }
 const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
     const { handleSubmit } = useFormContext<BoardTaskCreation>();
-    const columnTasks = useKanbanStore((state) => state.tasks);
+    const storeTasks = useAllTasks();
 
     const generateRank = (columnId: string) => {
-        const tasks = columnTasks[columnId];
+        const tasks = storeTasks[columnId];
         const tasksLength = tasks.length;
         if (!tasksLength) {
             return LexoRank.middle().toString();

@@ -14,8 +14,7 @@ interface TaskOptionsDropdownProps {
 
 const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
     const { id, title } = task;
-
-    const { deleteTask, isLoading: deleteLoading } = useDeleteTask();
+    const { mutate: deleteTask, isLoading } = useDeleteTask();
 
     const [isEditting, setIsEditting] = useState(false);
     const stopEditting = () => setIsEditting(false);
@@ -41,7 +40,7 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                             text="Delete"
                             color="error"
                             startIcon={<HiTrash size={18} />}
-                            loading={deleteLoading}
+                            loading={isLoading}
                             ariaLabel={`Delete ${title} task`}
                             onClick={() => deleteTask({ id })}
                         />

@@ -2,9 +2,9 @@ import TaskDetails from '@components/task-details';
 import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
-import useKanbanStore from 'store/kanban-store';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import Dialog from '@components/ui/dialog';
+import { useTasksActions } from 'store/columns-tasks-store';
 
 /**
  * @returns Modal with task details using the route as modal pattern (used in apps like Instagram and Reddit)
@@ -12,7 +12,7 @@ import Dialog from '@components/ui/dialog';
 const TaskDetailsModal = () => {
     let router = useRouter();
     const id = router.query.taskId as string;
-    const task = useKanbanStore((state) => state.getTaskById(id));
+    const task = useTasksActions().getTaskById(id);
     const {
         data: subtasks,
         isLoading,

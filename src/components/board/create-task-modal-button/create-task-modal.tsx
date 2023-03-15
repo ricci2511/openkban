@@ -19,7 +19,8 @@ const CreateTaskModal = ({ open, closeDialog }: DialogType) => {
         closeDialog();
         formMethods.reset();
     };
-    const { createTask, isLoading } = useCreateTask(onCreateTaskSuccess);
+    const { mutate: createTask, isLoading } =
+        useCreateTask(onCreateTaskSuccess);
 
     return (
         <Dialog open={open} closeDialog={closeDialog} className="max-w-2xl">

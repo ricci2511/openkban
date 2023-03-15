@@ -18,10 +18,12 @@ const CreateTaskModalButton = () => {
                     <MdLibraryAdd size={18} />
                 </button>
             </div>
-            <CreateTaskModal
-                open={isDialogOpen}
-                closeDialog={() => setIsDialogOpen(false)}
-            />
+            {isDialogOpen && (
+                <CreateTaskModal
+                    open={isDialogOpen}
+                    closeDialog={() => setIsDialogOpen(false)}
+                />
+            )}
         </>
     );
 };

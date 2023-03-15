@@ -1,27 +1,29 @@
 import NextError from 'next/error';
-import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
 import React, { ReactElement, useEffect } from 'react';
 import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
-import KanbanBoard from '@components/board';
+import { useBoardActions, useBoardId } from 'store/board-store';
+import useFetchBoardData from '@hooks/use-fetch-board-data';
+import KanbanBodySection from '@components/board/kanban-body-section';
+import KanbanHeaderSection from '@components/board/kanban-header-section';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
-    const { data, error, status } = trpc.boardRouter.getById.useQuery(
-        { id },
-        { cacheTime: 0 }
-    );
+    const { data, error, isLoading } = useFetchBoardData(id);
+
+    const storeBoardId = useBoardId();
+    const { setCurrentBoardId } = useBoardActions();
     const { mutate: updateBoard } = useUpdateBoard();
 
-    // Update the board's lastInteractedAt field
     useEffect(() => {
-        if (id) {
+        if (id !== storeBoardId && data) {
+            setCurrentBoardId(id);
             updateBoard({ id, lastInteractedAt: new Date() });
         }
-    }, [id, updateBoard]);
+    }, [id, updateBoard, storeBoardId, setCurrentBoardId, data]);
 
     if (error) {
         return (
@@ -32,7 +34,7 @@ export const BoardPage: NextPageWithLayout = () => {
         );
     }
 
-    if (status !== 'success') {
+    if (isLoading) {
         return <CustomLoadingSpinner centered />;
     }
 
@@ -40,7 +42,12 @@ export const BoardPage: NextPageWithLayout = () => {
         return <NextError title="Board not found" statusCode={404} />;
     }
 
-    return <KanbanBoard boardData={data} />;
+    return (
+        <>
+            <KanbanHeaderSection title={data.title} />
+            <KanbanBodySection boardId={data.id} />
+        </>
+    );
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
