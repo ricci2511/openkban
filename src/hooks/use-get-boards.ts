@@ -1,7 +1,6 @@
 import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
 import { Board } from '@prisma/client';
-import { useBoardActions, useBoards } from 'store/board-store';
 
 const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
     const { prop, order } = sort;
@@ -34,19 +33,9 @@ const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
  * @returns sorted boards, isLoading state, error state
  */
 const useGetBoards = (sortBy?: SortableBoard) => {
-    const { setBoards } = useBoardActions();
-    const { isLoading, error, isInitialLoading } =
-        trpc.boardRouter.getAll.useQuery(undefined, {
-            onSuccess: (boards) => {
-                // set the boards on initial load
-                if (isInitialLoading) {
-                    setBoards(boards);
-                }
-            },
-        });
+    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery();
 
-    const storeBoards = useBoards();
-    const boards = sortBy ? getSortedBoards(storeBoards, sortBy) : storeBoards;
+    const boards = sortBy && data ? getSortedBoards(data, sortBy) : data;
     return { boards, isLoading, error };
 };
 

@@ -5,6 +5,22 @@ import BoardItem from '@components/dashboard/board-item';
 import useGetBoards from '@hooks/use-get-boards';
 import MainLayout from '@components/layouts/main-layout';
 import CreateBoardModalButton from '@components/dashboard/create-board-modal-button';
+import { getSSGHelpers } from '@server/trpc-ssg-helpers';
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export async function getServerSideProps(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const ssg = await getSSGHelpers({ req, res });
+    // prefetch all boards
+    await ssg.boardRouter.getAll.prefetch();
+    return {
+        props: {
+            trpcState: ssg.dehydrate(),
+        },
+    };
+}
 
 const Dashboard = () => {
     const { data: session } = useSession();

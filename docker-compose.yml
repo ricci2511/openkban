@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+    env_file:
+      # a .env.development file with a REDIS_URL var is required, the one from .env.example should work out of the box
+      - .env.development

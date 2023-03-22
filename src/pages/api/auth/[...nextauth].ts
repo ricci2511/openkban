@@ -8,6 +8,7 @@ import { env } from '../../../env/server.mjs';
 export const authOptions: NextAuthOptions = {
     // Include user.id on session
     callbacks: {
+        // TODO: cache session in Redis? Will look into Upstash adapter
         session({ session, user }) {
             if (session.user) {
                 session.user.id = user.id;
