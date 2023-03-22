@@ -3,6 +3,7 @@ import { Board } from '@prisma/client';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
+// TODO: This store will be removed in further commits as i will be using a combination of redis and tanstack query as the cache
 type BoardStore = {
     boards: Board[];
     currentBoardId: string | undefined;

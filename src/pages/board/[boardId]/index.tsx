@@ -5,25 +5,23 @@ import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
-import { useBoardActions, useBoardId } from 'store/board-store';
 import useFetchBoardData from '@hooks/use-fetch-board-data';
 import KanbanBodySection from '@components/board/kanban-body-section';
 import KanbanHeaderSection from '@components/board/kanban-header-section';
+import { useBoardId } from 'store/columns-tasks-store';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
     const { data, error, isLoading } = useFetchBoardData(id);
 
     const storeBoardId = useBoardId();
-    const { setCurrentBoardId } = useBoardActions();
     const { mutate: updateBoard } = useUpdateBoard();
 
     useEffect(() => {
         if (id !== storeBoardId && data) {
-            setCurrentBoardId(id);
             updateBoard({ id, lastInteractedAt: new Date() });
         }
-    }, [id, updateBoard, storeBoardId, setCurrentBoardId, data]);
+    }, [id, updateBoard, storeBoardId, data]);
 
     if (error) {
         return (

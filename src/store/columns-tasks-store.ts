@@ -5,6 +5,7 @@ import { immer } from 'zustand/middleware/immer';
 import { arrayMove } from '@dnd-kit/sortable';
 import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
 
+// TODO: this store will be renamed to KanbanStore as I will only keep a store for the current kanban board that is being interacted with
 export type ColumnsMap = {
     [boardId: string]: BoardColumn[];
 };
@@ -40,6 +41,7 @@ type TasksActions = {
 type ColumnTasksStore = {
     columns: ColumnsMap;
     tasks: TasksMap;
+    boardId: string;
     columnsActions: ColumnsActions;
     tasksActions: TasksActions;
     init: (columnsWithTasks: BoardColumnWithTasks[]) => void;
@@ -74,10 +76,12 @@ const useColumnsTasksStore = create(
     immer<ColumnTasksStore>((set, get) => ({
         columns: {},
         tasks: {},
+        boardId: '',
         init: (columnsWithTasks) =>
             set((state) => {
                 state.columns = initColumnsMap(columnsWithTasks, get().columns);
                 state.tasks = initTasksMap(columnsWithTasks, get().tasks);
+                state.boardId = columnsWithTasks[0].boardId;
             }),
         columnsActions: {
             setColumns: (columns) =>
@@ -161,6 +165,10 @@ const useColumnsTasksStore = create(
     }))
 );
 
+/**
+ * @returns boardId of the current kanban board
+ */
+export const useBoardId = () => useColumnsTasksStore((state) => state.boardId);
 /**
  * This function should be called once after having fetched the required data when navigating to a specific board.
  * @returns init function of the ColumnsTasksStore

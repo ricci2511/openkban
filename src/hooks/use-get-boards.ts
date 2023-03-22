@@ -33,7 +33,14 @@ const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
  * @returns sorted boards, isLoading state, error state
  */
 const useGetBoards = (sortBy?: SortableBoard) => {
-    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery();
+    const cachedQuery = trpc.useContext().boardRouter.getAll.getData();
+    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery(
+        undefined,
+        {
+            enabled: !cachedQuery,
+            initialData: cachedQuery,
+        }
+    );
 
     const boards = sortBy && data ? getSortedBoards(data, sortBy) : data;
     return { boards, isLoading, error };

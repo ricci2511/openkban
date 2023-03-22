@@ -11,7 +11,7 @@ import {
 import useCreateColumn from '@hooks/use-create-column';
 import { Button, Form } from 'react-daisyui';
 import FormInputGroup from '@components/ui/form/form-input-group';
-import { useBoardId } from 'store/board-store';
+import { useBoardId } from 'store/columns-tasks-store';
 
 interface CreateColumnFormProps {
     setCreating: React.Dispatch<React.SetStateAction<boolean>>;

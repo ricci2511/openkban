@@ -1,16 +1,18 @@
 import { trpc } from '@lib/trpc';
-import { useBoardActions } from 'store/board-store';
 
 /**
  * @param successCb callback to run after successful board creation
  * @returns createBoard trpc mutation object
  */
 const useCreateBoard = (successCb?: () => void) => {
-    const { addBoard } = useBoardActions();
+    const utils = trpc.useContext().boardRouter.getAll;
 
     const createBoardMutation = trpc.boardRouter.create.useMutation({
         onSuccess: (newBoard) => {
-            addBoard(newBoard);
+            utils.setData(undefined, (prevBoards) => {
+                if (!prevBoards) return prevBoards;
+                return [...prevBoards, newBoard];
+            });
             successCb?.();
         },
     });

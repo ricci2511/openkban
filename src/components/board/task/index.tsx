@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
-import { Button, Dropdown } from 'react-daisyui';
+import { Button } from 'react-daisyui';
 import TaskOptionsDropdown from './task-options-dropdown';
-import { useBoardId } from 'store/board-store';
+import { useBoardId } from 'store/columns-tasks-store';
 
 export interface TaskProps {
     task: BoardTask;

@@ -1,25 +1,34 @@
 import { trpc } from '@lib/trpc';
-import { useBoardActions, useBoards } from 'store/board-store';
 
 /**
  * @returns update board trpc mutation object
  */
 const useUpdateBoard = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
-    const { updateBoard } = useBoardActions();
-    const boards = useBoards();
 
     const updateBoardMutation = trpc.boardRouter.update.useMutation({
         // optimistic update
         onMutate: async (boardToUpdate) => {
             utils.cancel();
-            updateBoard(boardToUpdate);
+            // store old boards in case mutation fails
+            const oldBoards = utils.getData();
+            utils.setData(undefined, (prevBoards) => {
+                if (!prevBoards) {
+                    return prevBoards;
+                }
+                return prevBoards.map((prevBoard) =>
+                    prevBoard.id === boardToUpdate.id
+                        ? { ...prevBoard, ...boardToUpdate }
+                        : prevBoard
+                );
+            });
             successCb?.();
-            // store the previous board in case the mutation fails
-            return boards.find((b) => b.id === boardToUpdate.id);
+            // return the previous boards in case the mutation fails
+            return oldBoards;
         },
-        onError: (err, boardToUpdate, oldBoard) => {
-            updateBoard(oldBoard!);
+        onError: (err, boardToUpdate, oldBoards) => {
+            // on error revert to previous boards
+            utils.setData(undefined, oldBoards);
         },
     });
 
