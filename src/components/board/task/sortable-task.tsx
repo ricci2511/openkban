@@ -16,6 +16,7 @@ const SortableTask = ({ task, color }: TaskProps) => {
 
     const style = {
         cursor: isDragging ? 'grabbing' : 'default',
+        touchAction: 'none', // fixes messed up dragging on touch devices
         transform: CSS.Transform.toString(transform),
         transition,
     };
