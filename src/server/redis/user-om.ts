@@ -12,6 +12,10 @@ export type CachedUser = {
     boardIds?: string[];
 };
 
-export const cacheUserBoardIds = async (userId: string, boardIds: string[]) => {
-    userRepository.save(userId, { boardIds });
+export const cacheBoardIds = async (userId: string, boardIds: string[]) => {
+    await userRepository.save(userId, { boardIds });
+};
+
+export const cacheBoardId = async (userId: string, boardId: string) => {
+    await redisClient.json.arrAppend(`user:${userId}`, '.boardIds', boardId);
 };

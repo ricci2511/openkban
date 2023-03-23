@@ -15,8 +15,6 @@ const boardSchema = new Schema('board', {
 export const boardRepository = new Repository(boardSchema, redisClient);
 
 export const getCachedBoards = async (userId: string) => {
-    // first connect to Redis if not already connected
-    await connect();
     // fetch the board IDs available to the user
     const { boardIds } = (await userRepository.fetch(userId)) as CachedUser;
     // if no board IDs, return null

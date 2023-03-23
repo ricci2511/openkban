@@ -13,7 +13,7 @@ import {
     getCachedBoards,
     invalidateBoard,
 } from '@server/redis/board-om';
-import { cacheUserBoardIds } from '@server/redis/user-om';
+import { cacheBoardId, cacheBoardIds } from '@server/redis/user-om';
 import { TRPCError } from '@trpc/server';
 
 export const boardRouter = t.router({
@@ -75,7 +75,7 @@ export const boardRouter = t.router({
                     return board.id;
                 })
             )
-                .then((boardIds) => cacheUserBoardIds(userId, boardIds))
+                .then((boardIds) => cacheBoardIds(userId, boardIds))
                 .catch((error) => {
                     throw new TRPCError({
                         code: 'INTERNAL_SERVER_ERROR',
@@ -121,20 +121,51 @@ export const boardRouter = t.router({
         .input(boardCeationSchema)
         .mutation(async ({ ctx, input }) => {
             const randomColor = randomNoRepeats(PRESET_COLORS);
-            const createBoard = await ctx.prisma.board.create({
-                data: {
-                    title: input.title,
-                    isFavourite: input.isFavourite,
-                    userId: ctx.session.user.id,
-                    columns: {
-                        create: input.columnTitles.map((title) => ({
-                            title: title,
-                            color: randomColor(),
-                        })),
+            try {
+                const board = await ctx.prisma.board.create({
+                    data: {
+                        title: input.title,
+                        isFavourite: input.isFavourite,
+                        userId: ctx.session.user.id,
+                        columns: {
+                            create: input.columnTitles.map((title) => ({
+                                title: title,
+                                color: randomColor(),
+                            })),
+                        },
                     },
-                },
-            });
-            return createBoard;
+                });
+
+                try {
+                    // cache the board and then cache the board ID for the user
+                    cacheBoard(board).then(() => {
+                        cacheBoardId(ctx.session.user.id, board.id).catch(
+                            (error) => {
+                                throw new TRPCError({
+                                    code: 'INTERNAL_SERVER_ERROR',
+                                    message:
+                                        'Could not cache board ID in redis',
+                                    cause: error,
+                                });
+                            }
+                        );
+                    });
+                } catch (error) {
+                    throw new TRPCError({
+                        code: 'INTERNAL_SERVER_ERROR',
+                        message: 'Could not cache board in redis',
+                        cause: error,
+                    });
+                }
+
+                return board;
+            } catch (error) {
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'Could not create board. Please try again later.',
+                    cause: error,
+                });
+            }
         }),
     update: authedProcedure
         .input(boardUpdateSchema)
