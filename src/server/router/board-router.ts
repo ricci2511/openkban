@@ -13,7 +13,11 @@ import {
     getCachedBoards,
     invalidateBoard,
 } from '@server/redis/board-om';
-import { cacheBoardId, cacheBoardIds } from '@server/redis/user-om';
+import {
+    cacheBoardId,
+    cacheBoardIds,
+    deleteBoardId,
+} from '@server/redis/user-om';
 import { TRPCError } from '@trpc/server';
 
 export const boardRouter = t.router({
@@ -205,11 +209,42 @@ export const boardRouter = t.router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            const deleteBoard = await ctx.prisma.board.delete({
-                where: {
-                    id: input.id,
-                },
-            });
-            return deleteBoard;
+            try {
+                const board = await ctx.prisma.board.delete({
+                    where: {
+                        id: input.id,
+                    },
+                });
+
+                try {
+                    invalidateBoard(board.id).then(() => {
+                        deleteBoardId(ctx.session.user.id, board.id).catch(
+                            (error) => {
+                                throw new TRPCError({
+                                    code: 'INTERNAL_SERVER_ERROR',
+                                    message:
+                                        'Could not delete board ID from redis',
+                                    cause: error,
+                                });
+                            }
+                        );
+                    });
+                } catch (error) {
+                    throw new TRPCError({
+                        code: 'INTERNAL_SERVER_ERROR',
+                        message: 'Could not delete board from redis',
+                        cause: error,
+                    });
+                }
+
+                return board;
+            } catch (error) {
+                console.log('BOARD DELETE ERROR', error);
+                throw new TRPCError({
+                    code: 'INTERNAL_SERVER_ERROR',
+                    message: 'Could not delete board. Please try again later.',
+                    cause: error,
+                });
+            }
         }),
 });

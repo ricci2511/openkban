@@ -80,7 +80,7 @@ model BoardColumn {
   id        String      @id @default(cuid())
   createdAt DateTime    @default(now())
   title     String
-  board     Board       @relation(fields: [boardId], references: [id])
+  board     Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId   String
   tasks     BoardTask[]
   color     String      @default("#0ea5e9")

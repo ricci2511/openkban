@@ -1,6 +1,6 @@
 import { EntityId, Repository, Schema } from 'redis-om';
-import { redisClient, connect, DEFAULT_CACHE_TIME } from '.';
-import { userRepository, CachedUser } from './user-om';
+import { redisClient, DEFAULT_CACHE_TIME } from '.';
+import { getCachedUser } from './user-om';
 import { Board } from '@prisma/client';
 
 const boardSchema = new Schema('board', {
@@ -16,7 +16,7 @@ export const boardRepository = new Repository(boardSchema, redisClient);
 
 export const getCachedBoards = async (userId: string) => {
     // fetch the board IDs available to the user
-    const { boardIds } = (await userRepository.fetch(userId)) as CachedUser;
+    const { boardIds } = await getCachedUser(userId);
     // if no board IDs, return null
     if (!boardIds || !boardIds.length) return null;
 
