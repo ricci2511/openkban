@@ -7,10 +7,9 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - ./data:/redis/data
-    env_file:
-      # a .env file with a REDIS_URL var is required, the one from .env.example should work out of the box
-      - .env
+      - ./data:/data
+    environment:
+      REDIS_URL: "${REDIS_URL}"
   db:
     image: mysql:latest
     container_name: mysql
@@ -18,9 +17,9 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_DATABASE: openkban_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       MYSQL_ALLOW_EMPTY_PASSWORD: true
     volumes:
-      - ./data:/db/var/lib/mysql
+      - ./data:/var/lib/mysql
