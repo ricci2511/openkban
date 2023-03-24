@@ -1,7 +1,8 @@
-# openkban
-This project is still early in development. It will take some time until I release the first stable version. I'm learning most of the tech used in this project as I keep building the app.
+# Openkban
+Openkban (i know, not the most creative name) is a open source kanban web app built with nextjs, with "most" of the features you would expect.
+This project is still early in development. My main motivation is to improve my developer skills, but aside from that I'm trying to build a modern, free and open source kanban web app for everyone.
 
-## Instructions
+## Getting started
 1. Clone the repo and cd into it:
 
     ```
@@ -9,6 +10,10 @@ This project is still early in development. It will take some time until I relea
     cd openkban
     ```
 2. Create a `.env` file with the contents of `.env.example`. The example file includes instructions that should be followed before proceeding (getting keys for OAuth providers).
+
+    ```
+    cp .env.example .env
+    ```
 3. Install dependencies:
 
     ```
@@ -29,3 +34,6 @@ This project is still early in development. It will take some time until I relea
     // listening on localhost:3000
     npm run dev
     ```
+
+## License
+MIT
