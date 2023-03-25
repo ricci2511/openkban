@@ -9,22 +9,23 @@ import { randomNoRepeats } from '@lib/helpers';
 import { PRESET_COLORS } from '@lib/constants';
 import { BoardData } from 'types/board-types';
 import {
-    cacheBoard,
-    getCachedBoards,
+    saveBoard,
+    getSavedBoards,
     invalidateBoard,
-} from '@server/redis/board-om';
+    deleteBoard,
+} from '@server/redis/board';
 import {
-    cacheBoardId,
-    cacheBoardIds,
-    deleteBoardId,
-} from '@server/redis/user-om';
+    appendBoardId,
+    getSavedBoardIds,
+    saveBoardIds,
+} from '@server/redis/user';
 import { TRPCError } from '@trpc/server';
 
 export const boardRouter = t.router({
     getAll: authedProcedure.query(async ({ ctx }) => {
         const userId = ctx.session.user.id;
 
-        const cachedBoards = await getCachedBoards(userId);
+        const cachedBoards = await getSavedBoards(userId);
         if (cachedBoards) {
             const { boards, missingBoardIds, error } = cachedBoards;
 
@@ -47,7 +48,7 @@ export const boardRouter = t.router({
                         },
                     });
                     // cache the missing boards
-                    missingBoards.forEach((board) => cacheBoard(board));
+                    missingBoards.forEach((board) => saveBoard(board));
 
                     return [...boards, ...missingBoards];
                 } catch (error) {
@@ -75,11 +76,13 @@ export const boardRouter = t.router({
             // first cache the boards and then cache the board IDs for the user
             Promise.all(
                 boards.map((board) => {
-                    cacheBoard(board);
+                    saveBoard(board);
                     return board.id;
                 })
             )
-                .then((boardIds) => cacheBoardIds(userId, boardIds))
+                .then((boardIds) =>
+                    boardIds.length ? saveBoardIds(userId, boardIds) : null
+                )
                 .catch((error) => {
                     throw new TRPCError({
                         code: 'INTERNAL_SERVER_ERROR',
@@ -125,6 +128,7 @@ export const boardRouter = t.router({
         .input(boardCeationSchema)
         .mutation(async ({ ctx, input }) => {
             const randomColor = randomNoRepeats(PRESET_COLORS);
+            const userId = ctx.session.user.id;
             try {
                 const board = await ctx.prisma.board.create({
                     data: {
@@ -142,18 +146,21 @@ export const boardRouter = t.router({
 
                 try {
                     // cache the board and then cache the board ID for the user
-                    cacheBoard(board).then(() => {
-                        cacheBoardId(ctx.session.user.id, board.id).catch(
-                            (error) => {
-                                throw new TRPCError({
-                                    code: 'INTERNAL_SERVER_ERROR',
-                                    message:
-                                        'Could not cache board ID in redis',
-                                    cause: error,
-                                });
-                            }
-                        );
-                    });
+                    await saveBoard(board);
+                    try {
+                        const ids = await getSavedBoardIds(userId);
+                        if (ids) {
+                            await appendBoardId(userId, board.id);
+                        } else {
+                            await saveBoardIds(userId, [board.id]);
+                        }
+                    } catch (error) {
+                        throw new TRPCError({
+                            code: 'INTERNAL_SERVER_ERROR',
+                            message: 'Could not add board ID to redis cache',
+                            cause: error,
+                        });
+                    }
                 } catch (error) {
                     throw new TRPCError({
                         code: 'INTERNAL_SERVER_ERROR',
@@ -217,18 +224,7 @@ export const boardRouter = t.router({
                 });
 
                 try {
-                    invalidateBoard(board.id).then(() => {
-                        deleteBoardId(ctx.session.user.id, board.id).catch(
-                            (error) => {
-                                throw new TRPCError({
-                                    code: 'INTERNAL_SERVER_ERROR',
-                                    message:
-                                        'Could not delete board ID from redis',
-                                    cause: error,
-                                });
-                            }
-                        );
-                    });
+                    await deleteBoard(ctx.session.user.id, board.id);
                 } catch (error) {
                     throw new TRPCError({
                         code: 'INTERNAL_SERVER_ERROR',
