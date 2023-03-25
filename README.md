@@ -1,6 +1,9 @@
 # Openkban
-Openkban (i know, not the most creative name) is a open source kanban web app built with nextjs, with "most" of the features you would expect.
-This project is still early in development. My main motivation is to improve my developer skills, but aside from that I'm trying to build a modern, free and open source kanban web app for everyone.
+Openkban (i know, not the most creative name) is a open source kanban web app built with nextjs, including "most" of the features you would expect.
+This project is still early in development. 
+
+## Motivation
+My main goal is to improve my developer skills, but aside from that I'm trying to build a modern, free and open source kanban web app for everyone.
 
 ## Getting started
 1. Clone the repo and cd into it:
