@@ -4,16 +4,14 @@ import { useFormContext } from 'react-hook-form';
 import { Form } from 'react-daisyui';
 import FormSelect from '@components/ui/form/form-select';
 import InfoTooltip from '@components/ui/tooltip/info-tooltip';
-import { useBoardId } from 'store/columns-tasks-store';
-import { useColumns } from 'store/columns-tasks-store';
+import { useColumns } from 'store/kanban-store';
 
 const ColumnSelect = () => {
     const {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const boardId = useBoardId();
-    const columns = useColumns(boardId);
+    const columns = useColumns();
 
     return (
         <span>

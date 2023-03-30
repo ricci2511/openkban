@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import Dialog from '@components/ui/dialog';
-import { useTasksActions } from 'store/columns-tasks-store';
+import { useTasksActions } from 'store/kanban-store';
 
 /**
  * @returns Modal with task details using the route as modal pattern (used in apps like Instagram and Reddit)

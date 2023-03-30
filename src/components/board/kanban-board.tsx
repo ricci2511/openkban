@@ -22,15 +22,16 @@ import {
 import { trpc } from '@lib/trpc';
 import CreateColumnButton from './create-column-button';
 import { MAX_COLUMNS } from '@lib/constants';
-import { BoardColumn } from '@prisma/client';
-import { TasksMap, useTasksActions } from 'store/columns-tasks-store';
+import {
+    TasksMap,
+    useColumns,
+    useTasks,
+    useTasksActions,
+} from 'store/kanban-store';
 
-interface KanbanBoardProps {
-    columns: BoardColumn[];
-    tasks: TasksMap;
-}
-
-const KanbanBoard = ({ columns, tasks }: KanbanBoardProps) => {
+const KanbanBoard = () => {
+    const columns = useColumns();
+    const tasks = useTasks();
     const { setTasks, dropTaskInColumn } = useTasksActions();
     // id of the currently dragged task
     const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);

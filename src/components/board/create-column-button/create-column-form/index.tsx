@@ -11,7 +11,7 @@ import {
 import useCreateColumn from '@hooks/use-create-column';
 import { Button, Form } from 'react-daisyui';
 import FormInputGroup from '@components/ui/form/form-input-group';
-import { useBoardId } from 'store/columns-tasks-store';
+import { useBoardId } from 'store/kanban-store';
 
 interface CreateColumnFormProps {
     setCreating: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,7 +33,7 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
     const { mutate: createColumn, isLoading } = useCreateColumn(() =>
         setCreating(false)
     );
-    const boardId = useBoardId()!;
+    const boardId = useBoardId();
     const onSubmit = handleSubmit(({ title }) => {
         createColumn({ boardId, title, color });
     });

@@ -6,7 +6,7 @@ import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
 import { Button } from 'react-daisyui';
 import TaskOptionsDropdown from './task-options-dropdown';
-import { useBoardId } from 'store/columns-tasks-store';
+import { useBoardId } from 'store/kanban-store';
 
 export interface TaskProps {
     task: BoardTask;

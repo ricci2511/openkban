@@ -1,5 +1,5 @@
 import { trpc } from '@lib/trpc';
-import { useTasksActions } from 'store/columns-tasks-store';
+import { useTasksActions } from 'store/kanban-store';
 
 /**
  * @param successCb callback to run after successful task creation

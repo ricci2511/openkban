@@ -1,5 +1,5 @@
 import { trpc } from '@lib/trpc';
-import { useColumnsActions } from 'store/columns-tasks-store';
+import { useColumnsActions } from 'store/kanban-store';
 
 /**
  * @param successCb callback to run after successful column creation

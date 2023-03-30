@@ -8,14 +8,14 @@ import TaskTitleInput from './task-title-input';
 import { LexoRank } from 'lexorank';
 import TaskDescriptionTextarea from './task-description-textarea';
 import { Form } from 'react-daisyui';
-import { useAllTasks } from 'store/columns-tasks-store';
+import { useTasks } from 'store/kanban-store';
 
 interface CreateTaskFormProps {
     createTask: ReturnType<typeof useCreateTask>['mutate'];
 }
 const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
     const { handleSubmit } = useFormContext<BoardTaskCreation>();
-    const storeTasks = useAllTasks();
+    const storeTasks = useTasks();
 
     const generateRank = (columnId: string) => {
         const tasks = storeTasks[columnId];

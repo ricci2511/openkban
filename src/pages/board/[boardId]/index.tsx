@@ -5,23 +5,25 @@ import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
-import useFetchBoardData from '@hooks/use-fetch-board-data';
 import KanbanBodySection from '@components/board/kanban-body-section';
 import KanbanHeaderSection from '@components/board/kanban-header-section';
-import { useBoardId } from 'store/columns-tasks-store';
+import { trpc } from '@lib/trpc';
+import { useBoardId } from 'store/kanban-store';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
-    const { data, error, isLoading } = useFetchBoardData(id);
+    const { data, error, isLoading } = trpc.boardRouter.getById.useQuery({
+        id,
+    });
 
-    const storeBoardId = useBoardId();
     const { mutate: updateBoard } = useUpdateBoard();
+    const storeBoardId = useBoardId();
 
     useEffect(() => {
-        if (id !== storeBoardId && data) {
+        if (data && storeBoardId !== id) {
             updateBoard({ id, lastInteractedAt: new Date() });
         }
-    }, [id, updateBoard, storeBoardId, data]);
+    }, [id, updateBoard, data, storeBoardId]);
 
     if (error) {
         return (
@@ -43,7 +45,7 @@ export const BoardPage: NextPageWithLayout = () => {
     return (
         <>
             <KanbanHeaderSection title={data.title} />
-            <KanbanBodySection boardId={data.id} />
+            <KanbanBodySection columns={data.columns} />
         </>
     );
 };

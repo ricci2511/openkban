@@ -1,15 +1,15 @@
 import { trpc } from '@lib/trpc';
-import { useColumnsActions } from 'store/columns-tasks-store';
+import { useColumnsActions } from 'store/kanban-store';
 
 /**
  * @returns delete column trpc mutation object
  */
 const useDeleteColumn = () => {
-    const { removeColumn } = useColumnsActions();
+    const { deleteColumn } = useColumnsActions();
 
     const deleteColumnMutation = trpc.boardColumnRouter.delete.useMutation({
-        onSuccess: ({ id, boardId }) => {
-            removeColumn(id, boardId);
+        onSuccess: (column) => {
+            deleteColumn(column.id);
         },
     });
     return deleteColumnMutation;

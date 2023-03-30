@@ -1,5 +1,5 @@
 import { trpc } from '@lib/trpc';
-import { useColumnsActions } from 'store/columns-tasks-store';
+import { useColumnsActions } from 'store/kanban-store';
 
 /**
  * @returns update column trpc mutation object

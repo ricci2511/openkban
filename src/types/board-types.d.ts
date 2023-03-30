@@ -14,6 +14,6 @@ export type TaskWithSubTasks = BoardTask & {
     subtasks: BoardSubtask[];
 };
 
-export type KanbanBoard = Board & {
+export type BoardData = Board & {
     columns: BoardColumnWithTasks[];
 };
