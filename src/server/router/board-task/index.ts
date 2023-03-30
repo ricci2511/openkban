@@ -1,5 +1,5 @@
 import { t } from '@server/trpc';
-import { authedProcedure } from './auth-router';
+import { authedProcedure } from '../auth-router';
 import { boardTaskCreationSchema } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
 

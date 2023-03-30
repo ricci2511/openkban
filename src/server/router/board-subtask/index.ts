@@ -1,8 +1,8 @@
 import { t } from '@server/trpc';
-import { authedProcedure } from './auth-router';
+import { authedProcedure } from '../auth-router';
 import { z } from 'zod';
 
-export const boardTaskSubtaskRouter = t.router({
+export const boardSubtaskRouter = t.router({
     getAllByTaskId: authedProcedure
         .input(
             z.object({

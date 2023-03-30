@@ -17,7 +17,7 @@ const TaskDetailsModal = () => {
         data: subtasks,
         isLoading,
         error,
-    } = trpc.boardTaskSubtaskRouter.getAllByTaskId.useQuery(
+    } = trpc.boardSubtaskRouter.getAllByTaskId.useQuery(
         { taskId: id },
         { enabled: !!id }
     );

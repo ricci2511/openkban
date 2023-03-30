@@ -1,12 +1,9 @@
 import { redisClient, DEFAULT_EXPIRE_TIME, jsonGet } from '.';
-import { getSavedBoardIds } from './user';
+import { getSavedBoardIds } from './user-board-ids';
 import { Board } from '@prisma/client';
 
 // in redisJSON the dates are stored as strings
-type RedisBoard = Omit<Board, 'createdAt' | 'lastInteractedAt'> & {
-    createdAt: string;
-    lastInteractedAt: string;
-};
+type RedisBoard = TypeDatesToString<Board>;
 
 const deserializeBoard = (board: RedisBoard): Board => {
     return {

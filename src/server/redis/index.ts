@@ -32,6 +32,7 @@ export const disconnect = async () => {
     }
 };
 
+// Typed redis get commands
 export const jsonGet = async <T>(
     key: string,
     path?: string
@@ -42,6 +43,40 @@ export const jsonGet = async <T>(
         return result as T;
     } catch (error) {
         console.error(`ERROR getting ${key} JSON from Redis:`, error);
+        return null;
+    }
+};
+
+export const hashGet = async <T>(
+    key: string,
+    field: string
+): Promise<T | null> => {
+    try {
+        const result = await redisClient.hGet(key, field);
+        if (!result) return null;
+        return JSON.parse(result) as T;
+    } catch (error) {
+        console.error(
+            `ERROR getting ${key} hash with field ${field} from Redis:`,
+            error
+        );
+        return null;
+    }
+};
+
+export const hashGetAll = async <T>(
+    key: string
+): Promise<{ [key: string]: T } | null> => {
+    try {
+        const result = await redisClient.hGetAll(key);
+        if (!result) return null;
+        const parsedResult: { [key: string]: T } = {};
+        Object.entries(result).forEach(([key, value]) => {
+            parsedResult[key] = JSON.parse(value);
+        });
+        return parsedResult;
+    } catch (error) {
+        console.error(`ERROR getting ${key} hash from Redis:`, error);
         return null;
     }
 };
