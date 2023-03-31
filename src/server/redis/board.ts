@@ -2,7 +2,7 @@ import { redis, DEFAULT_EXPIRE_TIME } from '.';
 import { getSavedBoardIds } from './user-board-ids';
 import { Board } from '@prisma/client';
 
-// in redisJSON the dates are stored as strings
+// the date properties are stored as strings in Redis
 type RedisBoard = TypeDatesToString<Board>;
 
 const hashKey = (boardId: string) => `board:${boardId}`;
@@ -109,7 +109,7 @@ export const invalidateBoard = async (boardId: string) => {
  * @param userId
  * @param boardId
  */
-export const deleteBoard = async (userId: string, boardId: string) => {
+export const deleteSavedBoard = async (userId: string, boardId: string) => {
     const boardIds = await getSavedBoardIds(userId);
     if (!boardIds) return;
     const index = boardIds.findIndex((id) => id === boardId);

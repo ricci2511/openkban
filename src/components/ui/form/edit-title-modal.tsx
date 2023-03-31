@@ -7,7 +7,7 @@ import FormInput from './form-input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { TRPCClientErrorLike } from '@trpc/client';
-import { AppRouter } from '@server/router';
+import { AppRouter } from '@server/routers';
 import { UseTRPCMutationResult } from '@trpc/react-query/shared';
 
 type HasIdAndTitle = { id: string } & TitleInput;

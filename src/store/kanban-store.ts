@@ -144,7 +144,7 @@ export const useTasks = () => useKanbanStore((state) => state.tasks);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.
- * See: https://tkdodo.eu/blog/working-with-zustand#separate-actions-from-state
+ * @see: https://tkdodo.eu/blog/working-with-zustand#separate-actions-from-state
  * @returns object with all actions that can be performed on the columns
  */
 export const useColumnsActions = () =>
