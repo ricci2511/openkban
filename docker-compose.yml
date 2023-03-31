@@ -1,15 +1,18 @@
 version: '3.8'
 services:
   redis:
-    image: redis/redis-stack:latest
-    container_name: redis-stack
+    image: redis
     restart: always
     ports:
       - 6379:6379
-    volumes:
-      - ./data:/data
+  serverless-redis-http:
+    ports:
+      - '8079:80'
+    image: hiett/serverless-redis-http:latest
     environment:
-      REDIS_URL: "${REDIS_URL}"
+      SRH_MODE: env
+      SRH_TOKEN: "${REDIS_TOKEN}"
+      SRH_CONNECTION_STRING: "${SRH_CONNECTION_STRING}" 
   db:
     image: mysql:latest
     container_name: mysql

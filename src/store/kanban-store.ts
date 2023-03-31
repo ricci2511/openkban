@@ -1,5 +1,4 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
 import { BoardTask, BoardColumn } from '@prisma/client';
 import { BoardColumnWithTasks } from 'types/board-types';
 import { create } from 'zustand';
@@ -50,7 +49,7 @@ const useKanbanStore = create(
                     ({ tasks, ...col }) => col
                 );
                 state.tasks = columnsWithTasks.reduce((acc: TasksMap, cur) => {
-                    acc[cur.id] = [...cur.tasks].sort(sortByLexoRankAsc);
+                    acc[cur.id] = [...cur.tasks];
                     return acc;
                 }, {});
                 state.boardId = columnsWithTasks[0].boardId;

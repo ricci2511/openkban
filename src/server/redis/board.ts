@@ -1,9 +1,11 @@
-import { redisClient, DEFAULT_EXPIRE_TIME, jsonGet } from '.';
+import { redis, DEFAULT_EXPIRE_TIME } from '.';
 import { getSavedBoardIds } from './user-board-ids';
 import { Board } from '@prisma/client';
 
 // in redisJSON the dates are stored as strings
 type RedisBoard = TypeDatesToString<Board>;
+
+const hashKey = (boardId: string) => `board:${boardId}`;
 
 const deserializeBoard = (board: RedisBoard): Board => {
     return {
@@ -18,38 +20,58 @@ const deserializeBoard = (board: RedisBoard): Board => {
  * @param boardId
  * @returns board if it exists in the cache, otherwise null
  */
-export const getSavedBoard = async (boardId: string) => {
-    const board = await jsonGet<RedisBoard>(`board:${boardId}`);
-    return board ? deserializeBoard(board) : null;
+export const getSavedBoardById = async (boardId: string) => {
+    try {
+        const board = await redis.get<RedisBoard>(hashKey(boardId));
+        return board ? deserializeBoard(board) : null;
+    } catch (error) {
+        console.error(`ERROR getting saved board {${hashKey(boardId)}}`, error);
+    }
+};
+
+/**
+ * Retrieves boards from the cache if they exist.
+ * @param boardIds array of board IDs
+ * @returns array of non-deserialized boards or undefined
+ */
+const getSavedBoardsByIds = async (boardIds: string[]) => {
+    try {
+        return await redis.mget<RedisBoard[]>(
+            ...boardIds.map((id) => hashKey(id))
+        );
+    } catch (error) {
+        console.error('ERROR getting all saved boards', error);
+    }
 };
 
 /**
  * Retrieves all cached boards available to the user, and if any are missing, return the missing board IDs to fetch them from the db.
  * @param userId
- * @returns object with boards array, missingBoardIds array, and error if any
+ * @returns object with boards and missingBoardIds array
  */
-export const getSavedBoards = async (userId: string) => {
+export const getAllSavedBoards = async (userId: string) => {
     // fetch the board IDs available to the user
     const boardIds = await getSavedBoardIds(userId);
     // if no board IDs, return null
     if (!boardIds || !boardIds.length) return null;
 
-    let boards: Board[] = [];
-    let missingBoardIds: string[] = [];
-    try {
-        for (const id of boardIds) {
-            const board = await getSavedBoard(id);
-            if (board === null) {
-                missingBoardIds.push(id);
-            } else {
-                boards.push(board);
-            }
-        }
+    const boards = await getSavedBoardsByIds(boardIds);
+    if (!boards) return null;
 
-        return { boards, missingBoardIds, error: null };
-    } catch (error) {
-        return { boards, missingBoardIds, error };
+    const result: { boards: Board[]; missingBoardIds: string[] } = {
+        boards: [],
+        missingBoardIds: [],
+    };
+
+    for (let i = 0; i < boardIds.length; i++) {
+        if (boards[i]) {
+            result.boards.push(deserializeBoard(boards[i]));
+        } else {
+            result.missingBoardIds.push(boardIds[i]);
+        }
     }
+
+    return result;
 };
 
 /**
@@ -58,12 +80,13 @@ export const getSavedBoards = async (userId: string) => {
  * @param expireSeconds
  */
 export const saveBoard = async (board: Board, expireSeconds?: number) => {
-    const boardId = `board:${board.id}`;
-    await redisClient
-        .multi()
-        .json.set(boardId, '.', board)
-        .expire(boardId, expireSeconds ?? DEFAULT_EXPIRE_TIME)
-        .exec();
+    try {
+        await redis.set(hashKey(board.id), board, {
+            ex: expireSeconds ?? DEFAULT_EXPIRE_TIME,
+        });
+    } catch (error) {
+        console.error(`ERROR saving {${hashKey(board.id)}} in redis`, error);
+    }
 };
 
 /**
@@ -71,7 +94,14 @@ export const saveBoard = async (board: Board, expireSeconds?: number) => {
  * @param boardId
  */
 export const invalidateBoard = async (boardId: string) => {
-    await redisClient.json.del(`board:${boardId}`);
+    try {
+        await redis.del(hashKey(boardId));
+    } catch (error) {
+        console.error(
+            `ERROR invalidating {${hashKey(boardId)}} in redis`,
+            error
+        );
+    }
 };
 
 /**
@@ -83,9 +113,13 @@ export const deleteBoard = async (userId: string, boardId: string) => {
     const boardIds = await getSavedBoardIds(userId);
     if (!boardIds) return;
     const index = boardIds.findIndex((id) => id === boardId);
-    await redisClient
-        .multi()
-        .json.del(`board:${boardId}`)
-        .json.arrPop(`user:${userId}`, '.boardIds', index)
-        .exec();
+    try {
+        await redis
+            .pipeline()
+            .del(hashKey(boardId))
+            .json.arrpop(`user:${userId}`, '.boardIds', index)
+            .exec();
+    } catch (error) {
+        console.error(`ERROR deleting {${hashKey(boardId)}} in redis`, error);
+    }
 };

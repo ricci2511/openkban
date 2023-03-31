@@ -3,7 +3,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { prisma } from '@server/db/client';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import { env } from '../../../env/server.mjs';
+import { env } from 'env.mjs';
 
 export const authOptions: NextAuthOptions = {
     // Include user.id on session

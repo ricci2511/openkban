@@ -1,4 +1,4 @@
-import { redisClient } from '.';
+import { redis } from '.';
 
 const setKey = (userId: string) => `userBoards:${userId}`;
 
@@ -7,7 +7,11 @@ const setKey = (userId: string) => `userBoards:${userId}`;
  * @returns array of board ids belonging to a user
  */
 export const getSavedBoardIds = async (userId: string) => {
-    return await redisClient.sMembers(setKey(userId));
+    try {
+        return await redis.smembers(setKey(userId));
+    } catch (error) {
+        console.error(`ERROR getting ${setKey(userId)} set from Redis:`, error);
+    }
 };
 
 /**
@@ -20,11 +24,15 @@ export const saveBoardIdOrIds = async (
     boardIdOrIds: string | string[]
 ) => {
     const key = setKey(userId);
-    await redisClient
-        .multi()
-        .sAdd(key, boardIdOrIds)
-        .expire(key, 60 * 60 * 24 * 7)
-        .exec();
+    try {
+        await redis
+            .pipeline()
+            .sadd(key, boardIdOrIds)
+            .expire(key, 60 * 60 * 24 * 7)
+            .exec();
+    } catch (error) {
+        console.error(`ERROR saving ${key} set to Redis:`, error);
+    }
 };
 
 /**
@@ -36,7 +44,14 @@ export const addBoardIdOrIds = async (
     userId: string,
     boardIdOrIds: string | string[]
 ) => {
-    await redisClient.sAdd(setKey(userId), boardIdOrIds);
+    try {
+        await redis.sadd(setKey(userId), boardIdOrIds);
+    } catch (error) {
+        console.error(
+            `ERROR adding ${boardIdOrIds} to ${setKey(userId)} set in Redis:`,
+            error
+        );
+    }
 };
 
 /**
@@ -45,7 +60,11 @@ export const addBoardIdOrIds = async (
  * @returns true if the set exists, otherwise false
  */
 export const idsSetExists = async (userId: string) => {
-    return !!(await redisClient.exists(setKey(userId)));
+    try {
+        return !!(await redis.exists(setKey(userId)));
+    } catch (error) {
+        console.error(`ERROR checking if ${setKey(userId)} exists:`, error);
+    }
 };
 
 /**

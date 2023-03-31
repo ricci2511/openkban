@@ -9,10 +9,10 @@ import { randomNoRepeats } from '@lib/helpers';
 import { PRESET_COLORS } from '@lib/constants';
 import {
     saveBoard,
-    getSavedBoards,
+    getAllSavedBoards,
     invalidateBoard,
     deleteBoard,
-    getSavedBoard,
+    getSavedBoardById,
 } from '@server/redis/board';
 import {
     saveBoardIdOrIds,
@@ -35,43 +35,55 @@ import {
     BOARD_CACHE_DELETE_ERROR,
 } from './errors';
 import { internalServerError, notFound } from '@server/trpc-error-helpers';
+import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
+import { BoardData } from 'types/board-types';
+
+const sortTasksOfBoard = (board: BoardData): BoardData => {
+    return {
+        ...board,
+        columns: board.columns.map((column) => ({
+            ...column,
+            tasks: column.tasks.sort(sortByLexoRankAsc),
+        })),
+    };
+};
 
 export const boardRouter = t.router({
     getAll: authedProcedure.query(async ({ ctx }) => {
         const userId = ctx.session.user.id;
 
-        const cachedBoards = await getSavedBoards(userId);
+        const cachedBoards = await getAllSavedBoards(userId);
         if (cachedBoards) {
-            const { boards, missingBoardIds, error } = cachedBoards;
+            try {
+                const { boards, missingBoardIds } = cachedBoards;
 
-            if (error) {
+                // if some boards are missing, query them from the db and return them with the cached ones
+                if (!!missingBoardIds.length) {
+                    try {
+                        const missingBoards = await ctx.prisma.board.findMany({
+                            where: {
+                                id: {
+                                    in: missingBoardIds,
+                                },
+                            },
+                        });
+                        // cache the missing boards
+                        missingBoards.forEach((board) => saveBoard(board));
+
+                        return [...boards, ...missingBoards];
+                    } catch (error) {
+                        throw internalServerError(
+                            MISSING_BOARDS_QUERY_ERROR,
+                            error
+                        );
+                    }
+                }
+
+                // if no missing boards and no error, just return the cached boards
+                return boards;
+            } catch (error) {
                 throw internalServerError(CACHED_BOARDS_FETCH_ERROR, error);
             }
-
-            // if some boards are missing, query them from the db and return them with the cached ones
-            if (!!missingBoardIds.length) {
-                try {
-                    const missingBoards = await ctx.prisma.board.findMany({
-                        where: {
-                            id: {
-                                in: missingBoardIds,
-                            },
-                        },
-                    });
-                    // cache the missing boards
-                    missingBoards.forEach((board) => saveBoard(board));
-
-                    return [...boards, ...missingBoards];
-                } catch (error) {
-                    throw internalServerError(
-                        MISSING_BOARDS_QUERY_ERROR,
-                        error
-                    );
-                }
-            }
-
-            // if no missing boards and no error, just return the cached boards
-            if (!error) return boards;
         }
 
         // if not found in cache, query the db
@@ -111,7 +123,7 @@ export const boardRouter = t.router({
         .query(async ({ ctx, input }) => {
             const boardId = input.id;
 
-            const savedBoard = await getSavedBoard(boardId);
+            const savedBoard = await getSavedBoardById(boardId);
             // if board metadata is cached, only query the columns with tasks
             if (savedBoard) {
                 const columnsWithTasks = await queryColumnsByBoardId(
@@ -119,7 +131,10 @@ export const boardRouter = t.router({
                     boardId
                 );
 
-                return { ...savedBoard, columns: columnsWithTasks };
+                return sortTasksOfBoard({
+                    ...savedBoard,
+                    columns: columnsWithTasks,
+                });
             }
 
             try {
@@ -155,7 +170,7 @@ export const boardRouter = t.router({
                     }
                 );
 
-                return board;
+                return sortTasksOfBoard(board);
             } catch (error) {
                 throw internalServerError(BOARD_QUERY_ERROR, error);
             }
