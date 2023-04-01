@@ -1,5 +1,5 @@
 import { redis, DEFAULT_EXPIRE_TIME } from '.';
-import { getSavedBoardIds } from './user-board-ids';
+import { getSavedBoardIds, setKey } from './user-board-ids';
 import { Board } from '@prisma/client';
 
 // the date properties are stored as strings in Redis
@@ -105,19 +105,16 @@ export const invalidateBoard = async (boardId: string) => {
 };
 
 /**
- * Completely deletes the board from the cache, including the boardId from the user's boardIds array.
+ * Completely deletes the board from the cache, including the boardId from the user's boardIds set.
  * @param userId
  * @param boardId
  */
 export const deleteSavedBoard = async (userId: string, boardId: string) => {
-    const boardIds = await getSavedBoardIds(userId);
-    if (!boardIds) return;
-    const index = boardIds.findIndex((id) => id === boardId);
     try {
         await redis
             .pipeline()
-            .del(hashKey(boardId))
-            .json.arrpop(`user:${userId}`, '.boardIds', index)
+            .del(hashKey(boardId)) // delete the board
+            .srem(setKey(userId), boardId) // remove the boardId from the user's boardIds set
             .exec();
     } catch (error) {
         console.error(`ERROR deleting {${hashKey(boardId)}} in redis`, error);

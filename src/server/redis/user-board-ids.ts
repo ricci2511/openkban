@@ -1,6 +1,6 @@
 import { redis } from '.';
 
-const setKey = (userId: string) => `userBoards:${userId}`;
+export const setKey = (userId: string) => `userBoards:${userId}`;
 
 /**
  * @param userId
