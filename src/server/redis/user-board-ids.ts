@@ -25,11 +25,14 @@ export const saveBoardIdOrIds = async (
 ) => {
     const key = setKey(userId);
     try {
-        await redis
-            .pipeline()
-            .sadd(key, boardIdOrIds)
-            .expire(key, 60 * 60 * 24 * 7)
-            .exec();
+        const pipeline = redis.pipeline();
+        if (Array.isArray(boardIdOrIds)) {
+            pipeline.sadd(key, ...boardIdOrIds.map((id) => id));
+        } else {
+            pipeline.sadd(key, boardIdOrIds);
+        }
+        pipeline.expire(key, 60 * 60 * 24 * 7);
+        await pipeline.exec();
     } catch (error) {
         console.error(`ERROR saving ${key} set to Redis:`, error);
     }
