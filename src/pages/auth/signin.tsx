@@ -1,5 +1,5 @@
 import SignInLayout from '@components/layouts/signin-layout';
-import { signIn, getProviders, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { SiGithub } from 'react-icons/si';
@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import { useRouter } from 'next/router';
+import { getServerProviders } from '@server/helpers/get-server-providers';
 
 const SignIn = ({ providers }: AuthProviders) => {
     const [withEmail, setWithEmail] = useState(false);
@@ -110,9 +111,9 @@ const SignIn = ({ providers }: AuthProviders) => {
     );
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     return {
-        props: { providers: await getProviders() },
+        props: { providers: getServerProviders() },
     };
 };
 
