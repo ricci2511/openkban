@@ -111,7 +111,7 @@ const SignIn = ({ providers }: AuthProviders) => {
     );
 };
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
     return {
         props: { providers: getServerProviders() },
     };
