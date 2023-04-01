@@ -33,15 +33,12 @@ const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
  * @returns sorted boards, isLoading state, error state
  */
 const useGetBoards = (sortBy?: SortableBoard) => {
-    const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery(
-        undefined,
-        {
-            refetchOnWindowFocus: false,
-        }
-    );
+    const { data, isLoading } = trpc.boardRouter.getAll.useQuery(undefined, {
+        refetchOnWindowFocus: false,
+    });
 
     const boards = sortBy && data ? getSortedBoards(data, sortBy) : data;
-    return { boards, isLoading, error };
+    return { boards, isLoading };
 };
 
 export default useGetBoards;

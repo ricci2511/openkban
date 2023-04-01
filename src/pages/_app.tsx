@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes';
 import { AppProps } from 'next/app';
 import { ReactElement, ReactNode } from 'react';
 import { NextPage } from 'next';
+import { Toaster } from 'react-hot-toast';
 
 /**
  * Persistent layout between page changes.
@@ -40,6 +41,7 @@ const App = ({
                     {getLayout(<Component {...pageProps} />)}
                 </SessionProvider>
             </ThemeProvider>
+            <Toaster />
         </>
     );
 };
