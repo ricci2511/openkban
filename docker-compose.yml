@@ -11,7 +11,7 @@ services:
     image: hiett/serverless-redis-http:latest
     environment:
       SRH_MODE: env
-      SRH_TOKEN: "${REDIS_TOKEN}"
+      SRH_TOKEN: "${UPSTASH_REDIS_REST_TOKEN}"
       SRH_CONNECTION_STRING: "${SRH_CONNECTION_STRING}" 
   db:
     image: mysql:latest

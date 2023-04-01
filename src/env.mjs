@@ -6,8 +6,9 @@ import { z } from 'zod';
  */
 const server = z.object({
     DATABASE_URL: z.string().url(),
-    REDIS_URL: z.string().url(),
-    // NODE_ENV: z.enum(['development', 'test', 'production']),
+    UPSTASH_REDIS_REST_URL: z.string().url(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    NODE_ENV: z.enum(['development', 'test', 'production']),
     NEXTAUTH_SECRET:
         process.env.NODE_ENV === 'production'
             ? z.string().min(1)
@@ -41,8 +42,9 @@ const client = z.object({
  */
 const processEnv = {
     DATABASE_URL: process.env.DATABASE_URL,
-    REDIS_URL: process.env.REDIS_URL,
-    // NODE_ENV: process.env.NODE_ENV,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
