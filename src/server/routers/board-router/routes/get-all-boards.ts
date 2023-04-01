@@ -1,4 +1,7 @@
-import { internalServerError } from '@server/helpers/error-helpers';
+import {
+    checkForRateLimit,
+    internalServerError,
+} from '@server/helpers/error-helpers';
 import { getAllSavedBoards, saveBoard } from '@server/redis/board';
 import { saveBoardIdOrIds } from '@server/redis/user-board-ids';
 import { authedProcedure } from '@server/routers/auth-router';
@@ -11,6 +14,8 @@ import {
 
 export const getAllBoards = authedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
+
+    await checkForRateLimit(`all-boards:${userId}`);
 
     const cachedBoards = await getAllSavedBoards(userId);
     if (cachedBoards) {

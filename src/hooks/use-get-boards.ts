@@ -33,12 +33,10 @@ const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
  * @returns sorted boards, isLoading state, error state
  */
 const useGetBoards = (sortBy?: SortableBoard) => {
-    const cachedQuery = trpc.useContext().boardRouter.getAll.getData();
     const { data, isLoading, error } = trpc.boardRouter.getAll.useQuery(
         undefined,
         {
-            enabled: !cachedQuery,
-            initialData: cachedQuery,
+            refetchOnWindowFocus: false,
         }
     );
 

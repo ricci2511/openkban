@@ -12,9 +12,12 @@ import { useBoardId } from 'store/kanban-store';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
-    const { data, error, isLoading } = trpc.boardRouter.getById.useQuery({
-        id,
-    });
+    const { data, error, isLoading } = trpc.boardRouter.getById.useQuery(
+        {
+            id,
+        },
+        { refetchOnWindowFocus: false }
+    );
 
     const { mutate: updateBoard } = useUpdateBoard();
     const storeBoardId = useBoardId();
