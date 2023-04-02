@@ -22,7 +22,7 @@ export const customLink: TRPCLink<AppRouter> = () => {
                 // value we receive on error
                 error(err) {
                     observer.error(err);
-                    // global error handler
+                    // all error messages are toastified
                     toast.error(err.message);
                 },
                 complete() {

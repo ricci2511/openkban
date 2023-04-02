@@ -17,6 +17,6 @@ export const redis = new Redis({
  */
 export const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.tokenBucket(10, '45 s', 10),
+    limiter: Ratelimit.tokenBucket(8, '45 s', 8),
     analytics: true,
 });
