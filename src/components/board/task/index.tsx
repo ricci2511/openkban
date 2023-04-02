@@ -7,6 +7,15 @@ import Link from 'next/link';
 import { Button } from 'react-daisyui';
 import TaskOptionsDropdown from './task-options-dropdown';
 import { useBoardId } from 'store/kanban-store';
+import dynamic from 'next/dynamic';
+
+// dynamically import the due date warning tooltip
+const DueDateWarningTooltip = dynamic(
+    () => import('./due-date-warning-tooltip'),
+    {
+        ssr: false,
+    }
+);
 
 export interface TaskProps {
     task: BoardTask;
@@ -21,6 +30,9 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const taskClasses = `flex bg-base-200 border-l-2
         ${isDragging && 'opacity-50'}`;
 
+    const dueDateToday = dayjs().isSame(dueDate, 'day');
+    const dueDateOverdue = dayjs().isAfter(dueDate, 'day');
+
     return (
         <div className={taskClasses} style={{ borderLeftColor: color }}>
             <Link
@@ -32,11 +44,19 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
             >
                 <div className="flex flex-col space-y-4 p-3">
                     <span>{title}</span>
-                    <span className="text-xs font-extralight">
-                        {`${dayjs()
-                            .month(dueDate.getMonth())
-                            .format('MMM')} ${dueDate.getDate()}`}
-                    </span>
+                    <div className="flex items-center gap-3">
+                        <span className="text-xs font-extralight">
+                            {`${dayjs()
+                                .month(dueDate.getMonth())
+                                .format('MMM')} ${dueDate.getDate()}`}
+                        </span>
+                        {(dueDateToday || dueDateOverdue) && (
+                            <DueDateWarningTooltip
+                                today={dueDateToday}
+                                overdue={dueDateOverdue}
+                            />
+                        )}
+                    </div>
                 </div>
             </Link>
             <div className="flex flex-none flex-col items-center space-y-6 py-2">
