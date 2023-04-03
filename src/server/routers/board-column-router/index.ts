@@ -1,11 +1,13 @@
 import { t } from '@server/trpc';
-import { getAllColumnsByBoardId } from './routes/get-all-columns-by-board-id';
+import { getAllColumns } from './routes/get-all-columns';
 import { createColumn } from './routes/create-column';
 import { updateColumn } from './routes/update-column';
 import { deleteColumn } from './routes/delete-column';
+import { getAllColumnsWithTasks } from './routes/get-all-columns-with-tasks';
 
 export const boardColumnRouter = t.router({
-    getAllByBoardId: getAllColumnsByBoardId,
+    getAll: getAllColumns,
+    getAllWithTasks: getAllColumnsWithTasks,
     create: createColumn,
     update: updateColumn,
     delete: deleteColumn,

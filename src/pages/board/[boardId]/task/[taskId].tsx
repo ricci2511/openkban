@@ -1,6 +1,6 @@
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import TaskDetails from '@components/task-details';
 import { NextPageWithLayout } from 'pages/_app';
 import MainLayout from '@components/layouts/main-layout';
@@ -15,6 +15,10 @@ export const TaskPage: NextPageWithLayout = () => {
         error,
         status,
     } = trpc.boardTaskRouter.getById.useQuery({ id: taskId as string });
+
+    const { data: columns } = trpc.boardColumnRouter.getAll.useQuery({
+        boardId: boardId as string,
+    });
 
     if (error) {
         return (
@@ -45,7 +49,7 @@ export const TaskPage: NextPageWithLayout = () => {
             >
                 {'<- BACK TO BOARD'}
             </button>
-            <TaskDetails task={task} />
+            <TaskDetails task={task} columns={columns} />
         </div>
     );
 };

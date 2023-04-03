@@ -14,7 +14,7 @@ import {
     BOARD_METADATA_CACHE_ERROR,
     BOARD_QUERY_ERROR,
 } from '../errors';
-import { queryColumnsByBoardId } from '@server/routers/board-column-router/routes/get-all-columns-by-board-id';
+import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
 
 const sortTasksOfBoard = (board: BoardData): BoardData => {
     return {
@@ -39,7 +39,7 @@ export const getBoardById = authedProcedure
         const savedBoard = await getSavedBoardById(boardId);
         // if board metadata is cached, only query the columns with tasks
         if (savedBoard) {
-            const columnsWithTasks = await queryColumnsByBoardId(
+            const columnsWithTasks = await queryColumnsWithTasks(
                 ctx.prisma,
                 boardId
             );

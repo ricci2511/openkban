@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import Dialog from '@components/ui/dialog';
-import { useTasksActions } from 'store/kanban-store';
+import { useColumns, useTasksActions } from 'store/kanban-store';
 
 /**
  * @returns Modal with task details using the route as modal pattern (used in apps like Instagram and Reddit)
@@ -13,19 +13,18 @@ const TaskDetailsModal = () => {
     let router = useRouter();
     const id = router.query.taskId as string;
     const task = useTasksActions().getTaskById(id);
-    const {
-        data: subtasks,
-        isLoading,
-        error,
-    } = trpc.boardSubtaskRouter.getAllByTaskId.useQuery(
-        { taskId: id },
-        { enabled: !!id }
-    );
+    const { data: subtasks, isLoading } =
+        trpc.boardSubtaskRouter.getAllByTaskId.useQuery(
+            { taskId: id },
+            { enabled: !!id, refetchOnWindowFocus: false }
+        );
 
     const taskWithSubtasks = useMemo(
         () => (task && subtasks ? { ...task, subtasks } : null),
         [subtasks, task]
     );
+
+    const columns = useColumns();
 
     return (
         <Dialog
@@ -35,7 +34,7 @@ const TaskDetailsModal = () => {
         >
             {isLoading && <CustomLoadingSpinner />}
             {taskWithSubtasks && !!id && (
-                <TaskDetails task={taskWithSubtasks} />
+                <TaskDetails task={taskWithSubtasks} columns={columns} />
             )}
         </Dialog>
     );
