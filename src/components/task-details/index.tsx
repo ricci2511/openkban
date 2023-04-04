@@ -1,18 +1,24 @@
-import { TaskWithSubTasks } from 'types/board-types';
 import React from 'react';
-import { BoardColumn } from '@prisma/client';
+import Description from './description';
+import { useColumns, useCurrentTask, useSubtasks } from 'store/kanban-store';
 
-const TaskDetails = ({
-    task,
-    columns,
-}: {
-    task: TaskWithSubTasks;
-    columns?: BoardColumn[];
-}) => {
-    // TODO
+const TaskDetails = ({ taskId }: { taskId: string }) => {
+    const task = useCurrentTask();
+    const subtasks = useSubtasks();
+    const columns = useColumns();
+
     return (
         <div>
-            <h1 className="text-3xl font-bold">{task.title}</h1>
+            <section className="mb-4 flex gap-4">
+                <h1 className="text-4xl font-bold">{task?.title}</h1>
+                {/**
+                 * TODO: Some sort of columns dropdown to switch the task to another column if desired.
+                 * Each dropdown item being a button with the column name and color.
+                 */}
+            </section>
+            <section>
+                <Description />
+            </section>
         </div>
     );
 };

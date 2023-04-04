@@ -6,19 +6,51 @@ import { NextPageWithLayout } from 'pages/_app';
 import MainLayout from '@components/layouts/main-layout';
 import { trpc } from '@lib/trpc';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
+import {
+    useColumnsActions,
+    useCurrentTask,
+    useSubtasksActions,
+    useTasksActions,
+} from 'store/kanban-store';
 
 export const TaskPage: NextPageWithLayout = () => {
     const router = useRouter();
     const { boardId, taskId } = router.query;
+
+    const { setCurrentTask } = useTasksActions();
+    const { setColumns } = useColumnsActions();
+    const { setSubtasks } = useSubtasksActions();
+
+    trpc.boardColumnRouter.getAll.useQuery(
+        {
+            boardId: boardId as string,
+        },
+        {
+            refetchOnWindowFocus: false,
+            onSuccess: (columns) => {
+                setColumns(columns);
+            },
+        }
+    );
+
     const {
         data: task,
         error,
         status,
-    } = trpc.boardTaskRouter.getById.useQuery({ id: taskId as string });
+    } = trpc.boardTaskRouter.getById.useQuery(
+        { id: taskId as string },
+        {
+            refetchOnWindowFocus: false,
+            onSuccess: (task) => {
+                if (!task) return;
+                const { subtasks, ...taskWithoutSubtasks } = task;
+                setCurrentTask(taskWithoutSubtasks);
+                setSubtasks(subtasks);
+            },
+        }
+    );
 
-    const { data: columns } = trpc.boardColumnRouter.getAll.useQuery({
-        boardId: boardId as string,
-    });
+    const currentTask = useCurrentTask();
 
     if (error) {
         return (
@@ -33,7 +65,7 @@ export const TaskPage: NextPageWithLayout = () => {
         return <CustomLoadingSpinner centered />;
     }
 
-    if (!task) {
+    if (!task || !currentTask) {
         return <NextError title="Task not found" statusCode={404} />;
     }
 
@@ -42,14 +74,14 @@ export const TaskPage: NextPageWithLayout = () => {
             <button
                 className="mb-4"
                 onClick={() =>
-                    router.push(`/board/${boardId}`, undefined, {
-                        shallow: true,
-                    })
+                    router
+                        .replace(`/board/${boardId}`)
+                        .then(() => router.reload())
                 }
             >
                 {'<- BACK TO BOARD'}
             </button>
-            <TaskDetails task={task} columns={columns} />
+            <TaskDetails taskId={task.id} />
         </div>
     );
 };

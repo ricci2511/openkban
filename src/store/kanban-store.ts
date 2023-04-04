@@ -1,5 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { BoardTask, BoardColumn } from '@prisma/client';
+import { BoardTask, BoardColumn, BoardSubtask } from '@prisma/client';
 import { BoardColumnWithTasks } from 'types/board-types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -17,6 +17,7 @@ type ColumnsActions = {
 
 type TasksActions = {
     setTasks: (tasks: TasksMap) => void;
+    setCurrentTask: (task: BoardTask) => void;
     addTask: (task: BoardTask) => void;
     removeTask: (taskId: string, columnId: string) => void;
     updateTask: (task: BoardTask) => void;
@@ -29,13 +30,24 @@ type TasksActions = {
     ) => void;
 };
 
+type SubtasksActions = {
+    setSubtasks: (subtasks: BoardSubtask[]) => void;
+    addSubtask: (subtask: BoardSubtask) => void;
+    removeSubtask: (subtaskId: string) => void;
+    updateSubtask: (subtask: BoardSubtask) => void;
+};
+
 type KanbanStore = {
     boardId: string;
     columns: BoardColumn[];
     tasks: TasksMap;
+    currentTask: BoardTask | undefined;
+    // only the subtasks of the current task in use are stored here
+    subtasks: BoardSubtask[];
     init: (columnsWithTasks: BoardColumnWithTasks[]) => void;
     columnsActions: ColumnsActions;
     tasksActions: TasksActions;
+    subtasksActions: SubtasksActions;
 };
 
 const useKanbanStore = create(
@@ -43,6 +55,8 @@ const useKanbanStore = create(
         boardId: '',
         columns: [],
         tasks: {},
+        currentTask: undefined,
+        subtasks: [],
         init: (columnsWithTasks) =>
             set((state) => {
                 state.columns = columnsWithTasks.map(
@@ -85,6 +99,10 @@ const useKanbanStore = create(
                 set((state) => {
                     state.tasks = tasks;
                 }),
+            setCurrentTask: (task) =>
+                set((state) => {
+                    state.currentTask = task;
+                }),
             addTask: (task) =>
                 set((state) => {
                     if (!state.tasks[task.columnId]) {
@@ -100,6 +118,12 @@ const useKanbanStore = create(
                 }),
             updateTask: (task) =>
                 set((state) => {
+                    // update current task if it's the same as the updated task
+                    if (state.currentTask && state.currentTask.id === task.id) {
+                        state.currentTask = task;
+                    }
+
+                    if (!state.tasks[task.columnId]) return;
                     const index = state.tasks[task.columnId].findIndex(
                         (t) => t.id === task.id
                     );
@@ -117,6 +141,32 @@ const useKanbanStore = create(
                         oldTaskIndex,
                         newTaskIndex
                     );
+                }),
+        },
+        subtasksActions: {
+            setSubtasks: (subtasks) =>
+                set((state) => {
+                    state.subtasks = subtasks;
+                }),
+            addSubtask: (subtask) =>
+                set((state) => {
+                    !state.subtasks
+                        ? (state.subtasks = [subtask])
+                        : state.subtasks.push(subtask);
+                }),
+            removeSubtask: (subtaskId) =>
+                set((state) => {
+                    state.subtasks = state.subtasks.filter(
+                        (st) => st.id !== subtaskId
+                    );
+                }),
+            updateSubtask: (subtask) =>
+                set((state) => {
+                    const index = state.subtasks.findIndex(
+                        (st) => st.id === subtask.id
+                    );
+                    if (index === -1) return;
+                    state.subtasks[index] = subtask;
                 }),
         },
     }))
@@ -143,6 +193,17 @@ export const useColumns = () => useKanbanStore((state) => state.columns);
 export const useTasks = () => useKanbanStore((state) => state.tasks);
 
 /**
+ * @returns the current task that the user is working on
+ */
+export const useCurrentTask = () =>
+    useKanbanStore((state) => state.currentTask);
+
+/**
+ * @returns all subtasks that are in the kanban store
+ */
+export const useSubtasks = () => useKanbanStore((state) => state.subtasks);
+
+/**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.
  * @see: https://tkdodo.eu/blog/working-with-zustand#separate-actions-from-state
  * @returns object with all actions that can be performed on the columns
@@ -155,3 +216,9 @@ export const useColumnsActions = () =>
  */
 export const useTasksActions = () =>
     useKanbanStore((state) => state.tasksActions);
+
+/**
+ * @returns object with all actions that can be performed on the subtasks
+ */
+export const useSubtasksActions = () =>
+    useKanbanStore((state) => state.subtasksActions);

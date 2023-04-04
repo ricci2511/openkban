@@ -1,10 +1,10 @@
 import TaskDetails from '@components/task-details';
 import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React from 'react';
 import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import Dialog from '@components/ui/dialog';
-import { useColumns, useTasksActions } from 'store/kanban-store';
+import { useSubtasksActions, useTasksActions } from 'store/kanban-store';
 
 /**
  * @returns Modal with task details using the route as modal pattern (used in apps like Instagram and Reddit)
@@ -12,19 +12,23 @@ import { useColumns, useTasksActions } from 'store/kanban-store';
 const TaskDetailsModal = () => {
     let router = useRouter();
     const id = router.query.taskId as string;
-    const task = useTasksActions().getTaskById(id);
+
+    const { getTaskById, setCurrentTask } = useTasksActions();
+    const { setSubtasks } = useSubtasksActions();
+
     const { data: subtasks, isLoading } =
         trpc.boardSubtaskRouter.getAllByTaskId.useQuery(
             { taskId: id },
-            { enabled: !!id, refetchOnWindowFocus: false }
+            {
+                enabled: !!id,
+                refetchOnWindowFocus: false,
+                onSuccess: (subtasks) => {
+                    const task = getTaskById(id);
+                    if (task) setCurrentTask(task);
+                    setSubtasks(subtasks);
+                },
+            }
         );
-
-    const taskWithSubtasks = useMemo(
-        () => (task && subtasks ? { ...task, subtasks } : null),
-        [subtasks, task]
-    );
-
-    const columns = useColumns();
 
     return (
         <Dialog
@@ -33,9 +37,7 @@ const TaskDetailsModal = () => {
             className="max-w-4xl"
         >
             {isLoading && <CustomLoadingSpinner />}
-            {taskWithSubtasks && !!id && (
-                <TaskDetails task={taskWithSubtasks} columns={columns} />
-            )}
+            {subtasks && !!id && <TaskDetails taskId={id} />}
         </Dialog>
     );
 };
