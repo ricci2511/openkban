@@ -1,7 +1,7 @@
 import { internalServerError } from '@server/helpers/error-helpers';
 import { authedProcedure } from '@server/routers/auth-router';
+import { updateError } from '@server/routers/common-errors';
 import { z } from 'zod';
-import { COLUMN_UPDATE_ERROR } from '../errors';
 
 export const updateColumn = authedProcedure
     .input(
@@ -24,6 +24,6 @@ export const updateColumn = authedProcedure
             });
             return updateColumn;
         } catch (error) {
-            throw internalServerError(COLUMN_UPDATE_ERROR, error);
+            throw internalServerError(updateError('column'), error);
         }
     });

@@ -4,12 +4,9 @@ import { boardCeationSchema } from '@lib/schemas/board-schemas';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { saveBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
-import {
-    BOARD_CREATE_ERROR,
-    BOARD_IDS_CACHE_ERROR,
-    BOARD_METADATA_CACHE_ERROR,
-} from '../errors';
+import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { addBoardIdOrIds } from '@server/redis/user-board-ids';
+import { createError } from '@server/routers/common-errors';
 
 export const createBoard = authedProcedure
     .input(boardCeationSchema)
@@ -42,6 +39,6 @@ export const createBoard = authedProcedure
 
             return board;
         } catch (error) {
-            throw internalServerError(BOARD_CREATE_ERROR, error);
+            throw internalServerError(createError('board'), error);
         }
     });

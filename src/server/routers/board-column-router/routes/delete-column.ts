@@ -1,7 +1,7 @@
 import { authedProcedure } from '@server/routers/auth-router';
 import { z } from 'zod';
-import { COLUMN_DELETE_ERROR } from '../errors';
 import { internalServerError } from '@server/helpers/error-helpers';
+import { deleteError } from '@server/routers/common-errors';
 
 export const deleteColumn = authedProcedure
     .input(
@@ -18,6 +18,6 @@ export const deleteColumn = authedProcedure
             });
             return deleteColumn;
         } catch (error) {
-            throw internalServerError(COLUMN_DELETE_ERROR, error);
+            throw internalServerError(deleteError('column'), error);
         }
     });

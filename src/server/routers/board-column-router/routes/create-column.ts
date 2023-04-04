@@ -1,7 +1,7 @@
 import { boardColumnCreationSchema } from '@lib/schemas/board-schemas';
 import { authedProcedure } from '@server/routers/auth-router';
-import { COLUMN_CREATE_ERROR } from '../errors';
 import { internalServerError } from '@server/helpers/error-helpers';
+import { createError } from '@server/routers/common-errors';
 
 export const createColumn = authedProcedure
     .input(boardColumnCreationSchema)
@@ -23,6 +23,6 @@ export const createColumn = authedProcedure
             });
             return createColumn;
         } catch (error) {
-            throw internalServerError(COLUMN_CREATE_ERROR, error);
+            throw internalServerError(createError('column'), error);
         }
     });

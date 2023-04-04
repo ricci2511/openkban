@@ -1,8 +1,8 @@
 import { authedProcedure } from '@server/routers/auth-router';
-import { COLUMNS_TASKS_QUERY_ERROR } from '../errors';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { z } from 'zod';
 import { PrismaClient } from '@prisma/client';
+import { queryError } from '@server/routers/common-errors';
 
 export const queryColumnsWithTasks = async (
     prisma: PrismaClient,
@@ -18,7 +18,8 @@ export const queryColumnsWithTasks = async (
             },
         });
     } catch (error) {
-        throw internalServerError(COLUMNS_TASKS_QUERY_ERROR, error);
+        const message = queryError('column', false);
+        throw internalServerError(message, error);
     }
 };
 

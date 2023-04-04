@@ -1,6 +1,6 @@
 import { internalServerError } from '@server/helpers/error-helpers';
-import { COLUMNS_TASKS_QUERY_ERROR } from '../errors';
 import { authedProcedure } from '@server/routers/auth-router';
+import { queryError } from '@server/routers/common-errors';
 import { z } from 'zod';
 
 export const getAllColumns = authedProcedure
@@ -13,6 +13,7 @@ export const getAllColumns = authedProcedure
                 },
             });
         } catch (error) {
-            throw internalServerError(COLUMNS_TASKS_QUERY_ERROR, error);
+            const message = queryError('column', false);
+            throw internalServerError(message, error);
         }
     });

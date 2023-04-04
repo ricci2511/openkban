@@ -9,12 +9,9 @@ import { upsertBoardIds } from '@server/redis/user-board-ids';
 import { authedProcedure } from '@server/routers/auth-router';
 import { BoardData } from 'types/board-types';
 import { z } from 'zod';
-import {
-    BOARD_IDS_CACHE_ERROR,
-    BOARD_METADATA_CACHE_ERROR,
-    BOARD_QUERY_ERROR,
-} from '../errors';
+import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
+import { queryError } from '@server/routers/common-errors';
 
 const sortTasksOfBoard = (board: BoardData): BoardData => {
     return {
@@ -82,6 +79,7 @@ export const getBoardById = authedProcedure
 
             return sortTasksOfBoard(board);
         } catch (error) {
-            throw internalServerError(BOARD_QUERY_ERROR, error);
+            const message = queryError('board', true);
+            throw internalServerError(message, error);
         }
     });

@@ -2,7 +2,8 @@ import { boardUpdateSchema } from '@lib/schemas/board-schemas';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { invalidateBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
-import { BOARD_INVALIDATION_ERROR, BOARD_UPDATE_ERROR } from '../errors';
+import { BOARD_INVALIDATION_ERROR } from '../errors';
+import { updateError } from '@server/routers/common-errors';
 
 export const updateBoard = authedProcedure
     .input(boardUpdateSchema)
@@ -26,6 +27,6 @@ export const updateBoard = authedProcedure
 
             return updateBoard;
         } catch (error) {
-            throw internalServerError(BOARD_UPDATE_ERROR, error);
+            throw internalServerError(updateError('board'), error);
         }
     });

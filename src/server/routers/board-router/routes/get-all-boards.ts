@@ -7,10 +7,10 @@ import { saveBoardIdOrIds } from '@server/redis/user-board-ids';
 import { authedProcedure } from '@server/routers/auth-router';
 import {
     BOARDS_CACHE_ERROR,
-    BOARDS_QUERY_ERROR,
     CACHED_BOARDS_FETCH_ERROR,
     MISSING_BOARDS_QUERY_ERROR,
 } from '@server/routers/board-router/errors';
+import { queryError } from '@server/routers/common-errors';
 
 export const getAllBoards = authedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
@@ -76,6 +76,7 @@ export const getAllBoards = authedProcedure.query(async ({ ctx }) => {
         // boards are returned while the caching is happening in the background
         return boards;
     } catch (error) {
-        throw internalServerError(BOARDS_QUERY_ERROR, error);
+        const message = queryError('board', false);
+        throw internalServerError(message, error);
     }
 });

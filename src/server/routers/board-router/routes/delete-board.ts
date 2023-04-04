@@ -2,7 +2,8 @@ import { internalServerError } from '@server/helpers/error-helpers';
 import { deleteSavedBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
 import { z } from 'zod';
-import { BOARD_CACHE_DELETE_ERROR, BOARD_DELETE_ERROR } from '../errors';
+import { BOARD_CACHE_DELETE_ERROR } from '../errors';
+import { deleteError } from '@server/routers/common-errors';
 
 export const deleteBoard = authedProcedure
     .input(
@@ -26,6 +27,6 @@ export const deleteBoard = authedProcedure
 
             return board;
         } catch (error) {
-            throw internalServerError(BOARD_DELETE_ERROR, error);
+            throw internalServerError(deleteError('board'), error);
         }
     });
