@@ -1,14 +1,13 @@
 import React from 'react';
 import Dialog, { DialogType } from '../dialog';
 import { Button, Form, Input, Modal } from 'react-daisyui';
-import { useForm } from 'react-hook-form';
-import { TitleInput, titleSchema } from '@lib/schemas/board-schemas';
+import { TitleInput } from '@lib/schemas/board-schemas';
 import FormInput from './form-input';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { TRPCClientErrorLike } from '@trpc/client';
 import { AppRouter } from '@server/routers';
 import { UseTRPCMutationResult } from '@trpc/react-query/shared';
+import { useTitleForm } from '@hooks/use-title-form';
 
 type HasIdAndTitle = { id: string } & TitleInput;
 
@@ -40,9 +39,7 @@ const EditTitleModal = <TEntity extends HasIdAndTitle>({
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TitleInput>({
-        resolver: zodResolver(titleSchema(zodString)),
-    });
+    } = useTitleForm(zodString);
 
     const { mutate: updateTitle, isLoading } = updateMutation;
 

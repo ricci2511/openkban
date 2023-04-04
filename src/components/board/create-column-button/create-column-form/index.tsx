@@ -1,17 +1,12 @@
 import PopoverPicker from '@components/ui/color-picker/popover-picker';
 import { PRESET_COLORS } from '@lib/constants';
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-    TitleInput,
-    columnTitle,
-    titleSchema,
-} from '@lib/schemas/board-schemas';
+import { TitleInput, columnTitle } from '@lib/schemas/board-schemas';
 import useCreateColumn from '@hooks/use-create-column';
 import { Button, Form } from 'react-daisyui';
 import FormInputGroup from '@components/ui/form/form-input-group';
 import { useBoardId } from 'store/kanban-store';
+import { useTitleForm } from '@hooks/use-title-form';
 
 interface CreateColumnFormProps {
     setCreating: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,9 +17,7 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TitleInput>({
-        resolver: zodResolver(titleSchema(columnTitle)),
-    });
+    } = useTitleForm(columnTitle);
     const [color, setColor] = useState(
         PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)]
     );

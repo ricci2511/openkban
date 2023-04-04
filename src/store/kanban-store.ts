@@ -41,6 +41,8 @@ type KanbanStore = {
     boardId: string;
     columns: BoardColumn[];
     tasks: TasksMap;
+    // it might be more efficient to just store the reference with a tuple to avoid task
+    // data duplication, e.g. [columnId, taskIndex], but i encountered race condition problems
     currentTask: BoardTask | undefined;
     // only the subtasks of the current task in use are stored here
     subtasks: BoardSubtask[];

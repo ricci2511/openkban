@@ -1,14 +1,9 @@
 import FormInput from '@components/ui/form/form-input';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateSubtask } from '@hooks/use-create-subtask';
-import {
-    TitleInput,
-    subtaskTitle,
-    titleSchema,
-} from '@lib/schemas/board-schemas';
+import { useTitleForm } from '@hooks/use-title-form';
+import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { Button } from 'react-daisyui';
-import { useForm } from 'react-hook-form';
 import { useCurrentTask } from 'store/kanban-store';
 
 const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
@@ -16,9 +11,7 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<TitleInput>({
-        resolver: zodResolver(titleSchema(subtaskTitle)),
-    });
+    } = useTitleForm(subtaskTitle);
 
     const { mutate: createSubtask, isLoading } = useCreateSubtask(stopAddingCb);
     const { id: taskId } = useCurrentTask()!;
