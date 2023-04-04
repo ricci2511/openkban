@@ -21,7 +21,7 @@ export const TaskPage: NextPageWithLayout = () => {
     const { setColumns } = useColumnsActions();
     const { setSubtasks } = useSubtasksActions();
 
-    trpc.boardColumnRouter.getAll.useQuery(
+    const { data: columns } = trpc.boardColumnRouter.getAll.useQuery(
         {
             boardId: boardId as string,
         },
@@ -40,6 +40,8 @@ export const TaskPage: NextPageWithLayout = () => {
     } = trpc.boardTaskRouter.getById.useQuery(
         { id: taskId as string },
         {
+            // task query depends on columns query
+            enabled: !!columns,
             refetchOnWindowFocus: false,
             onSuccess: (task) => {
                 if (!task) return;

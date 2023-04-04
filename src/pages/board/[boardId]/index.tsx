@@ -1,6 +1,6 @@
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
 import useUpdateBoard from '@hooks/use-update-board';
@@ -8,25 +8,30 @@ import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import KanbanBodySection from '@components/board/kanban-body-section';
 import KanbanHeaderSection from '@components/board/kanban-header-section';
 import { trpc } from '@lib/trpc';
-import { useBoardId } from 'store/kanban-store';
+import { useBoardId, useInitKanbanStore } from 'store/kanban-store';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
+
+    const initStore = useInitKanbanStore();
+    const { mutate: updateBoard } = useUpdateBoard();
+    const storeBoardId = useBoardId();
+
     const { data, error, isLoading } = trpc.boardRouter.getById.useQuery(
         {
             id,
         },
-        { refetchOnWindowFocus: false }
-    );
-
-    const { mutate: updateBoard } = useUpdateBoard();
-    const storeBoardId = useBoardId();
-
-    useEffect(() => {
-        if (data && storeBoardId !== id) {
-            updateBoard({ id, lastInteractedAt: new Date() });
+        {
+            refetchOnWindowFocus: false,
+            onSuccess: ({ id, columns }) => {
+                initStore(columns);
+                // update lastInteractedAt only if a different board is loaded
+                if (id !== storeBoardId) {
+                    updateBoard({ id, lastInteractedAt: new Date() });
+                }
+            },
         }
-    }, [id, updateBoard, data, storeBoardId]);
+    );
 
     if (error) {
         return (
@@ -48,7 +53,7 @@ export const BoardPage: NextPageWithLayout = () => {
     return (
         <>
             <KanbanHeaderSection title={data.title} />
-            <KanbanBodySection columns={data.columns} />
+            <KanbanBodySection />
         </>
     );
 };
