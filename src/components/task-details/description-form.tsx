@@ -54,19 +54,20 @@ const DescriptionForm = ({
                 <FormTextarea<TaskDescription>
                     id="description"
                     placeholder={`description for ${title}...`}
+                    autoFocus
                     className="w-full"
                     register={register}
                     registerName="taskDescription"
                     errors={errors}
                 />
             </fieldset>
-            <div className="mt-2 flex gap-3 self-end">
+            <div className="mt-2 flex gap-3 self-start">
                 <Button
                     type="submit"
                     color="primary"
                     loading={isLoading}
                     disabled={isLoading}
-                    aria-label="Create a new task"
+                    aria-label={`Update description for task ${title}`}
                 >
                     {isLoading ? 'Updating...' : 'Update Description'}
                 </Button>

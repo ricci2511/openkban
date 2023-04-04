@@ -37,7 +37,7 @@ const TaskDetailsModal = () => {
             className="max-w-4xl"
         >
             {isLoading && <CustomLoadingSpinner />}
-            {subtasks && !!id && <TaskDetails taskId={id} />}
+            {subtasks && !!id && <TaskDetails />}
         </Dialog>
     );
 };

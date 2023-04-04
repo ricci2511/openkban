@@ -83,7 +83,7 @@ export const TaskPage: NextPageWithLayout = () => {
             >
                 {'<- BACK TO BOARD'}
             </button>
-            <TaskDetails taskId={task.id} />
+            <TaskDetails />
         </div>
     );
 };

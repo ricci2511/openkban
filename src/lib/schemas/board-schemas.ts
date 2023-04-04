@@ -16,6 +16,11 @@ export const taskTitle = z
     .min(1, 'Task title cannot be empty')
     .max(35, 'Task title cannot contain more than 35 characters');
 
+export const subtaskTitle = z
+    .string()
+    .min(1, 'Subtask title cannot be empty')
+    .max(50, 'Subtask title cannot contain more than 50 characters');
+
 /**
  *
  * @param zodString zod string used to validate the title input field
@@ -72,6 +77,12 @@ export const boardTaskCreationSchema = z.object({
         .min(new Date(), 'The due date must be in the future'),
 });
 export type BoardTaskCreation = z.infer<typeof boardTaskCreationSchema>;
+
+export const boardSubtaskCreationSchema = z.object({
+    taskId: z.string().cuid(),
+    title: subtaskTitle,
+});
+export type BoardSubtaskCreation = z.infer<typeof boardSubtaskCreationSchema>;
 
 // Boards can currently be sorted by createdAt, title and lastInteractedAt props
 const sortableBoardSchema = z.object({

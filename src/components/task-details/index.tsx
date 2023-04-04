@@ -1,15 +1,15 @@
 import React from 'react';
 import Description from './description';
-import { useColumns, useCurrentTask, useSubtasks } from 'store/kanban-store';
+import { useColumns, useCurrentTask } from 'store/kanban-store';
+import Subtasks from './subtasks';
 
-const TaskDetails = ({ taskId }: { taskId: string }) => {
+const TaskDetails = () => {
     const task = useCurrentTask();
-    const subtasks = useSubtasks();
     const columns = useColumns();
 
     return (
-        <div>
-            <section className="mb-4 flex gap-4">
+        <div className="flex flex-col gap-6">
+            <section className="flex gap-4">
                 <h1 className="text-4xl font-bold">{task?.title}</h1>
                 {/**
                  * TODO: Some sort of columns dropdown to switch the task to another column if desired.
@@ -18,6 +18,9 @@ const TaskDetails = ({ taskId }: { taskId: string }) => {
             </section>
             <section>
                 <Description />
+            </section>
+            <section>
+                <Subtasks />
             </section>
         </div>
     );
