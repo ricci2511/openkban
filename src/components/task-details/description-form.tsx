@@ -65,6 +65,7 @@ const DescriptionForm = ({
                 <Button
                     type="submit"
                     color="primary"
+                    size="sm"
                     loading={isLoading}
                     disabled={isLoading}
                     aria-label={`Update description for task ${title}`}
@@ -74,6 +75,7 @@ const DescriptionForm = ({
                 <Button
                     type="button"
                     color="error"
+                    size="sm"
                     onClick={stopEdittingCb}
                     aria-label="Cancel task description update"
                 >

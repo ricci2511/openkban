@@ -10,12 +10,9 @@ import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 
 // dynamically import the due date warning tooltip
-const DueDateWarningTooltip = dynamic(
-    () => import('./due-date-warning-tooltip'),
-    {
-        ssr: false,
-    }
-);
+const DueDateWarning = dynamic(() => import('./due-date-warning'), {
+    ssr: false,
+});
 
 export interface TaskProps {
     task: BoardTask;
@@ -44,32 +41,33 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
             >
                 <div className="flex flex-col space-y-4 p-3">
                     <span>{title}</span>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                         <span className="text-xs font-extralight">
                             {`${dayjs()
                                 .month(dueDate.getMonth())
                                 .format('MMM')} ${dueDate.getDate()}`}
                         </span>
-                        {(dueDateToday || dueDateOverdue) && (
-                            <DueDateWarningTooltip
-                                today={dueDateToday}
-                                overdue={dueDateOverdue}
-                            />
-                        )}
                     </div>
+                    {(dueDateToday || dueDateOverdue) && (
+                        <DueDateWarning
+                            today={dueDateToday}
+                            overdue={dueDateOverdue}
+                        />
+                    )}
                 </div>
             </Link>
-            <div className="flex flex-none flex-col items-center space-y-6 py-2">
-                <span className="pr-1 pt-4" aria-roledescription="draggable">
-                    <Button color="ghost" size="xs">
-                        <RxDragHandleDots2
-                            size={20}
-                            className="cursor-grab focus:cursor-grabbing"
-                            {...listeners}
-                        />
+            <div className="flex flex-none flex-col items-center justify-around">
+                <span className="pr-1" aria-roledescription="draggable">
+                    <Button
+                        color="ghost"
+                        size="sm"
+                        className="cursor-grab focus:cursor-grabbing"
+                        {...listeners}
+                    >
+                        <RxDragHandleDots2 size={20} />
                     </Button>
                 </span>
-                <span className="pr-1">
+                <span className="">
                     <TaskOptionsDropdown task={task} />
                 </span>
             </div>
