@@ -16,3 +16,5 @@ export const BOARD_IDS_CACHE_ERROR =
     'Could not add board ID or ids to redis cache';
 
 export const BOARD_CACHE_DELETE_ERROR = 'Could not delete board from redis';
+
+export const BOARD_CACHE_UPDATE_ERROR = 'Could not update board cache';

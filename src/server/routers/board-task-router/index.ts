@@ -2,9 +2,10 @@ import { t } from '@server/trpc';
 import { authedProcedure } from '../auth-router';
 import { boardTaskCreationSchema } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 
 export const boardTaskRouter = t.router({
-    getById: authedProcedure
+    getById: authedRateLimitedProcedure
         .input(
             z.object({
                 id: z.string().cuid(),

@@ -93,7 +93,7 @@ export const saveBoard = async (board: Board, expireSeconds?: number) => {
  * Invalidates the board in the cache, e.g. when a board is updated.
  * @param boardId
  */
-export const invalidateBoard = async (boardId: string) => {
+export const invalidateSavedBoard = async (boardId: string) => {
     try {
         await redis.del(hashKey(boardId));
     } catch (error) {
@@ -101,6 +101,14 @@ export const invalidateBoard = async (boardId: string) => {
             `ERROR invalidating {${hashKey(boardId)}} in redis`,
             error
         );
+    }
+};
+
+export const updateSavedBoard = async (id: string, board: Board) => {
+    try {
+        await redis.set(hashKey(id), board);
+    } catch (error) {
+        console.error(`ERROR updating {${hashKey(id)}} in redis`, error);
     }
 };
 

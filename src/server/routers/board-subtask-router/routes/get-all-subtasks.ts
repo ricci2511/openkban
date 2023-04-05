@@ -1,9 +1,9 @@
 import { internalServerError, notFound } from '@server/helpers/error-helpers';
-import { authedProcedure } from '@server/routers/auth-router';
 import { z } from 'zod';
 import { queryError } from '@server/routers/common-errors';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 
-export const getAllSubtasks = authedProcedure
+export const getAllSubtasks = authedRateLimitedProcedure
     .input(
         z.object({
             taskId: z.string().cuid(),

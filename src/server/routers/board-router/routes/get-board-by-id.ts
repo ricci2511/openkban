@@ -1,17 +1,13 @@
 import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
-import {
-    checkForRateLimit,
-    internalServerError,
-    notFound,
-} from '@server/helpers/error-helpers';
+import { internalServerError, notFound } from '@server/helpers/error-helpers';
 import { getSavedBoardById, saveBoard } from '@server/redis/board';
 import { upsertBoardIds } from '@server/redis/user-board-ids';
-import { authedProcedure } from '@server/routers/auth-router';
 import { BoardData } from 'types/board-types';
 import { z } from 'zod';
 import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
 import { queryError } from '@server/routers/common-errors';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 
 const sortTasksOfBoard = (board: BoardData): BoardData => {
     return {
@@ -25,13 +21,10 @@ const sortTasksOfBoard = (board: BoardData): BoardData => {
 
 const idSchema = z.object({ id: z.string().cuid() });
 
-export const getBoardById = authedProcedure
+export const getBoardById = authedRateLimitedProcedure
     .input(idSchema)
     .query(async ({ ctx, input }) => {
-        const userId = ctx.session.user.id;
         const boardId = input.id;
-
-        await checkForRateLimit(`board-by-id:${userId}`);
 
         const savedBoard = await getSavedBoardById(boardId);
         // if board metadata is cached, only query the columns with tasks

@@ -1,6 +1,8 @@
 import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
 import { Board } from '@prisma/client';
+import { AppRouter } from '@server/routers';
+import { DefinedUseTRPCQueryOptions } from '@trpc/react-query/shared';
 
 const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
     const { prop, order } = sort;
@@ -29,16 +31,22 @@ const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
 };
 
 /**
- * @param sortBy object with prop and order enums to sort the boards by
- * @returns sorted boards, isLoading state, error state
+ * @param sortBy optional object with prop and order enums to sort the boards by
+ * @param enabled whether to query the boards or not, defaults to true
+ * @returns sorted boards and query state
  */
-const useGetBoards = (sortBy?: SortableBoard) => {
-    const { data, isLoading } = trpc.boardRouter.getAll.useQuery(undefined, {
+const useGetBoards = (sortBy?: SortableBoard, enabled: boolean = true) => {
+    // TODO: change useQuery to useInfiniteQuery
+    const isCached = !!trpc.useContext().boardRouter.getAll.getData();
+    const boardsQuery = trpc.boardRouter.getAll.useQuery(undefined, {
         refetchOnWindowFocus: false,
+        enabled: enabled && !isCached,
     });
 
+    const { data, ...rest } = boardsQuery;
     const boards = sortBy && data ? getSortedBoards(data, sortBy) : data;
-    return { boards, isLoading };
+
+    return { boards, ...rest };
 };
 
 export default useGetBoards;

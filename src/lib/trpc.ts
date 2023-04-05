@@ -4,6 +4,7 @@ import type { AppRouter } from '@server/routers';
 import superjson from 'superjson';
 import { observable } from '@trpc/server/observable';
 import { toast } from 'react-hot-toast';
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 
 const getBaseUrl = () => {
     if (typeof window !== 'undefined') return '';
@@ -54,3 +55,9 @@ export const trpc = createTRPCNext<AppRouter>({
     },
     ssr: false,
 });
+
+/**
+ * @see: https://trpc.io/docs/server/infer-types#inference-helpers
+ */
+export type RouterInputs = inferRouterInputs<AppRouter>;
+export type RouterOutputs = inferRouterOutputs<AppRouter>;

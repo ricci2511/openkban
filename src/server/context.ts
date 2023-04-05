@@ -8,7 +8,7 @@ type CreateContextOptions = {
     session: Session | null;
 };
 
-const createInnerTRPCContext = (opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     return {
         session: opts.session,
         prisma,
@@ -25,10 +25,15 @@ export const createContext = async (
     const { req, res } = opts;
 
     const session = await getServerAuthSession({ req, res });
-
-    return createInnerTRPCContext({
+    const contextInner = createInnerTRPCContext({
         session,
     });
+
+    return {
+        ...contextInner,
+        req,
+        res,
+    };
 };
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
