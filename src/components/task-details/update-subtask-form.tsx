@@ -1,4 +1,5 @@
 import FormTextarea from '@components/ui/form/form-textarea';
+import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
 import { useUpdateSubtask } from '@hooks/use-update-subtask';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
@@ -36,11 +37,17 @@ const UpdateSubtaskForm = ({
         updateSubtask({ id, title });
     });
 
+    const ref = useClickOutside<HTMLFormElement>(stopEdittingCb);
+
     return (
-        <form onSubmit={onSubmit} className="form-control w-full gap-2">
+        <form
+            onSubmit={onSubmit}
+            className="form-control w-full gap-2"
+            ref={ref}
+        >
             <fieldset>
                 <FormTextarea<TitleInput>
-                    id="description"
+                    id="subtask-title"
                     placeholder="Your subtask title..."
                     autoFocus
                     className="w-full"

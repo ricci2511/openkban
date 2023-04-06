@@ -7,12 +7,13 @@ import { Button, Form } from 'react-daisyui';
 import FormInputGroup from '@components/ui/form/form-input-group';
 import { useBoardId } from 'store/kanban-store';
 import { useTitleForm } from '@hooks/use-title-form';
+import { useClickOutside } from '@hooks/use-click-outside';
 
-interface CreateColumnFormProps {
-    setCreating: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
+const CreateColumnForm = ({
+    stopCreatingCb,
+}: {
+    stopCreatingCb: () => void;
+}) => {
     const {
         register,
         handleSubmit,
@@ -23,16 +24,16 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
     );
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
-    const { mutate: createColumn, isLoading } = useCreateColumn(() =>
-        setCreating(false)
-    );
+    const { mutate: createColumn, isLoading } = useCreateColumn(stopCreatingCb);
     const boardId = useBoardId();
     const onSubmit = handleSubmit(({ title }) => {
         createColumn({ boardId, title, color });
     });
 
+    const ref = useClickOutside<HTMLFormElement>(stopCreatingCb);
+
     return (
-        <Form className="relative -mt-10 w-full" onSubmit={onSubmit}>
+        <Form className="relative -mt-10 w-full" onSubmit={onSubmit} ref={ref}>
             <Form.Label
                 title="Column title"
                 htmlFor="column-title"
@@ -78,7 +79,7 @@ const CreateColumnForm = ({ setCreating }: CreateColumnFormProps) => {
                     type="button"
                     className="w-1/2"
                     color="error"
-                    onClick={() => setCreating(false)}
+                    onClick={stopCreatingCb}
                 >
                     Cancel
                 </Button>

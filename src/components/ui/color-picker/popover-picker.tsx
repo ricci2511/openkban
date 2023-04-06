@@ -1,6 +1,6 @@
-import React, { useCallback, useRef } from 'react';
-import useOnClickOutside from 'use-onclickoutside';
+import React, { useCallback } from 'react';
 import ColorPicker, { ColorPickerProps } from '.';
+import { useClickOutside } from '@hooks/use-click-outside';
 
 interface PopoverPickerProps extends ColorPickerProps {
     isOpen: boolean;
@@ -13,10 +13,8 @@ const PopoverPicker = ({
     changeColor,
     ...rest
 }: PopoverPickerProps) => {
-    const popoverRef = useRef<HTMLDivElement>(null);
-
     const close = useCallback(() => toggle(false), [toggle]);
-    useOnClickOutside(popoverRef, close);
+    const popoverRef = useClickOutside<HTMLDivElement>(close);
 
     return (
         <div className="relative z-10">

@@ -6,6 +6,7 @@ import { Button } from 'react-daisyui';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useCurrentTask } from 'store/kanban-store';
+import { useClickOutside } from '@hooks/use-click-outside';
 
 // TODO: maybe reuse boardTaskCreationSchema for this?
 const descriptionSchema = z.object({
@@ -45,12 +46,11 @@ const DescriptionForm = ({
         updateDescription(taskDescription);
     });
 
+    const ref = useClickOutside<HTMLFormElement>(stopEdittingCb);
+
     return (
-        <form onSubmit={onSubmit} className="form-control">
+        <form onSubmit={onSubmit} className="form-control" ref={ref}>
             <fieldset>
-                <label htmlFor="description" className="label-text label">
-                    Description
-                </label>
                 <FormTextarea<TaskDescription>
                     id="description"
                     placeholder={`description for ${title}...`}

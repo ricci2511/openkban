@@ -16,7 +16,9 @@ const CreateColumnButton = () => {
                     <RiAddFill size={20} />
                 </button>
             )}
-            {creating && <CreateColumnForm setCreating={setCreating} />}
+            {creating && (
+                <CreateColumnForm stopCreatingCb={() => setCreating(false)} />
+            )}
         </li>
     );
 };

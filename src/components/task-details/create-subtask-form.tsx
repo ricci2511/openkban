@@ -1,4 +1,5 @@
 import FormTextarea from '@components/ui/form/form-textarea';
+import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateSubtask } from '@hooks/use-create-subtask';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
@@ -20,8 +21,10 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
         createSubtask({ taskId, title });
     });
 
+    const ref = useClickOutside<HTMLFormElement>(stopAddingCb);
+
     return (
-        <form onSubmit={onSubmit} className="form-control gap-3">
+        <form onSubmit={onSubmit} className="form-control gap-3" ref={ref}>
             <fieldset>
                 <FormTextarea<TitleInput>
                     id="description"
