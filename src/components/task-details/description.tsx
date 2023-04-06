@@ -4,6 +4,7 @@ import { HiPencil } from 'react-icons/hi';
 import { RiAddFill } from 'react-icons/ri';
 import DescriptionForm from './description-form';
 import { useCurrentTask } from 'store/kanban-store';
+import { RxTextAlignLeft } from 'react-icons/rx';
 
 const Description = () => {
     const { title, description } = useCurrentTask()!;
@@ -13,7 +14,8 @@ const Description = () => {
 
     return (
         <>
-            <span className="mb-2 flex items-center gap-3">
+            <div className="mb-2 flex items-center gap-3">
+                <RxTextAlignLeft size={22} />
                 <h4 className="text-xl font-semibold">Task Description</h4>
                 {!editting && description && (
                     <Button
@@ -24,23 +26,28 @@ const Description = () => {
                         onClick={startEditting}
                     />
                 )}
-            </span>
-            {!description && !editting && (
-                <Button
-                    className="mt-2"
-                    onClick={startEditting}
-                    endIcon={<RiAddFill size={18} />}
-                >
-                    Add description
-                </Button>
-            )}
-            {editting ? (
-                <DescriptionForm stopEdittingCb={stopEditting} />
-            ) : (
-                <p className="text-base" aria-label={`Description of ${title}`}>
-                    {description}
-                </p>
-            )}
+            </div>
+            <div className="ml-9">
+                {!description && !editting && (
+                    <Button
+                        className="mt-2"
+                        onClick={startEditting}
+                        endIcon={<RiAddFill size={18} />}
+                    >
+                        Add description
+                    </Button>
+                )}
+                {editting ? (
+                    <DescriptionForm stopEdittingCb={stopEditting} />
+                ) : (
+                    <p
+                        className="text-base"
+                        aria-label={`Description of ${title}`}
+                    >
+                        {description}
+                    </p>
+                )}
+            </div>
         </>
     );
 };

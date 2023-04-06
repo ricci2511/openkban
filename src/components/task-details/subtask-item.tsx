@@ -15,11 +15,11 @@ const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
     };
 
     return (
-        <li className="flex items-start gap-3 rounded-md p-2 transition-all duration-200 hover:bg-base-200">
+        <li className="-ml-1.5 flex items-start gap-3.5 rounded-md p-2 transition-all duration-200 hover:bg-base-200">
             <input
                 type="checkbox"
                 checked={isDone}
-                className="checkbox-primary checkbox"
+                className="checkbox-primary checkbox checkbox-sm"
                 onChange={(e) => handleCheckboxChange(e)}
                 aria-label={`Mark subtask ${title} as completed or not`}
             />

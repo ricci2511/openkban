@@ -53,49 +53,42 @@ const EditTitleModal = <TEntity extends HasIdAndTitle>({
 
     return (
         <Dialog open={open} closeDialog={closeDialog} className="max-w-2xl">
-            <Modal.Header className="mt-3 text-2xl font-bold">
-                Edit {name} title
+            <Modal.Header className="mt-3 text-2xl font-semibold">
+                Edit {name} title of{' '}
+                <span className="font-bold">{`'${oldTitle}'`}</span>
             </Modal.Header>
             <Modal.Body>
-                <Form className="mb-4 w-full" onSubmit={onSubmit}>
-                    <div className="flex flex-col gap-4 md:flex-row">
-                        <span className="w-full md:w-1/2">
-                            <Form.Label title={`Old ${name} title`} />
-                            <Input
-                                type="text"
-                                name="old-title"
-                                className="w-full"
-                                defaultValue={oldTitle}
-                                size="lg"
-                                disabled
-                            />
-                        </span>
-                        <span className="w-full md:w-1/2">
-                            <Form.Label
-                                title={`New ${name} title`}
-                                htmlFor={`new-${name}-title`}
-                            />
-                            <FormInput<TitleInput>
-                                type="text"
-                                id={`new-${name}-title`}
-                                placeholder={`${name} title...`}
-                                className="w-full"
-                                size="lg"
-                                disabled={isLoading}
-                                autoFocus
-                                register={register}
-                                registerName="title"
-                                registerRules={{ required: true }}
-                                errors={errors}
-                            />
-                        </span>
-                    </div>
+                <Form
+                    className="mb-4 w-full"
+                    onSubmit={onSubmit}
+                    id="edit-title-form"
+                >
+                    <fieldset className="w-full">
+                        <Form.Label
+                            title={`New title`}
+                            htmlFor={`new-${name}-title`}
+                        />
+                        <FormInput<TitleInput>
+                            type="text"
+                            id={`new-${name}-title`}
+                            placeholder={`${name} title...`}
+                            className="w-full"
+                            size="lg"
+                            disabled={isLoading}
+                            autoFocus
+                            register={register}
+                            registerName="title"
+                            registerRules={{ required: true }}
+                            errors={errors}
+                        />
+                    </fieldset>
                 </Form>
             </Modal.Body>
             <Modal.Actions>
                 <Button
+                    type="submit"
+                    form="edit-title-form"
                     color="primary"
-                    onClick={onSubmit}
                     loading={isLoading}
                     disabled={isLoading}
                 >

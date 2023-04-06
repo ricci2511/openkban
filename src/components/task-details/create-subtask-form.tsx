@@ -24,7 +24,7 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
     const ref = useClickOutside<HTMLFormElement>(stopAddingCb);
 
     return (
-        <form onSubmit={onSubmit} className="form-control gap-3" ref={ref}>
+        <form onSubmit={onSubmit} className="form-control ml-9 gap-3" ref={ref}>
             <fieldset>
                 <FormTextarea<TitleInput>
                     id="description"

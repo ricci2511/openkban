@@ -2,7 +2,6 @@ import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
-import { RiSettings3Fill, RiUserSettingsFill } from 'react-icons/ri';
 import { MdOutlineKeyboardArrowUp } from 'react-icons/md';
 import { Button, Dropdown } from 'react-daisyui';
 
@@ -51,14 +50,6 @@ const User = ({ session }: { session: Session }) => {
                             <MdOutlineKeyboardArrowUp size={16} />
                         </Button>
                         <Dropdown.Menu className="mb-2 w-52 gap-2 bg-base-100">
-                            <Dropdown.Item>
-                                <RiUserSettingsFill size={18} />
-                                Account settings
-                            </Dropdown.Item>
-                            <Dropdown.Item>
-                                <RiSettings3Fill size={18} />
-                                App settings
-                            </Dropdown.Item>
                             <li className="mt-1">
                                 <Button
                                     variant="outline"
