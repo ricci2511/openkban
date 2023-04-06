@@ -56,10 +56,10 @@ const rateLimiterMiddlweware = createTRPCUpstashLimiter({
     fingerprint: (ctx, _input) => getFingerprint(ctx.req),
     windowMs: 60000,
     message: (hitInfo) =>
-        `Too many requests, please try again later. ${Math.ceil(
+        `Too many requests, please try again in about ${Math.ceil(
             (hitInfo.reset - Date.now()) / 1000
-        )}`,
-    max: 15,
+        )} seconds.`,
+    max: 12,
 });
 
 const authRateLimitterMiddleware = authMiddleware.unstable_pipe(

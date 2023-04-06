@@ -1,9 +1,9 @@
 import { internalServerError } from '@server/helpers/error-helpers';
-import { authedProcedure } from '@server/middlewares';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 import { updateError } from '@server/routers/common-errors';
 import { z } from 'zod';
 
-export const updateSubtask = authedProcedure
+export const updateSubtask = authedRateLimitedProcedure
     .input(
         z.object({
             id: z.string(),

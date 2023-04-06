@@ -1,9 +1,9 @@
 import { internalServerError } from '@server/helpers/error-helpers';
-import { authedProcedure } from '@server/routers/auth-router';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 import { updateError } from '@server/routers/common-errors';
 import { z } from 'zod';
 
-export const updateColumn = authedProcedure
+export const updateColumn = authedRateLimitedProcedure
     .input(
         z.object({
             id: z.string().cuid(),

@@ -1,11 +1,11 @@
 import { boardUpdateSchema } from '@lib/schemas/board-schemas';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { invalidateSavedBoard, updateSavedBoard } from '@server/redis/board';
-import { authedProcedure } from '@server/routers/auth-router';
 import { BOARD_CACHE_UPDATE_ERROR, BOARD_INVALIDATION_ERROR } from '../errors';
 import { updateError } from '@server/routers/common-errors';
+import { authedRateLimitedProcedure } from '@server/middlewares';
 
-export const updateBoard = authedProcedure
+export const updateBoard = authedRateLimitedProcedure
     .input(boardUpdateSchema)
     .mutation(async ({ ctx, input }) => {
         const { id, title, isFavourite, lastInteractedAt } = input;

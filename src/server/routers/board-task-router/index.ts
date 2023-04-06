@@ -37,7 +37,7 @@ export const boardTaskRouter = t.router({
             });
             return createTask;
         }),
-    update: authedProcedure
+    update: authedRateLimitedProcedure
         .input(
             z.object({
                 id: z.string().cuid(),
