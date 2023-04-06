@@ -6,13 +6,13 @@ import DescriptionForm from './description-form';
 import { useCurrentTask } from 'store/kanban-store';
 
 const Description = () => {
-    const { description } = useCurrentTask()!;
+    const { title, description } = useCurrentTask()!;
     const [editting, setEditting] = useState(false);
     const startEditting = () => setEditting(true);
     const stopEditting = () => setEditting(false);
 
     return (
-        <div>
+        <>
             <span className="mb-2 flex items-center gap-3">
                 <h4 className="text-xl font-semibold">Task Description</h4>
                 {!editting && description && (
@@ -37,9 +37,11 @@ const Description = () => {
             {editting ? (
                 <DescriptionForm stopEdittingCb={stopEditting} />
             ) : (
-                <p className="text-base ">{description}</p>
+                <p className="text-base" aria-label={`Description of ${title}`}>
+                    {description}
+                </p>
             )}
-        </div>
+        </>
     );
 };
 

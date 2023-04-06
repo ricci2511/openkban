@@ -8,7 +8,7 @@ const TaskDetails = () => {
     const columns = useColumns();
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="mx-auto flex flex-col gap-6">
             <section className="flex gap-4">
                 <h1 className="text-4xl font-bold">{task?.title}</h1>
                 {/**

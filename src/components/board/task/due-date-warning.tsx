@@ -9,13 +9,13 @@ interface DueDateWarningProps {
 const DueDateWarning = ({ today, overdue }: DueDateWarningProps) => {
     return (
         <>
-            {today && !overdue && (
+            {today && (
                 <span className="flex gap-2">
                     <RiErrorWarningFill className="text-warning" size={20} />
                     <p className="text-sm text-warning">Due date Today</p>
                 </span>
             )}
-            {!today && overdue && (
+            {overdue && (
                 <span className="flex gap-2">
                     <RiErrorWarningFill className="text-error" size={20} />
                     <p className="text-sm text-error">Due date Overdue</p>

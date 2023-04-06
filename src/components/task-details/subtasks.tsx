@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { RiAddFill } from 'react-icons/ri';
-import { useSubtasks } from 'store/kanban-store';
+import { useCurrentTask, useSubtasks } from 'store/kanban-store';
 import CreateSubtaskForm from './create-subtask-form';
+import SubtaskItem from './subtask-item';
 
 const Subtasks = () => {
+    const { title } = useCurrentTask()!;
     const subtasks = useSubtasks();
 
     const [adding, setAdding] = useState(false);
@@ -12,11 +14,11 @@ const Subtasks = () => {
     const startAdding = () => setAdding(true);
 
     return (
-        <div>
+        <>
             <h4 className="text-xl font-semibold">Subtasks</h4>
-            <ul className="mb-3">
+            <ul className="my-3" aria-label={`Subtasks list of ${title}`}>
                 {subtasks.map((subtask) => (
-                    <li key={subtask.id}>{subtask.title}</li>
+                    <SubtaskItem key={subtask.id} data={subtask} />
                 ))}
             </ul>
             {adding ? (
@@ -26,11 +28,12 @@ const Subtasks = () => {
                     size="sm"
                     endIcon={<RiAddFill size={18} />}
                     onClick={startAdding}
+                    aria-label="Add a subtask"
                 >
                     Add a subtask
                 </Button>
             )}
-        </div>
+        </>
     );
 };
 

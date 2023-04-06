@@ -16,7 +16,8 @@ const TaskDetailsModal = () => {
     const { getTaskById, setCurrentTask } = useTasksActions();
     const { setSubtasks } = useSubtasksActions();
 
-    const { data: subtasks, isLoading } =
+    // isLoading is always true when the query is disabled, therefore fetchStatus is more accurate
+    const { data: subtasks, fetchStatus } =
         trpc.boardSubtaskRouter.getAllByTaskId.useQuery(
             { taskId: id },
             {
@@ -34,9 +35,9 @@ const TaskDetailsModal = () => {
         <Dialog
             open={!!id}
             closeDialog={() => router.back()}
-            className="max-w-4xl"
+            className="max-w-3xl"
         >
-            {isLoading && <CustomLoadingSpinner />}
+            {fetchStatus === 'fetching' && <CustomLoadingSpinner />}
             {subtasks && !!id && <TaskDetails />}
         </Dialog>
     );
