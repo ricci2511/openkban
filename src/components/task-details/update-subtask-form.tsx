@@ -1,27 +1,43 @@
 import FormTextarea from '@components/ui/form/form-textarea';
-import { useCreateSubtask } from '@hooks/use-create-subtask';
 import { useTitleForm } from '@hooks/use-title-form';
+import { useUpdateSubtask } from '@hooks/use-update-subtask';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { Button } from 'react-daisyui';
-import { useCurrentTask } from 'store/kanban-store';
 
-const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
+interface UpdateSubtaskFormProps {
+    id: string;
+    currTitle: string; // current subtask title
+    stopEdittingCb: () => void;
+}
+
+const UpdateSubtaskForm = ({
+    id,
+    currTitle,
+    stopEdittingCb,
+}: UpdateSubtaskFormProps) => {
     const {
         register,
         handleSubmit,
+        getValues,
         formState: { errors },
-    } = useTitleForm(subtaskTitle);
+    } = useTitleForm(subtaskTitle, {
+        values: { title: currTitle },
+    });
 
-    const { mutate: createSubtask, isLoading } = useCreateSubtask(stopAddingCb);
-    const { id: taskId } = useCurrentTask()!;
+    const { mutate: updateSubtask, isLoading } =
+        useUpdateSubtask(stopEdittingCb);
 
     const onSubmit = handleSubmit(({ title }) => {
-        createSubtask({ taskId, title });
+        if (title === currTitle) {
+            stopEdittingCb();
+            return;
+        }
+        updateSubtask({ id, title });
     });
 
     return (
-        <form onSubmit={onSubmit} className="form-control gap-3">
+        <form onSubmit={onSubmit} className="form-control w-full gap-2">
             <fieldset>
                 <FormTextarea<TitleInput>
                     id="description"
@@ -40,16 +56,18 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
                     size="sm"
                     loading={isLoading}
                     disabled={isLoading}
-                    aria-label="Create a new subtask"
+                    aria-label={`Save subtask with title: ${getValues(
+                        'title'
+                    )}`}
                 >
-                    {isLoading ? 'Adding...' : 'Add subtask'}
+                    {isLoading ? 'Saving...' : 'Save'}
                 </Button>
                 <Button
                     type="button"
                     color="error"
                     size="sm"
-                    onClick={stopAddingCb}
-                    aria-label="Cancel subtask creation"
+                    onClick={stopEdittingCb}
+                    aria-label="Cancel subtask update"
                 >
                     Cancel
                 </Button>
@@ -58,4 +76,4 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
     );
 };
 
-export default CreateSubtaskForm;
+export default UpdateSubtaskForm;
