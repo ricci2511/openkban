@@ -9,6 +9,22 @@ import {
 } from '@server/routers/board-router/errors';
 import { queryError } from '@server/routers/common-errors';
 
+// prisma include object to get all users associated with a board
+export const boardUserInclude = {
+    boardUser: {
+        select: {
+            role: true,
+            user: {
+                select: {
+                    name: true,
+                    email: true,
+                    image: true,
+                },
+            },
+        },
+    },
+};
+
 // TODO: adapt procedure for useInfiniteQuery
 export const getAllBoards = authedRateLimitedProcedure.query(
     async ({ ctx }) => {
@@ -27,6 +43,9 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                                 id: {
                                     in: missingBoardIds,
                                 },
+                            },
+                            include: {
+                                ...boardUserInclude,
                             },
                         });
                         // cache the missing boards
@@ -52,7 +71,14 @@ export const getAllBoards = authedRateLimitedProcedure.query(
         try {
             const boards = await ctx.prisma.board.findMany({
                 where: {
-                    userId,
+                    boardUser: {
+                        some: {
+                            userId,
+                        },
+                    },
+                },
+                include: {
+                    ...boardUserInclude,
                 },
             });
 

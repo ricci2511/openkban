@@ -8,6 +8,7 @@ import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
 import { queryError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { boardUserInclude } from './get-all-boards';
 
 const sortTasksOfBoard = (board: BoardData): BoardData => {
     return {
@@ -51,15 +52,16 @@ export const getBoardById = authedRateLimitedProcedure
                             tasks: true,
                         },
                     },
+                    ...boardUserInclude,
                 },
             });
 
             if (!board) throw notFound('Board not found');
 
-            const { columns, ...metadata } = board;
+            const { columns, ...boardRest } = board;
 
             // cache board metadata
-            await saveBoard(metadata).catch((error) => {
+            await saveBoard(boardRest).catch((error) => {
                 throw internalServerError(BOARD_METADATA_CACHE_ERROR, error);
             });
 

@@ -7,6 +7,7 @@ import { authedProcedure } from '@server/routers/auth-router';
 import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { addBoardIdOrIds } from '@server/redis/user-board-ids';
 import { createError } from '@server/routers/common-errors';
+import { boardUserInclude } from './get-all-boards';
 
 export const createBoard = authedProcedure
     .input(boardCeationSchema)
@@ -25,7 +26,18 @@ export const createBoard = authedProcedure
                             color: randomColor(),
                         })),
                     },
+                    boardUser: {
+                        create: {
+                            role: 'ADMIN',
+                            user: {
+                                connect: {
+                                    id: userId,
+                                },
+                            },
+                        },
+                    },
                 },
+                include: { ...boardUserInclude },
             });
 
             // cache the new board metadata

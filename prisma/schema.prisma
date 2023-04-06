@@ -53,6 +53,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   boards        Board[]
+  boardUsers    BoardUser[]
 }
 
 model VerificationToken {
@@ -63,12 +64,32 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum BoardUserRole {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model BoardUser {
+  id        String        @id @default(cuid())
+  role      BoardUserRole @default(MEMBER)
+  board     Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId   String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@unique([boardId, userId])
+  @@index([boardId])
+  @@index([userId])
+}
+
 model Board {
   id               String        @id @default(cuid())
   createdAt        DateTime      @default(now())
   title            String
   isFavourite      Boolean       @default(false)
   user             User          @relation(fields: [userId], references: [id])
+  boardUser        BoardUser[]
   userId           String
   lastInteractedAt DateTime      @default(now())
   columns          BoardColumn[]
@@ -96,7 +117,7 @@ model BoardTask {
   rank        String         @default("0|000000:")
   title       String
   description String?
-  column      BoardColumn    @relation(fields: [columnId], references: [id])
+  column      BoardColumn    @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId    String
   subtasks    BoardSubtask[]
 
@@ -107,7 +128,7 @@ model BoardSubtask {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   title     String
-  task      BoardTask @relation(fields: [taskId], references: [id])
+  task      BoardTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId    String
   isDone    Boolean   @default(false)
 

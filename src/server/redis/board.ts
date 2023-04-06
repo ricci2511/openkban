@@ -1,13 +1,13 @@
+import { BoardWithUsersRoles } from 'types/board-types';
 import { redis, DEFAULT_EXPIRE_TIME } from '.';
 import { getSavedBoardIds, setKey } from './user-board-ids';
-import { Board } from '@prisma/client';
 
 // the date properties are stored as strings in Redis
-type RedisBoard = TypeDatesToString<Board>;
+type RedisBoard = TypeDatesToString<BoardWithUsersRoles>;
 
 const hashKey = (boardId: string) => `board:${boardId}`;
 
-const deserializeBoard = (board: RedisBoard): Board => {
+const deserializeBoard = (board: RedisBoard): BoardWithUsersRoles => {
     return {
         ...board,
         createdAt: new Date(board.createdAt),
@@ -58,10 +58,11 @@ export const getAllSavedBoards = async (userId: string) => {
     const boards = await getSavedBoardsByIds(boardIds);
     if (!boards) return null;
 
-    const result: { boards: Board[]; missingBoardIds: string[] } = {
-        boards: [],
-        missingBoardIds: [],
-    };
+    const result: { boards: BoardWithUsersRoles[]; missingBoardIds: string[] } =
+        {
+            boards: [],
+            missingBoardIds: [],
+        };
 
     for (let i = 0; i < boardIds.length; i++) {
         if (boards[i]) {
@@ -79,7 +80,10 @@ export const getAllSavedBoards = async (userId: string) => {
  * @param board
  * @param expireSeconds
  */
-export const saveBoard = async (board: Board, expireSeconds?: number) => {
+export const saveBoard = async (
+    board: BoardWithUsersRoles,
+    expireSeconds?: number
+) => {
     try {
         await redis.set(hashKey(board.id), board, {
             ex: expireSeconds ?? DEFAULT_EXPIRE_TIME,
@@ -104,7 +108,10 @@ export const invalidateSavedBoard = async (boardId: string) => {
     }
 };
 
-export const updateSavedBoard = async (id: string, board: Board) => {
+export const updateSavedBoard = async (
+    id: string,
+    board: BoardWithUsersRoles
+) => {
     try {
         await redis.set(hashKey(id), board);
     } catch (error) {

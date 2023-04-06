@@ -4,6 +4,7 @@ import { invalidateSavedBoard, updateSavedBoard } from '@server/redis/board';
 import { BOARD_CACHE_UPDATE_ERROR, BOARD_INVALIDATION_ERROR } from '../errors';
 import { updateError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { boardUserInclude } from './get-all-boards';
 
 export const updateBoard = authedRateLimitedProcedure
     .input(boardUpdateSchema)
@@ -19,6 +20,7 @@ export const updateBoard = authedRateLimitedProcedure
                     isFavourite,
                     lastInteractedAt,
                 },
+                include: { ...boardUserInclude },
             });
 
             // just update the cached board if the lastInteractedAt field was updated
