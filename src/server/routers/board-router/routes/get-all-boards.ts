@@ -1,6 +1,6 @@
 import { internalServerError } from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
-import { getAllSavedBoards, saveBoard } from '@server/redis/board';
+import { getAllSavedBoards, saveBoards } from '@server/redis/board';
 import { saveBoardIdOrIds } from '@server/redis/user-board-ids';
 import {
     BOARDS_CACHE_ERROR,
@@ -16,6 +16,7 @@ export const boardUserInclude = {
             role: true,
             user: {
                 select: {
+                    id: true,
                     name: true,
                     email: true,
                     image: true,
@@ -49,7 +50,8 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                             },
                         });
                         // cache the missing boards
-                        missingBoards.forEach((board) => saveBoard(board));
+                        // missingBoards.forEach((board) => saveBoard(board));
+                        saveBoards(missingBoards);
 
                         return [...boards, ...missingBoards];
                     } catch (error) {
@@ -82,19 +84,33 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                 },
             });
 
-            // first cache the boards and then cache the board IDs for the user
-            Promise.all(
-                boards.map((board) => {
-                    saveBoard(board);
-                    return board.id;
-                })
-            )
-                .then((boardIds) =>
-                    boardIds.length ? saveBoardIdOrIds(userId, boardIds) : null
-                )
-                .catch((error) => {
-                    throw internalServerError(BOARDS_CACHE_ERROR, error);
+            // might look for a better way to handle this, caching is HARD :(
+            // cache the boards and then the board IDs for the corresponding users
+            try {
+                await saveBoards(boards);
+                // map each user ID to the array of board IDs they are associated with
+                const uidBoardIdsMap = boards.reduce(
+                    (acc: { [userId: string]: string[] }, board) => {
+                        const { id, boardUser } = board;
+
+                        boardUser.forEach((boardUser) => {
+                            const userId = boardUser.user.id;
+                            // merge the board IDs if the user is already in the map
+                            acc[userId] = [...(acc[userId] || []), id];
+                        });
+
+                        return acc;
+                    },
+                    {}
+                );
+
+                // save the board IDs for each user
+                Object.entries(uidBoardIdsMap).forEach(([userId, boardIds]) => {
+                    saveBoardIdOrIds(userId, boardIds);
                 });
+            } catch (error) {
+                throw internalServerError(BOARDS_CACHE_ERROR, error);
+            }
 
             // boards are returned while the caching is happening in the background
             return boards;

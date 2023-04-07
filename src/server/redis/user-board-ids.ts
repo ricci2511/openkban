@@ -86,3 +86,14 @@ export const upsertBoardIds = async (
         await saveBoardIdOrIds(userId, boardIdOrIds);
     }
 };
+
+export const invalidateBoardIds = async (userId: string) => {
+    try {
+        await redis.del(setKey(userId));
+    } catch (error) {
+        console.error(
+            `ERROR invalidating ${setKey(userId)} set in Redis:`,
+            error
+        );
+    }
+};

@@ -3,39 +3,16 @@ import { Button } from 'react-daisyui';
 
 type ButtonType = ComponentProps<typeof Button>;
 
-interface DropdownButtonProps {
+interface DropdownButtonProps extends ButtonType {
     text: string;
-    color?: ButtonType['color'];
-    startIcon?: ButtonType['startIcon'];
-    loading?: ButtonType['loading'];
-    animation?: ButtonType['animation'];
-    ariaLabel?: ButtonType['aria-label'];
-    onClick: ButtonType['onClick'];
 }
 
 /**
  * @returns Standard button used in dropdown menus
  */
-const DropdownButton = ({
-    text,
-    color,
-    startIcon,
-    loading,
-    animation,
-    ariaLabel,
-    onClick,
-}: DropdownButtonProps) => {
+const DropdownButton = ({ text, ...rest }: DropdownButtonProps) => {
     return (
-        <Button
-            className="justify-start border-0"
-            variant="outline"
-            color={color}
-            startIcon={startIcon}
-            loading={loading}
-            animation={animation}
-            aria-label={ariaLabel}
-            onClick={onClick}
-        >
+        <Button className="justify-start border-0" variant="outline" {...rest}>
             {text}
         </Button>
     );

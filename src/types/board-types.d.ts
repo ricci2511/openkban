@@ -25,7 +25,7 @@ export type TaskWithSubTasks = BoardTask & {
 export type BoardWithUsersRoles = Board & {
     boardUser: {
         role: BoardUserRole;
-        user: Pick<User, 'name' | 'email' | 'image'>;
+        user: Omit<User, 'emailVerified'>;
     }[];
 };
 

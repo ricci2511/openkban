@@ -31,7 +31,7 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                         <DropdownButton
                             text="Rename"
                             startIcon={<HiPencil size={18} />}
-                            ariaLabel={`Rename ${title} task`}
+                            aria-label={`Rename ${title} task`}
                             onClick={() => setIsEditting(true)}
                         />
                     </li>
@@ -41,7 +41,7 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                             color="error"
                             startIcon={<HiTrash size={18} />}
                             loading={isLoading}
-                            ariaLabel={`Delete ${title} task`}
+                            aria-label={`Delete ${title} task`}
                             onClick={() => deleteTask({ id })}
                         />
                     </li>

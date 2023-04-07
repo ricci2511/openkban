@@ -21,9 +21,9 @@ const BoardItem = ({ board }: BoardProps) => {
 
     // TEMPORARY TESTING
     const { data: session } = useSession();
-    const owner = boardUser.find((user) => user.role === 'ADMIN');
-    const isOwner = owner?.user.email === session!.user!.email;
-    const { email, image, name } = owner!.user;
+    const admin = boardUser.find((user) => user.role === 'ADMIN');
+    const isAdmin = admin?.user.email === session!.user!.email;
+    const { email, image, name } = admin!.user;
 
     return (
         <li
@@ -36,7 +36,7 @@ const BoardItem = ({ board }: BoardProps) => {
             >
                 {title}
             </Link>
-            {owner && !isOwner && (
+            {admin && !isAdmin && (
                 <div className="absolute -bottom-5 -left-3">
                     <Image
                         src={image!}
@@ -52,7 +52,7 @@ const BoardItem = ({ board }: BoardProps) => {
                 favourite={isFavourite}
                 updateFavourite={updateFavourite}
             />
-            <BoardOptionsDropdown board={board} />
+            <BoardOptionsDropdown board={board} isAdmin={isAdmin} />
         </li>
     );
 };

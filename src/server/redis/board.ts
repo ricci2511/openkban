@@ -76,9 +76,8 @@ export const getAllSavedBoards = async (userId: string) => {
 };
 
 /**
- * Caches the board object in redis with a default expiration time of 1 day if no expiration time is specified.
- * @param board
- * @param expireSeconds
+ * @param board board object to cache
+ * @param expireSeconds optional expiration time in seconds, defaults to 1 day
  */
 export const saveBoard = async (
     board: BoardWithUsersRoles,
@@ -90,6 +89,29 @@ export const saveBoard = async (
         });
     } catch (error) {
         console.error(`ERROR saving {${hashKey(board.id)}} in redis`, error);
+    }
+};
+
+/**
+ * @param boards array of board objects to cache
+ * @param expireSeconds optional expiration time in seconds, defaults to 1 day
+ */
+export const saveBoards = async (
+    boards: BoardWithUsersRoles[],
+    expireSeconds?: number
+) => {
+    try {
+        const pipeline = redis.pipeline();
+
+        boards.forEach((b) => {
+            pipeline.set(hashKey(b.id), b, {
+                ex: expireSeconds ?? DEFAULT_EXPIRE_TIME,
+            });
+        });
+
+        await pipeline.exec();
+    } catch (error) {
+        console.error(`ERROR saving boards in redis`, error);
     }
 };
 

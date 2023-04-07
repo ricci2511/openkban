@@ -46,7 +46,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                         <DropdownButton
                             text="Rename"
                             startIcon={<HiPencil size={18} />}
-                            ariaLabel={`Rename ${title} column`}
+                            aria-label={`Rename ${title} column`}
                             onClick={() => setIsEditting(true)}
                         />
                     </li>
@@ -63,7 +63,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                                 />
                             }
                             animation={false}
-                            ariaLabel={`Change color of ${title} column`}
+                            aria-label={`Change color of ${title} column`}
                             onClick={() => setColorPickerOpen(true)}
                         />
                     </li>
@@ -72,7 +72,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                             text="Delete"
                             color="error"
                             startIcon={<HiTrash size={18} />}
-                            ariaLabel={`Delete ${title} column`}
+                            aria-label={`Delete ${title} column`}
                             onClick={() => setWarningDialogOpen(true)}
                         />
                     </li>
