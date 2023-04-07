@@ -1,10 +1,11 @@
 import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
-import { Board } from '@prisma/client';
-import { AppRouter } from '@server/routers';
-import { DefinedUseTRPCQueryOptions } from '@trpc/react-query/shared';
+import { BoardWithUsersRoles } from 'types/board-types';
 
-const getSortedBoards = ([...boards]: Board[], sort: SortableBoard) => {
+const getSortedBoards = (
+    [...boards]: BoardWithUsersRoles[],
+    sort: SortableBoard
+) => {
     const { prop, order } = sort;
     switch (prop) {
         case 'lastInteractedAt':

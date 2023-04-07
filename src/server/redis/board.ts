@@ -124,13 +124,20 @@ export const updateSavedBoard = async (
  * @param userId
  * @param boardId
  */
-export const deleteSavedBoard = async (userId: string, boardId: string) => {
+export const deleteSavedBoard = async (userIds: string[], boardId: string) => {
     try {
-        await redis
-            .pipeline()
-            .del(hashKey(boardId)) // delete the board
-            .srem(setKey(userId), boardId) // remove the boardId from the user's boardIds set
-            .exec();
+        const pipeline = redis.pipeline();
+
+        // delete the board
+        pipeline.del(hashKey(boardId));
+
+        // remove the boardId from the user's boardIds set
+        // a board can be shared with multiple users, so we need to remove the boardId from all of their sets
+        userIds.forEach((userId) => {
+            pipeline.srem(setKey(userId), boardId);
+        });
+
+        await pipeline.exec();
     } catch (error) {
         console.error(`ERROR deleting {${hashKey(boardId)}} in redis`, error);
     }

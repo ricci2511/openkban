@@ -13,23 +13,21 @@ const Dashboard = () => {
         order: 'desc',
     });
 
-    const boardItems =
-        boards &&
-        boards.map((board) => <BoardItem key={board.id} board={board} />);
-
     return (
         <MainLayout responsive>
             <>
-                <h1 className="mb-8 text-xl font-semibold">
+                <h1 className="mb-12 text-xl font-semibold">
                     {session && session.user
                         ? `${session.user.name}'s`
                         : `Your`}{' '}
                     dashboard
                 </h1>
                 {isLoading && <CustomLoadingSpinner />}
-                {boardItems && (
-                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                        {boardItems}
+                {boards && (
+                    <ul className="mb-4 grid grid-flow-row grid-cols-2 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                        {boards.map((board) => (
+                            <BoardItem key={board.id} board={board} />
+                        ))}
                     </ul>
                 )}
                 <CreateBoardModalButton />

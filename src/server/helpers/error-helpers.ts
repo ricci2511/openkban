@@ -14,3 +14,10 @@ export const notFound = (message: string) => {
         message,
     });
 };
+
+export const unauthorized = (message: string) => {
+    throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message,
+    });
+};

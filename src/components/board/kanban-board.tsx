@@ -43,8 +43,12 @@ const KanbanBoard = () => {
     );
     const [clonedTasks, setClonedTasks] = useState<TasksMap | null>(null);
 
-    const { mutate: updateTask, error } =
-        trpc.boardTaskRouter.update.useMutation();
+    const { mutate: updateTask } = trpc.boardTaskRouter.update.useMutation({
+        onError: () => {
+            // reset tasks to their previous state if the mutation fails
+            clonedTasks && setTasks(clonedTasks);
+        },
+    });
 
     const findContainer = (id: UniqueIdentifier) => {
         if (id in tasks) {
