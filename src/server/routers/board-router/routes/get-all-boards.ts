@@ -14,9 +14,10 @@ export const boardUserInclude = {
     boardUser: {
         select: {
             role: true,
+            isFavourite: true,
+            userId: true,
             user: {
                 select: {
-                    id: true,
                     name: true,
                     email: true,
                     image: true,
@@ -79,6 +80,7 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                         },
                     },
                 },
+                // TODO: will optimize this to only include the relevant board users
                 include: {
                     ...boardUserInclude,
                 },
@@ -88,26 +90,10 @@ export const getAllBoards = authedRateLimitedProcedure.query(
             // cache the boards and then the board IDs for the corresponding users
             try {
                 await saveBoards(boards);
-                // map each user ID to the array of board IDs they are associated with
-                const uidBoardIdsMap = boards.reduce(
-                    (acc: { [userId: string]: string[] }, board) => {
-                        const { id, boardUser } = board;
-
-                        boardUser.forEach((boardUser) => {
-                            const userId = boardUser.user.id;
-                            // merge the board IDs if the user is already in the map
-                            acc[userId] = [...(acc[userId] || []), id];
-                        });
-
-                        return acc;
-                    },
-                    {}
+                await saveBoardIdOrIds(
+                    userId,
+                    boards.map((board) => board.id)
                 );
-
-                // save the board IDs for each user
-                Object.entries(uidBoardIdsMap).forEach(([userId, boardIds]) => {
-                    saveBoardIdOrIds(userId, boardIds);
-                });
             } catch (error) {
                 throw internalServerError(BOARDS_CACHE_ERROR, error);
             }

@@ -95,7 +95,6 @@ export type SortableBoard = z.infer<typeof sortableBoardSchema>;
 export const boardUpdateSchema = z.object({
     id: z.string().cuid(),
     title: z.string().min(2).max(30).optional(),
-    isFavourite: z.boolean().optional(),
     lastInteractedAt: z.date().optional(),
 });
 export type BoardUpdate = z.infer<typeof boardUpdateSchema>;

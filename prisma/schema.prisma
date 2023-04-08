@@ -45,9 +45,9 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?     @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -71,12 +71,13 @@ enum BoardUserRole {
 }
 
 model BoardUser {
-  id        String        @id @default(cuid())
-  role      BoardUserRole @default(MEMBER)
-  board     Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId   String
-  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  id          String        @id @default(cuid())
+  role        BoardUserRole @default(MEMBER)
+  isFavourite Boolean       @default(false)
+  board       Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 
   @@unique([boardId, userId])
   @@index([boardId])
@@ -87,7 +88,6 @@ model Board {
   id               String        @id @default(cuid())
   createdAt        DateTime      @default(now())
   title            String
-  isFavourite      Boolean       @default(false)
   user             User          @relation(fields: [userId], references: [id])
   boardUser        BoardUser[]
   userId           String

@@ -25,7 +25,9 @@ export type TaskWithSubTasks = BoardTask & {
 export type BoardWithUsersRoles = Board & {
     boardUser: {
         role: BoardUserRole;
-        user: Omit<User, 'emailVerified'>;
+        isFavourite: boolean;
+        userId: string;
+        user: Omit<User, 'id' | 'emailVerified'>;
     }[];
 };
 

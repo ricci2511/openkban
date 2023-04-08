@@ -1,29 +1,29 @@
-import useUpdateBoard from '@hooks/use-update-board';
 import React from 'react';
 import FavouriteButton from './favourite-button';
 import BoardOptionsDropdown from './board-options-dropdown';
 import Link from 'next/link';
-import { BoardWithUsersRoles } from 'types/board-types';
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import useUpdateBoardUser from '@hooks/use-update-board-user';
+import AdminAvatar from './admin-avatar';
+import { BoardWithUsersRoles } from 'types/board-types';
 
 interface BoardProps {
     board: BoardWithUsersRoles;
 }
 
 const BoardItem = ({ board }: BoardProps) => {
-    const { id, title, isFavourite, boardUser } = board;
+    const { id, title, boardUser } = board;
 
-    const { mutate: updateBoard } = useUpdateBoard();
+    const { data: session } = useSession();
+    const me = boardUser.find((bu) => bu.userId === session?.user?.id);
+    const { isFavourite, role } = me!;
+
+    const { mutate: updateBoardUser } = useUpdateBoardUser(me?.userId!);
     const updateFavourite = () => {
-        updateBoard({ id: board.id, isFavourite: !isFavourite });
+        updateBoardUser({ boardId: id, isFavourite: !isFavourite });
     };
 
-    // TEMPORARY TESTING
-    const { data: session } = useSession();
-    const admin = boardUser.find((user) => user.role === 'ADMIN');
-    const isAdmin = admin?.user.email === session!.user!.email;
-    const { email, image, name } = admin!.user;
+    const admin = boardUser.find((bu) => bu.role === 'ADMIN');
 
     return (
         <li
@@ -36,23 +36,17 @@ const BoardItem = ({ board }: BoardProps) => {
             >
                 {title}
             </Link>
-            {admin && !isAdmin && (
+            {/* Display the admin's avatar for boards that the user is not an admin of */}
+            {admin && role !== 'ADMIN' && (
                 <div className="absolute -bottom-5 -left-3">
-                    <Image
-                        src={image!}
-                        alt={name!}
-                        width={32}
-                        height={32}
-                        className="rounded-full"
-                    />
+                    <AdminAvatar admin={admin} />
                 </div>
             )}
-
             <FavouriteButton
                 favourite={isFavourite}
                 updateFavourite={updateFavourite}
             />
-            <BoardOptionsDropdown board={board} isAdmin={isAdmin} />
+            <BoardOptionsDropdown board={board} isAdmin={role === 'ADMIN'} />
         </li>
     );
 };

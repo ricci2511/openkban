@@ -18,7 +18,6 @@ export const createBoard = authedProcedure
             const board = await ctx.prisma.board.create({
                 data: {
                     title: input.title,
-                    isFavourite: input.isFavourite,
                     userId: ctx.session.user.id,
                     columns: {
                         create: input.columnTitles.map((title) => ({
@@ -29,6 +28,7 @@ export const createBoard = authedProcedure
                     boardUser: {
                         create: {
                             role: 'ADMIN',
+                            isFavourite: input.isFavourite,
                             user: {
                                 connect: {
                                     id: userId,

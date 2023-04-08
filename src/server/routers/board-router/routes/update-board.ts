@@ -9,7 +9,7 @@ import { boardUserInclude } from './get-all-boards';
 export const updateBoard = authedRateLimitedProcedure
     .input(boardUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-        const { id, title, isFavourite, lastInteractedAt } = input;
+        const { id, title, lastInteractedAt } = input;
         try {
             const board = await ctx.prisma.board.update({
                 where: {
@@ -17,7 +17,6 @@ export const updateBoard = authedRateLimitedProcedure
                 },
                 data: {
                     title,
-                    isFavourite,
                     lastInteractedAt,
                 },
                 include: { ...boardUserInclude },
