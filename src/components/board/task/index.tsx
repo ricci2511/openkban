@@ -5,9 +5,9 @@ import React from 'react';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
 import { Button } from 'react-daisyui';
-import TaskOptionsDropdown from './task-options-dropdown';
 import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
+import { TaskOptionsDropdown } from './task-options-dropdown';
 
 // dynamically import the due date warning tooltip
 const DueDateWarning = dynamic(
@@ -23,7 +23,7 @@ export interface TaskProps {
     isDragging?: boolean;
     listeners?: SyntheticListenerMap | undefined;
 }
-const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
+export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
     const boardId = useBoardId();
 
@@ -77,5 +77,3 @@ const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
         </div>
     );
 };
-
-export default Task;

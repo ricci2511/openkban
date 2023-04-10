@@ -6,15 +6,15 @@ import {
 } from '@dnd-kit/sortable';
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
-import TaskSortable from '../task-sortable';
 import { ColumnOptionsDropdown } from './column-options-dropdown';
+import { TaskSortable } from '../task-sortable';
 
 interface ColumnProps {
     column: BoardColumn;
     tasks: BoardTask[];
 }
 
-const Column = ({ column, tasks }: ColumnProps) => {
+export const Column = ({ column, tasks }: ColumnProps) => {
     const { id, title, color } = column;
     const taskIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
     // each column is a droppable area
@@ -61,5 +61,3 @@ const Column = ({ column, tasks }: ColumnProps) => {
         </SortableContext>
     );
 };
-
-export default Column;

@@ -36,7 +36,10 @@ const getSortedBoards = (
  * @param enabled whether to query the boards or not, defaults to true
  * @returns sorted boards and query state
  */
-const useGetBoards = (sortBy?: SortableBoard, enabled: boolean = true) => {
+export const useGetBoards = (
+    sortBy?: SortableBoard,
+    enabled: boolean = true
+) => {
     // TODO: change useQuery to useInfiniteQuery
     const isCached = !!trpc.useContext().boardRouter.getAll.getData();
     const boardsQuery = trpc.boardRouter.getAll.useQuery(undefined, {
@@ -49,5 +52,3 @@ const useGetBoards = (sortBy?: SortableBoard, enabled: boolean = true) => {
 
     return { boards, ...rest };
 };
-
-export default useGetBoards;

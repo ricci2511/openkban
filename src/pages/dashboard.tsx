@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import useGetBoards from '@hooks/use-get-boards';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { CreateBoardModal } from '@components/dashboard/create-board-modal';
 import { BoardCard } from '@components/dashboard/board-card';
 import { MainLayout } from '@components/layouts/main-layout';
+import { useGetBoards } from '@hooks/use-get-boards';
 
 const Dashboard = () => {
     const { data: session } = useSession();

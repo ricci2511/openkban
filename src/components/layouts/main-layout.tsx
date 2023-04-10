@@ -1,6 +1,6 @@
 import { Auth } from '@components/auth';
 import { Header } from '@components/header';
-import Sidebar from '@components/sidebar';
+import { Sidebar } from '@components/sidebar';
 import React, { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 interface MainLayoutProps

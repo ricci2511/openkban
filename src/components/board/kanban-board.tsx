@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Column from './column';
 import {
     DndContext,
     DragEndEvent,
@@ -13,7 +12,6 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import Task from './task';
 import {
     createSortablePayloadByIndex,
     getBetweenRankAsc,
@@ -28,8 +26,10 @@ import {
 } from 'store/kanban-store';
 import { DndDragOverlay } from '@components/dnd-drag-overlay';
 import { CreateColumnButton } from './column-creation/create-column-button';
+import { Column } from './column';
+import { Task } from './task';
 
-const KanbanBoard = () => {
+export const KanbanBoard = () => {
     const columns = useColumns();
     const tasks = useTasks();
     const { setTasks, dropTaskInColumn } = useTasksActions();
@@ -236,5 +236,3 @@ const KanbanBoard = () => {
         </DndContext>
     );
 };
-
-export default KanbanBoard;

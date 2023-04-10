@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from 'pages/_app';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
-import KanbanBodySection from '@components/board/kanban-body-section';
-import KanbanHeaderSection from '@components/board/kanban-header-section';
 import { trpc } from '@lib/trpc';
 import { useBoardId, useInitKanbanStore } from 'store/kanban-store';
 import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
 import { MainLayout } from '@components/layouts/main-layout';
+import { KanbanHeaderSection } from '@components/board/kanban-header-section';
+import { KanbanBodySection } from '@components/board/kanban-body-section';
 
-export const BoardPage: NextPageWithLayout = () => {
+const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
 
     const initStore = useInitKanbanStore();

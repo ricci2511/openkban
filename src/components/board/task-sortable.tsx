@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import React from 'react';
 import { CSS } from '@dnd-kit/utilities';
-import Task, { TaskProps } from './task';
+import { Task, TaskProps } from './task';
 import { animateLayoutChanges } from '@lib/helpers';
 
 export const TaskSortable = ({ task, color }: TaskProps) => {
@@ -32,5 +32,3 @@ export const TaskSortable = ({ task, color }: TaskProps) => {
         </li>
     );
 };
-
-export default TaskSortable;

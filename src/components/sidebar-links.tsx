@@ -2,8 +2,8 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { RiDashboardFill } from 'react-icons/ri';
 import { HiViewBoards } from 'react-icons/hi';
-import useGetBoards from '@hooks/use-get-boards';
 import { Collapse } from 'react-daisyui';
+import { useGetBoards } from '@hooks/use-get-boards';
 
 export const SidebarLinks = () => {
     const [isOpen, setIsOpen] = useState(false);

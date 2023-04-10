@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';
 import { CreateTaskModal } from './task-creation/create-task-modal';
 
-const KanbanHeaderSection = ({ title }: { title: string }) => {
+export const KanbanHeaderSection = ({ title }: { title: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -29,5 +29,3 @@ const KanbanHeaderSection = ({ title }: { title: string }) => {
         </section>
     );
 };
-
-export default KanbanHeaderSection;

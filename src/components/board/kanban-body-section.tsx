@@ -1,8 +1,8 @@
 import React from 'react';
-import KanbanBoard from './kanban-board';
 import { TaskDetailsModal } from './task-details-modal';
+import { KanbanBoard } from './kanban-board';
 
-const KanbanBodySection = () => {
+export const KanbanBodySection = () => {
     return (
         <section className="h-full overflow-y-clip pt-28">
             <KanbanBoard />
@@ -10,5 +10,3 @@ const KanbanBodySection = () => {
         </section>
     );
 };
-
-export default KanbanBodySection;

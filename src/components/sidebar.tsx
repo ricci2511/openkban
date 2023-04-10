@@ -4,7 +4,7 @@ import { LoadingSpinner } from './ui/loading-spinner';
 import { SidebarLinks } from './sidebar-links';
 import { SidebarUser } from './sidebar-user';
 
-const Sidebar = () => {
+export const Sidebar = () => {
     const { data: session, status } = useSession();
 
     return (
@@ -25,5 +25,3 @@ const Sidebar = () => {
         </div>
     );
 };
-
-export default Sidebar;

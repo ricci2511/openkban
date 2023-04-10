@@ -14,7 +14,7 @@ interface TaskOptionsDropdownProps {
     task: BoardTask;
 }
 
-const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
+export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
     const { id, title } = task;
     const { mutate: deleteTask, isLoading } = useDeleteTask();
 
@@ -63,5 +63,3 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
         </>
     );
 };
-
-export default TaskOptionsDropdown;

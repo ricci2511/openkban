@@ -13,7 +13,7 @@ import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { TaskDetails } from '@components/task-details';
 import { MainLayout } from '@components/layouts/main-layout';
 
-export const TaskPage: NextPageWithLayout = () => {
+const TaskPage: NextPageWithLayout = () => {
     const router = useRouter();
     const { boardId, taskId } = router.query;
 
