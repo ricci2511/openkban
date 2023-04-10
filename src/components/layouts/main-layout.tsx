@@ -1,6 +1,6 @@
-import Auth from '@components/auth';
-import Header from '@components/ui/header';
-import Sidebar from '@components/ui/sidebar';
+import { Auth } from '@components/auth';
+import { Header } from '@components/header';
+import Sidebar from '@components/sidebar';
 import React, { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 interface MainLayoutProps
@@ -9,7 +9,7 @@ interface MainLayoutProps
     responsive?: boolean;
 }
 
-const MainLayout = ({
+export const MainLayout = ({
     children,
     responsive = false,
     ...rest
@@ -42,5 +42,3 @@ const MainLayout = ({
         </Auth>
     );
 };
-
-export default MainLayout;

@@ -1,30 +1,37 @@
-import { Button, Modal } from 'react-daisyui';
-import Dialog, { DialogType } from '@components/ui/dialog';
+import { Button } from 'react-daisyui';
 import React from 'react';
-import useDeleteColumn from '@hooks/use-delete-column';
+import { useDeleteColumn } from '@hooks/mutations/use-column-mutations';
+import {
+    ModalActions,
+    Modal,
+    ModalType,
+    ModalHeader,
+    ModalBody,
+} from '@components/ui/modal';
 
-interface DeleteWarningModalProps extends DialogType {
+interface DeleteWarningModalProps extends ModalType {
     columnId: string;
     title: string;
 }
-const DeleteWarningModal = ({
+
+export const DeleteWarningModal = ({
     open,
-    closeDialog,
+    closeModal,
     columnId,
     title,
 }: DeleteWarningModalProps) => {
-    const { mutate: deleteColumn, isLoading, error } = useDeleteColumn();
+    const { mutate: deleteColumn, isLoading } = useDeleteColumn();
 
     return (
-        <Dialog open={open} closeDialog={closeDialog}>
-            <Modal.Header className="mt-2 text-2xl font-bold">
+        <Modal open={open} closeModal={closeModal}>
+            <ModalHeader className="mt-2 text-2xl font-bold">
                 {`Delete column '${title}'`}
-            </Modal.Header>
-            <Modal.Body>
+            </ModalHeader>
+            <ModalBody>
                 Are you sure you want do delete this column and all the tasks
                 within it?
-            </Modal.Body>
-            <Modal.Actions>
+            </ModalBody>
+            <ModalActions>
                 <Button
                     type="button"
                     color="error"
@@ -37,14 +44,12 @@ const DeleteWarningModal = ({
                 </Button>
                 <Button
                     type="button"
-                    onClick={closeDialog}
+                    onClick={closeModal}
                     aria-label="Cancel column deletion and close modal"
                 >
                     Cancel
                 </Button>
-            </Modal.Actions>
-        </Dialog>
+            </ModalActions>
+        </Modal>
     );
 };
-
-export default DeleteWarningModal;

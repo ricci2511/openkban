@@ -7,7 +7,7 @@ export default function Document() {
             <body>
                 <Main />
                 {/* Here we will mount our modal portal */}
-                <div id="modal" />
+                <div id="portal-root" />
                 <NextScript />
             </body>
         </Html>

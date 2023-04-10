@@ -6,7 +6,7 @@ interface DueDateWarningProps {
     overdue: boolean;
 }
 
-const DueDateWarning = ({ today, overdue }: DueDateWarningProps) => {
+export const DueDateWarning = ({ today, overdue }: DueDateWarningProps) => {
     return (
         <>
             {today && (
@@ -24,5 +24,3 @@ const DueDateWarning = ({ today, overdue }: DueDateWarningProps) => {
         </>
     );
 };
-
-export default DueDateWarning;

@@ -14,13 +14,11 @@ import {
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Task from './task';
-import DndDragOverlay from '@components/dnd/dnd-drag-overlay';
 import {
     createSortablePayloadByIndex,
     getBetweenRankAsc,
 } from '@lib/lexorank-helpers';
 import { trpc } from '@lib/trpc';
-import CreateColumnButton from './create-column-button';
 import { MAX_COLUMNS } from '@lib/constants';
 import {
     TasksMap,
@@ -28,6 +26,8 @@ import {
     useTasks,
     useTasksActions,
 } from 'store/kanban-store';
+import { DndDragOverlay } from '@components/dnd-drag-overlay';
+import { CreateColumnButton } from './column-creation/create-column-button';
 
 const KanbanBoard = () => {
     const columns = useColumns();

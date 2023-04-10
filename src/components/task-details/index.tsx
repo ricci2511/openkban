@@ -1,10 +1,10 @@
 import React from 'react';
-import Description from './description';
 import { useColumns, useCurrentTask } from 'store/kanban-store';
-import Subtasks from './subtasks';
 import { RxActivityLog } from 'react-icons/rx';
+import { Description } from './description';
+import { Subtasks } from './subtasks';
 
-const TaskDetails = () => {
+export const TaskDetails = () => {
     const task = useCurrentTask()!;
     const columns = useColumns();
 
@@ -29,5 +29,3 @@ const TaskDetails = () => {
         </div>
     );
 };
-
-export default TaskDetails;

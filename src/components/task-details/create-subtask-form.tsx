@@ -1,13 +1,17 @@
-import FormTextarea from '@components/ui/form/form-textarea';
+import { FormTextarea } from '@components/ui/form-textarea';
+import { useCreateSubtask } from '@hooks/mutations/use-subtask-mutations';
 import { useClickOutside } from '@hooks/use-click-outside';
-import { useCreateSubtask } from '@hooks/use-create-subtask';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { Button } from 'react-daisyui';
 import { useCurrentTask } from 'store/kanban-store';
 
-const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
+export const CreateSubtaskForm = ({
+    stopAddingCb,
+}: {
+    stopAddingCb: () => void;
+}) => {
     const {
         register,
         handleSubmit,
@@ -25,7 +29,7 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
 
     return (
         <form onSubmit={onSubmit} className="form-control ml-9 gap-3" ref={ref}>
-            <fieldset>
+            <div>
                 <FormTextarea<TitleInput>
                     id="description"
                     placeholder="Your subtask title..."
@@ -35,7 +39,7 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
                     registerName="title"
                     errors={errors}
                 />
-            </fieldset>
+            </div>
             <div className="flex gap-2 self-start">
                 <Button
                     type="submit"
@@ -60,5 +64,3 @@ const CreateSubtaskForm = ({ stopAddingCb }: { stopAddingCb: () => void }) => {
         </form>
     );
 };
-
-export default CreateSubtaskForm;

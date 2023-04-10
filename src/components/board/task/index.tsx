@@ -10,9 +10,12 @@ import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 
 // dynamically import the due date warning tooltip
-const DueDateWarning = dynamic(() => import('./due-date-warning'), {
-    ssr: false,
-});
+const DueDateWarning = dynamic(
+    () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
+    {
+        ssr: false,
+    }
+);
 
 export interface TaskProps {
     task: BoardTask;

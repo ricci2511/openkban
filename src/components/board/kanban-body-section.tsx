@@ -1,6 +1,6 @@
 import React from 'react';
-import TaskDetailsModal from './task-details-modal';
 import KanbanBoard from './kanban-board';
+import { TaskDetailsModal } from './task-details-modal';
 
 const KanbanBodySection = () => {
     return (

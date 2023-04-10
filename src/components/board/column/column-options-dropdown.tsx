@@ -1,18 +1,21 @@
 import { BoardColumn } from '@prisma/client';
 import React, { useState } from 'react';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
-import PopoverPicker from '@components/ui/color-picker/popover-picker';
-import DeleteWarningModal from './delete-warning-modal';
 import { Button, Dropdown } from 'react-daisyui';
-import DropdownButton from '@components/ui/buttons/dropdown-button';
-import EditTitleModal from '@components/ui/form/edit-title-modal';
 import { columnTitle } from '@lib/schemas/board-schemas';
-import useUpdateColumn from '@hooks/use-update-column';
+import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
+import { DropdownButton } from '@components/ui/dropdown-button';
+import { ColorPickerPopover } from '@components/color-picker-popover';
+import { EditTitleModal } from '@components/edit-title-modal';
+import { DeleteWarningModal } from './delete-warning-modal';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
 }
-const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
+
+export const ColumnOptionsDropdown = ({
+    column,
+}: ColumnOptionsDropdownProps) => {
     const { id, color, title } = column;
 
     const [isEditting, setIsEditting] = useState(false);
@@ -32,7 +35,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
         });
     };
 
-    const [warningDialogOpen, setWarningDialogOpen] = useState(false);
+    const [warningDialogOpen, setWarningModalOpen] = useState(false);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
     return (
@@ -54,7 +57,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                         <DropdownButton
                             text="Change color"
                             startIcon={
-                                <PopoverPicker
+                                <ColorPickerPopover
                                     isOpen={colorPickerOpen}
                                     toggle={setColorPickerOpen}
                                     color={color}
@@ -73,7 +76,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                             color="error"
                             startIcon={<HiTrash size={18} />}
                             aria-label={`Delete ${title} column`}
-                            onClick={() => setWarningDialogOpen(true)}
+                            onClick={() => setWarningModalOpen(true)}
                         />
                     </li>
                 </Dropdown.Menu>
@@ -86,7 +89,7 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                     name="column"
                     oldTitle={title}
                     open={isEditting}
-                    closeDialog={stopEditting}
+                    closeModal={stopEditting}
                 />
             )}
             {warningDialogOpen && (
@@ -94,11 +97,9 @@ const ColumnOptionsDropdown = ({ column }: ColumnOptionsDropdownProps) => {
                     title={title}
                     columnId={id}
                     open={warningDialogOpen}
-                    closeDialog={() => setWarningDialogOpen(false)}
+                    closeModal={() => setWarningModalOpen(false)}
                 />
             )}
         </>
     );
 };
-
-export default ColumnOptionsDropdown;

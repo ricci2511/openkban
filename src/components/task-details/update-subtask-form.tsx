@@ -1,7 +1,7 @@
-import FormTextarea from '@components/ui/form/form-textarea';
+import { FormTextarea } from '@components/ui/form-textarea';
+import { useUpdateSubtask } from '@hooks/mutations/use-subtask-mutations';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
-import { useUpdateSubtask } from '@hooks/use-update-subtask';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { Button } from 'react-daisyui';
@@ -12,7 +12,7 @@ interface UpdateSubtaskFormProps {
     stopEdittingCb: () => void;
 }
 
-const UpdateSubtaskForm = ({
+export const UpdateSubtaskForm = ({
     id,
     currTitle,
     stopEdittingCb,
@@ -45,7 +45,7 @@ const UpdateSubtaskForm = ({
             className="form-control w-full gap-2"
             ref={ref}
         >
-            <fieldset>
+            <div>
                 <FormTextarea<TitleInput>
                     id="subtask-title"
                     placeholder="Your subtask title..."
@@ -55,7 +55,7 @@ const UpdateSubtaskForm = ({
                     registerName="title"
                     errors={errors}
                 />
-            </fieldset>
+            </div>
             <div className="flex gap-2 self-start">
                 <Button
                     type="submit"
@@ -82,5 +82,3 @@ const UpdateSubtaskForm = ({
         </form>
     );
 };
-
-export default UpdateSubtaskForm;

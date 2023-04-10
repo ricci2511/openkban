@@ -1,4 +1,3 @@
-import SignInLayout from '@components/layouts/signin-layout';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
@@ -8,9 +7,10 @@ import { AuthProviders } from 'types/next-auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EmailFormSchemaType, emailSchema } from '@lib/schemas/email-schema';
-import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import { useRouter } from 'next/router';
 import { getServerProviders } from '@server/helpers/get-server-providers';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
+import { SignInLayout } from '@components/layouts/signin-layout';
 
 const SignIn = ({ providers }: AuthProviders) => {
     const [withEmail, setWithEmail] = useState(false);
@@ -29,7 +29,7 @@ const SignIn = ({ providers }: AuthProviders) => {
         if (status === 'authenticated') router.replace('/dashboard');
     }, [status, router]);
     if (status === 'loading' || status === 'authenticated')
-        return <CustomLoadingSpinner centered />;
+        return <LoadingSpinner centered />;
 
     const onSubmit = handleSubmit((data) => console.log(data.email));
 

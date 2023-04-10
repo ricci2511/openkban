@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { HiPencil } from 'react-icons/hi';
 import { RiAddFill } from 'react-icons/ri';
-import DescriptionForm from './description-form';
 import { useCurrentTask } from 'store/kanban-store';
 import { RxTextAlignLeft } from 'react-icons/rx';
+import { DescriptionForm } from './description-form';
 
-const Description = () => {
+export const Description = () => {
     const { title, description } = useCurrentTask()!;
     const [editting, setEditting] = useState(false);
     const startEditting = () => setEditting(true);
@@ -51,5 +51,3 @@ const Description = () => {
         </>
     );
 };
-
-export default Description;

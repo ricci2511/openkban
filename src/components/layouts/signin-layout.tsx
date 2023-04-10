@@ -1,8 +1,8 @@
-import Header from '@components/ui/header';
+import { Header } from '@components/header';
 import Head from 'next/head';
 import React, { PropsWithChildren } from 'react';
 
-const SignInLayout = ({ children }: PropsWithChildren) => {
+export const SignInLayout = ({ children }: PropsWithChildren) => {
     return (
         <>
             <Head>
@@ -18,5 +18,3 @@ const SignInLayout = ({ children }: PropsWithChildren) => {
         </>
     );
 };
-
-export default SignInLayout;

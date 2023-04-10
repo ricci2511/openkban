@@ -1,9 +1,9 @@
-import { useUpdateSubtask } from '@hooks/use-update-subtask';
 import { BoardSubtask } from '@prisma/client';
 import React, { useState } from 'react';
-import UpdateSubtaskForm from './update-subtask-form';
+import { useUpdateSubtask } from '@hooks/mutations/use-subtask-mutations';
+import { UpdateSubtaskForm } from './update-subtask-form';
 
-const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
+export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
     const { id, title, isDone, taskId } = data;
 
     const [editting, setEditting] = useState(false);
@@ -37,5 +37,3 @@ const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
         </li>
     );
 };
-
-export default SubtaskItem;

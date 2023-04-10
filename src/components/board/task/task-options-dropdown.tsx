@@ -1,12 +1,14 @@
-import DropdownButton from '@components/ui/buttons/dropdown-button';
-import useDeleteTask from '@hooks/use-delete-task';
 import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-daisyui';
 import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import { taskTitle } from '@lib/schemas/board-schemas';
-import useUpdateTask from '@hooks/use-update-task';
-import EditTitleModal from '@components/ui/form/edit-title-modal';
+import {
+    useDeleteTask,
+    useUpdateTask,
+} from '@hooks/mutations/use-task-mutations';
+import { DropdownButton } from '@components/ui/dropdown-button';
+import { EditTitleModal } from '@components/edit-title-modal';
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
@@ -55,7 +57,7 @@ const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                     name="task"
                     oldTitle={title}
                     open={isEditting}
-                    closeDialog={stopEditting}
+                    closeModal={stopEditting}
                 />
             )}
         </>

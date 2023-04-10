@@ -1,9 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React from 'react';
-import CustomLoadingSpinner from './ui/other/custom-loading-spinner';
+import { LoadingSpinner } from './ui/loading-spinner';
 
-const Auth = ({ children }: { children: React.ReactNode }) => {
+export const Auth = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const { status } = useSession({
         required: true,
@@ -12,9 +12,7 @@ const Auth = ({ children }: { children: React.ReactNode }) => {
         },
     });
 
-    if (status === 'loading') return <CustomLoadingSpinner centered />;
+    if (status === 'loading') return <LoadingSpinner centered />;
 
     return <>{children}</>;
 };
-
-export default Auth;

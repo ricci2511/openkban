@@ -1,17 +1,17 @@
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
-import TaskDetails from '@components/task-details';
 import { NextPageWithLayout } from 'pages/_app';
-import MainLayout from '@components/layouts/main-layout';
 import { trpc } from '@lib/trpc';
-import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
 import {
     useColumnsActions,
     useCurrentTask,
     useSubtasksActions,
     useTasksActions,
 } from 'store/kanban-store';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
+import { TaskDetails } from '@components/task-details';
+import { MainLayout } from '@components/layouts/main-layout';
 
 export const TaskPage: NextPageWithLayout = () => {
     const router = useRouter();
@@ -64,7 +64,7 @@ export const TaskPage: NextPageWithLayout = () => {
     }
 
     if (status !== 'success') {
-        return <CustomLoadingSpinner centered />;
+        return <LoadingSpinner centered />;
     }
 
     if (!task || !currentTask) {

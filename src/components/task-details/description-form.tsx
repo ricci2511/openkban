@@ -1,12 +1,12 @@
-import FormTextarea from '@components/ui/form/form-textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import useUpdateTask from '@hooks/use-update-task';
 import React from 'react';
 import { Button } from 'react-daisyui';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useCurrentTask } from 'store/kanban-store';
 import { useClickOutside } from '@hooks/use-click-outside';
+import { useUpdateTask } from '@hooks/mutations/use-task-mutations';
+import { FormTextarea } from '@components/ui/form-textarea';
 
 // TODO: maybe reuse boardTaskCreationSchema for this?
 const descriptionSchema = z.object({
@@ -18,7 +18,7 @@ const descriptionSchema = z.object({
 
 type TaskDescription = z.infer<typeof descriptionSchema>;
 
-const DescriptionForm = ({
+export const DescriptionForm = ({
     stopEdittingCb,
 }: {
     stopEdittingCb: () => void;
@@ -50,7 +50,7 @@ const DescriptionForm = ({
 
     return (
         <form onSubmit={onSubmit} className="form-control" ref={ref}>
-            <fieldset>
+            <div>
                 <FormTextarea<TaskDescription>
                     id="description"
                     placeholder={`description for ${title}...`}
@@ -60,7 +60,7 @@ const DescriptionForm = ({
                     registerName="taskDescription"
                     errors={errors}
                 />
-            </fieldset>
+            </div>
             <div className="mt-2 flex gap-3 self-start">
                 <Button
                     type="submit"
@@ -85,5 +85,3 @@ const DescriptionForm = ({
         </form>
     );
 };
-
-export default DescriptionForm;

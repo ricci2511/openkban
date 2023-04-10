@@ -4,15 +4,16 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import SortableTask from '../task/sortable-task';
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
-import ColumnOptionsDropdown from './column-options-dropdown';
+import TaskSortable from '../task-sortable';
+import { ColumnOptionsDropdown } from './column-options-dropdown';
 
 interface ColumnProps {
     column: BoardColumn;
     tasks: BoardTask[];
 }
+
 const Column = ({ column, tasks }: ColumnProps) => {
     const { id, title, color } = column;
     const taskIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
@@ -48,7 +49,7 @@ const Column = ({ column, tasks }: ColumnProps) => {
                         className="grid grid-flow-row grid-rows-1 gap-3 p-2.5"
                     >
                         {tasks.map((task) => (
-                            <SortableTask
+                            <TaskSortable
                                 key={task.id}
                                 task={task}
                                 color={color}

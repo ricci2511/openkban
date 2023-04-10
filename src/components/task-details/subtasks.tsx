@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Button } from 'react-daisyui';
 import { RiAddFill } from 'react-icons/ri';
 import { useCurrentTask, useSubtasks } from 'store/kanban-store';
-import CreateSubtaskForm from './create-subtask-form';
-import SubtaskItem from './subtask-item';
 import { RxCheckbox } from 'react-icons/rx';
+import { SubtaskItem } from './subtask-item';
+import { CreateSubtaskForm } from './create-subtask-form';
 
-const Subtasks = () => {
+export const Subtasks = () => {
     const { title } = useCurrentTask()!;
     const subtasks = useSubtasks();
 
@@ -41,5 +41,3 @@ const Subtasks = () => {
         </>
     );
 };
-
-export default Subtasks;

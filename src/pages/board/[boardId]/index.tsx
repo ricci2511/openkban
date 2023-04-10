@@ -1,14 +1,14 @@
 import NextError from 'next/error';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
-import MainLayout from '@components/layouts/main-layout';
 import { NextPageWithLayout } from 'pages/_app';
-import useUpdateBoard from '@hooks/use-update-board';
-import CustomLoadingSpinner from '@components/ui/other/custom-loading-spinner';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
 import KanbanBodySection from '@components/board/kanban-body-section';
 import KanbanHeaderSection from '@components/board/kanban-header-section';
 import { trpc } from '@lib/trpc';
 import { useBoardId, useInitKanbanStore } from 'store/kanban-store';
+import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
+import { MainLayout } from '@components/layouts/main-layout';
 
 export const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
@@ -43,7 +43,7 @@ export const BoardPage: NextPageWithLayout = () => {
     }
 
     if (isLoading) {
-        return <CustomLoadingSpinner centered />;
+        return <LoadingSpinner centered />;
     }
 
     if (!data) {
