@@ -5,20 +5,22 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import useUpdateBoardUser from '@hooks/use-update-board-user';
 import AdminAvatar from './admin-avatar';
-import { BoardWithUsersRoles } from 'types/board-types';
+import { BoardWithUsers } from 'types/board-types';
 
 interface BoardProps {
-    board: BoardWithUsersRoles;
+    board: BoardWithUsers;
 }
 
 const BoardItem = ({ board }: BoardProps) => {
     const { id, title, boardUser } = board;
 
     const { data: session } = useSession();
-    const me = boardUser.find((bu) => bu.userId === session?.user?.id);
-    const { isFavourite, role } = me!;
 
-    const { mutate: updateBoardUser } = useUpdateBoardUser(me?.userId!);
+    const me = boardUser.find((bu) => bu.userId === session!.user!.id)!;
+    const { isFavourite, role, userId } = me;
+
+    // fav status is stored on the boardUser, each user can have its own fav status for the same board
+    const { mutate: updateBoardUser } = useUpdateBoardUser(userId);
     const updateFavourite = () => {
         updateBoardUser({ boardId: id, isFavourite: !isFavourite });
     };
@@ -42,10 +44,12 @@ const BoardItem = ({ board }: BoardProps) => {
                     <AdminAvatar admin={admin} />
                 </div>
             )}
-            <FavouriteButton
-                favourite={isFavourite}
-                updateFavourite={updateFavourite}
-            />
+            <div className="absolute -top-3 -left-4">
+                <FavouriteButton
+                    favourite={isFavourite}
+                    updateFavourite={updateFavourite}
+                />
+            </div>
             <BoardOptionsDropdown board={board} isAdmin={role === 'ADMIN'} />
         </li>
     );

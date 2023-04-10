@@ -22,7 +22,7 @@ export type TaskWithSubTasks = BoardTask & {
     subtasks: BoardSubtask[];
 };
 
-export type BoardWithUsersRoles = Board & {
+export type BoardWithUsers = Board & {
     boardUser: {
         role: BoardUserRole;
         isFavourite: boolean;
@@ -30,6 +30,8 @@ export type BoardWithUsersRoles = Board & {
         user: Omit<User, 'id' | 'emailVerified'>;
     }[];
 };
+
+export type ClientBoardUser = BoardWithUsers['boardUser'][0];
 
 export type BoardData = Board & {
     columns: BoardColumnWithTasks[];

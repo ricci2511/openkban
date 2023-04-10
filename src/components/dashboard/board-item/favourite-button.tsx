@@ -1,6 +1,5 @@
-import useUpdateBoard from '@hooks/use-update-board';
-import { Board } from '@prisma/client';
-import React, { useState } from 'react';
+import React from 'react';
+import { Button, Tooltip } from 'react-daisyui';
 import { HiOutlineStar } from 'react-icons/hi';
 
 interface FavouriteButtonProps {
@@ -12,18 +11,16 @@ const FavouriteButton = ({
     updateFavourite,
 }: FavouriteButtonProps) => {
     return (
-        <div
-            className={`${
-                favourite ? 'tooltip-error' : 'tooltip-primary'
-            } tooltip tooltip-right absolute -top-3 -left-4`}
-            data-tip={
-                favourite ? 'Remove from favourites' : 'Add to favourites'
-            }
+        <Tooltip
+            message={favourite ? 'Remove from favourites' : 'Add to favourites'}
+            color={favourite ? 'error' : 'primary'}
+            position="right"
         >
-            <button
+            <Button
                 type="button"
                 aria-describedby="Click this to add the selected board to your favourites"
-                className="btn-ghost btn-xs btn"
+                color="ghost"
+                size="xs"
                 onClick={updateFavourite}
             >
                 <HiOutlineStar
@@ -32,8 +29,8 @@ const FavouriteButton = ({
                     strokeWidth={1}
                     size={15}
                 />
-            </button>
-        </div>
+            </Button>
+        </Tooltip>
     );
 };
 

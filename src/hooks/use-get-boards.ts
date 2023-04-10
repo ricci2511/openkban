@@ -1,9 +1,9 @@
 import { SortableBoard } from '@lib/schemas/board-schemas';
 import { trpc } from '@lib/trpc';
-import { BoardWithUsersRoles } from 'types/board-types';
+import { BoardWithUsers } from 'types/board-types';
 
 const getSortedBoards = (
-    [...boards]: BoardWithUsersRoles[],
+    [...boards]: BoardWithUsers[],
     sort: SortableBoard
 ) => {
     const { prop, order } = sort;

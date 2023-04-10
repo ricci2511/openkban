@@ -1,13 +1,13 @@
-import { BoardWithUsersRoles } from 'types/board-types';
+import { BoardWithUsers } from 'types/board-types';
 import { redis, DEFAULT_EXPIRE_TIME } from '.';
 import { getSavedBoardIds, setKey } from './user-board-ids';
 
 // the date properties are stored as strings in Redis
-type RedisBoard = TypeDatesToString<BoardWithUsersRoles>;
+type RedisBoard = TypeDatesToString<BoardWithUsers>;
 
 const hashKey = (boardId: string) => `board:${boardId}`;
 
-const deserializeBoard = (board: RedisBoard): BoardWithUsersRoles => {
+const deserializeBoard = (board: RedisBoard): BoardWithUsers => {
     return {
         ...board,
         createdAt: new Date(board.createdAt),
@@ -58,11 +58,10 @@ export const getAllSavedBoards = async (userId: string) => {
     const boards = await getSavedBoardsByIds(boardIds);
     if (!boards) return null;
 
-    const result: { boards: BoardWithUsersRoles[]; missingBoardIds: string[] } =
-        {
-            boards: [],
-            missingBoardIds: [],
-        };
+    const result: { boards: BoardWithUsers[]; missingBoardIds: string[] } = {
+        boards: [],
+        missingBoardIds: [],
+    };
 
     for (let i = 0; i < boardIds.length; i++) {
         if (boards[i]) {
@@ -80,7 +79,7 @@ export const getAllSavedBoards = async (userId: string) => {
  * @param expireSeconds optional expiration time in seconds, defaults to 1 day
  */
 export const saveBoard = async (
-    board: BoardWithUsersRoles,
+    board: BoardWithUsers,
     expireSeconds?: number
 ) => {
     try {
@@ -97,7 +96,7 @@ export const saveBoard = async (
  * @param expireSeconds optional expiration time in seconds, defaults to 1 day
  */
 export const saveBoards = async (
-    boards: BoardWithUsersRoles[],
+    boards: BoardWithUsers[],
     expireSeconds?: number
 ) => {
     try {
@@ -130,10 +129,7 @@ export const invalidateSavedBoard = async (boardId: string) => {
     }
 };
 
-export const updateSavedBoard = async (
-    id: string,
-    board: BoardWithUsersRoles
-) => {
+export const updateSavedBoard = async (id: string, board: BoardWithUsers) => {
     try {
         await redis.set(hashKey(id), board);
     } catch (error) {
