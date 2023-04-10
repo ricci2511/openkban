@@ -1,4 +1,4 @@
-type Input = 'board' | 'column' | 'task' | 'subtask';
+type Input = 'board' | 'column' | 'task' | 'subtask' | 'boardUser';
 
 /**
  * @param input the input type (e.g. board, column, task, subtask)

@@ -4,7 +4,7 @@ export const setKey = (userId: string) => `userBoards:${userId}`;
 
 /**
  * @param userId
- * @returns array of board ids belonging to a user
+ * @returns array of board ids associated with the user
  */
 export const getSavedBoardIds = async (userId: string) => {
     try {
@@ -39,7 +39,7 @@ export const saveBoardIdOrIds = async (
 };
 
 /**
- * Appends a board id or ids to a existing set.
+ * Appends a board id or ids to a existing userBoards set.
  * @param userId
  * @param boardIdOrIds
  */
@@ -52,6 +52,27 @@ export const addBoardIdOrIds = async (
     } catch (error) {
         console.error(
             `ERROR adding ${boardIdOrIds} to ${setKey(userId)} set in Redis:`,
+            error
+        );
+    }
+};
+
+/**
+ * Deletes board id or ids from a userBoards set.
+ * @param userId the user id to delete the board id from
+ * @param boardIdOrIds the board id or ids to delete
+ */
+export const deleteBoardIdOrIds = async (
+    userId: string,
+    boardIdOrIds: string | string[]
+) => {
+    try {
+        await redis.srem(setKey(userId), boardIdOrIds);
+    } catch (error) {
+        console.error(
+            `ERROR removing ${boardIdOrIds} from ${setKey(
+                userId
+            )} set in Redis:`,
             error
         );
     }
@@ -71,7 +92,7 @@ export const idsSetExists = async (userId: string) => {
 };
 
 /**
- * Adds a board id/ids to a set if it exists, otherwise it creates the set and adds the board id/ids.
+ * Adds a board id/ids to a userBoards set if it exists, otherwise it creates the set and adds the board id/ids.
  * @param userId
  * @param boardIdOrIds
  */
@@ -87,6 +108,10 @@ export const upsertBoardIds = async (
     }
 };
 
+/**
+ * Invalidates a userBoards set.
+ * @param userId the user id associated with the set of board ids
+ */
 export const invalidateBoardIds = async (userId: string) => {
     try {
         await redis.del(setKey(userId));

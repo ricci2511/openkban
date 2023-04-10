@@ -5,7 +5,7 @@ import { internalServerError } from '@server/helpers/error-helpers';
 import { saveBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
 import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
-import { addBoardIdOrIds } from '@server/redis/user-board-ids';
+import { upsertBoardIds } from '@server/redis/user-board-ids';
 import { createError } from '@server/routers/common-errors';
 import { boardUserInclude } from './get-all-boards';
 
@@ -45,7 +45,7 @@ export const createBoard = authedProcedure
                 throw internalServerError(BOARD_METADATA_CACHE_ERROR, error);
             });
             // cache the new board ID
-            await addBoardIdOrIds(userId, board.id).catch((error) => {
+            await upsertBoardIds(userId, board.id).catch((error) => {
                 throw internalServerError(BOARD_IDS_CACHE_ERROR, error);
             });
 

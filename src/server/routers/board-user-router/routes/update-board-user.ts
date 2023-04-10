@@ -1,3 +1,4 @@
+import { Prisma, PrismaClient } from '@prisma/client';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { invalidateSavedBoard } from '@server/redis/board';
 import { z } from 'zod';
@@ -8,25 +9,37 @@ const schema = z.object({
     role: z.enum(['ADMIN', 'MEMBER', 'VIEWER']).optional(),
 });
 
+type UpdateInput = z.infer<typeof schema> & { userId: string };
+
+export const updateBoardUserMutation = async (
+    input: UpdateInput,
+    prisma: PrismaClient
+) => {
+    const { boardId, userId, isFavourite, role } = input;
+
+    return await prisma.boardUser.update({
+        where: {
+            boardId_userId: {
+                boardId,
+                userId,
+            },
+        },
+        data: {
+            isFavourite,
+            role,
+        },
+    });
+};
+
 export const updateBoardUser = authedRateLimitedProcedure
     .input(schema)
     .mutation(async ({ ctx, input }) => {
-        const { boardId, isFavourite, role } = input;
+        const boardUser = await updateBoardUserMutation(
+            { ...input, userId: ctx.session.user.id },
+            ctx.prisma
+        );
 
-        const boardUser = await ctx.prisma.boardUser.update({
-            where: {
-                boardId_userId: {
-                    boardId,
-                    userId: ctx.session.user.id,
-                },
-            },
-            data: {
-                isFavourite,
-                role,
-            },
-        });
-
-        await invalidateSavedBoard(boardId);
+        await invalidateSavedBoard(input.boardId);
 
         return boardUser;
     });

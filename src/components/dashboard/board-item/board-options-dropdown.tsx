@@ -25,11 +25,6 @@ const BoardOptionsDropdown = ({ board, isAdmin }: OptionsDropdownProps) => {
 
     const updateBoardMutation = useUpdateBoard(toggleEditting);
 
-    const deleteLabel = !isAdmin
-        ? 'Only admins can delete boards'
-        : `Delete ${title} board`;
-    const renameLabel = `Rename ${title} board`;
-
     return (
         <>
             <Dropdown vertical="end">
@@ -37,32 +32,31 @@ const BoardOptionsDropdown = ({ board, isAdmin }: OptionsDropdownProps) => {
                     <RxDotsVertical size={19} />
                 </Button>
                 <Dropdown.Menu className="w-40 gap-1 bg-base-200">
-                    <li title={renameLabel}>
+                    <li>
                         <DropdownButton
                             text="Rename"
                             startIcon={<RxPencil1 size={18} />}
-                            aria-label={renameLabel}
+                            aria-label={`Rename ${title} board`}
                             onClick={toggleEditting}
                         />
                     </li>
-                    <li title={deleteLabel}>
+                    <li>
                         <DropdownButton
-                            text="Delete"
+                            text="Leave"
                             color="error"
-                            startIcon={<RxTrash size={18} />}
-                            aria-label={deleteLabel}
-                            disabled={isLoading || !isAdmin}
-                            loading={isLoading}
-                            onClick={deleteBoard}
+                            startIcon={<RxExit size={18} />}
+                            onClick={() => leaveBoard({ boardId: id })}
                         />
                     </li>
-                    {!isAdmin && (
+                    {isAdmin && (
                         <li>
                             <DropdownButton
-                                text="Leave"
+                                text="Delete"
                                 color="error"
-                                startIcon={<RxExit size={18} />}
-                                onClick={() => leaveBoard({ boardId: id })}
+                                startIcon={<RxTrash size={18} />}
+                                aria-label={`Delete ${title} board`}
+                                loading={isLoading}
+                                onClick={deleteBoard}
                             />
                         </li>
                     )}

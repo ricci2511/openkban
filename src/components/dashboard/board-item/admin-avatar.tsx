@@ -11,7 +11,7 @@ const AdminAvatar = ({ admin }: { admin: ClientBoardUser }) => {
         <Tooltip message={`${adminName} (admin)`} position="bottom">
             <Image
                 src={image ?? ''}
-                alt={name ?? email ?? 'Admin'}
+                alt={adminName}
                 width={32}
                 height={32}
                 className="rounded-full"

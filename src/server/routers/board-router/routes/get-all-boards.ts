@@ -51,7 +51,6 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                             },
                         });
                         // cache the missing boards
-                        // missingBoards.forEach((board) => saveBoard(board));
                         saveBoards(missingBoards);
 
                         return [...boards, ...missingBoards];
@@ -80,13 +79,11 @@ export const getAllBoards = authedRateLimitedProcedure.query(
                         },
                     },
                 },
-                // TODO: will optimize this to only include the relevant board users
                 include: {
                     ...boardUserInclude,
                 },
             });
 
-            // might look for a better way to handle this, caching is HARD :(
             // cache the boards and then the board IDs for the corresponding users
             try {
                 await saveBoards(boards);
