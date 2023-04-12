@@ -18,12 +18,8 @@ import {
 } from '@lib/lexorank-helpers';
 import { trpc } from '@lib/trpc';
 import { MAX_COLUMNS } from '@lib/constants';
-import {
-    TasksMap,
-    useColumns,
-    useTasks,
-    useTasksActions,
-} from 'store/kanban-store';
+import { useColumns, useTasks, useTasksActions } from 'store/kanban-store';
+import { TasksMap } from 'types/kanban-store-types';
 import { DndDragOverlay } from '@components/dnd-drag-overlay';
 import { CreateColumnButton } from './column-creation/create-column-button';
 import { Column } from './column';

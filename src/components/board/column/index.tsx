@@ -30,7 +30,7 @@ export const Column = ({ column, tasks }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="relative flex max-h-[95%] flex-col">
+            <li className="relative flex h-[calc(100vh-225px)] flex-col">
                 <div
                     className="mb-4 flex items-center justify-between rounded-md border bg-base-200 p-2"
                     style={{ borderColor: color }}
@@ -43,7 +43,7 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                 {/* Might add a custom scrollbar for consistency between os's */}
                 <ul
                     ref={setNodeRef}
-                    className={`flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
+                    className={`flex h-full flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
                         theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
                     }`}
                 >
