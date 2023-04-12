@@ -40,9 +40,10 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                     </h2>
                     <ColumnOptionsDropdown column={column} />
                 </div>
+                {/* Might add a custom scrollbar for consistency between os's */}
                 <ul
                     ref={setNodeRef}
-                    className={`flex min-h-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
+                    className={`flex flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
                         theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
                     }`}
                 >

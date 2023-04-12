@@ -1,56 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { BoardTask, BoardColumn, BoardSubtask } from '@prisma/client';
-import { BoardColumnWithTasks } from 'types/board-types';
+import { KanbanStore, TasksMap } from 'types/kanban-store-types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-
-export type TasksMap = {
-    [columnId: string]: BoardTask[];
-};
-
-type ColumnsActions = {
-    setColumns: (columns: BoardColumn[]) => void;
-    addColumn: (column: BoardColumn) => void;
-    deleteColumn: (columnId: string) => void;
-    updateColumn: (column: BoardColumn) => void;
-};
-
-type TasksActions = {
-    setTasks: (tasks: TasksMap) => void;
-    setCurrentTask: (task: BoardTask) => void;
-    addTask: (task: BoardTask) => void;
-    removeTask: (taskId: string, columnId: string) => void;
-    updateTask: (task: BoardTask) => void;
-    getTaskById: (id: string) => BoardTask | undefined;
-    dropTaskInColumn: (
-        columnId: string,
-        tasks: BoardTask[],
-        oldTaskIndex: number,
-        newTaskIndex: number
-    ) => void;
-};
-
-type SubtasksActions = {
-    setSubtasks: (subtasks: BoardSubtask[]) => void;
-    addSubtask: (subtask: BoardSubtask) => void;
-    removeSubtask: (subtaskId: string) => void;
-    updateSubtask: (subtask: BoardSubtask) => void;
-};
-
-type KanbanStore = {
-    boardId: string;
-    columns: BoardColumn[];
-    tasks: TasksMap;
-    // it might be more efficient to just store the reference with a tuple to avoid task
-    // data duplication, e.g. [columnId, taskIndex], but i encountered race condition problems
-    currentTask: BoardTask | undefined;
-    // only the subtasks of the current task in use are stored here
-    subtasks: BoardSubtask[];
-    init: (columnsWithTasks: BoardColumnWithTasks[]) => void;
-    columnsActions: ColumnsActions;
-    tasksActions: TasksActions;
-    subtasksActions: SubtasksActions;
-};
 
 const useKanbanStore = create(
     immer<KanbanStore>((set, get) => ({
@@ -59,7 +10,9 @@ const useKanbanStore = create(
         tasks: {},
         currentTask: undefined,
         subtasks: [],
-        init: (columnsWithTasks) =>
+        boardUsers: [],
+        isAdmin: false,
+        init: (columnsWithTasks, boardUsers, isAdmin) =>
             set((state) => {
                 state.columns = columnsWithTasks.map(
                     ({ tasks, ...col }) => col
@@ -68,6 +21,8 @@ const useKanbanStore = create(
                     acc[cur.id] = [...cur.tasks];
                     return acc;
                 }, {});
+                state.boardUsers = boardUsers;
+                state.isAdmin = isAdmin;
                 state.boardId = columnsWithTasks[0].boardId;
             }),
         columnsActions: {
@@ -171,6 +126,30 @@ const useKanbanStore = create(
                     state.subtasks[index] = subtask;
                 }),
         },
+        boardUserActions: {
+            setBoardUsers: (users) =>
+                set((state) => {
+                    state.boardUsers = users;
+                }),
+            addBoardUser: (user) =>
+                set((state) => {
+                    state.boardUsers.push(user);
+                }),
+            removeBoardUser: (userId) =>
+                set((state) => {
+                    state.boardUsers = state.boardUsers.filter(
+                        (bu) => bu.userId !== userId
+                    );
+                }),
+            updateBoardUser: (user) =>
+                set((state) => {
+                    const index = state.boardUsers.findIndex(
+                        (bu) => bu.userId === user.userId
+                    );
+                    if (index === -1) return;
+                    state.boardUsers[index] = user;
+                }),
+        },
     }))
 );
 
@@ -206,6 +185,16 @@ export const useCurrentTask = () =>
 export const useSubtasks = () => useKanbanStore((state) => state.subtasks);
 
 /**
+ * @returns all board users of the current board
+ */
+export const useBoardUsers = () => useKanbanStore((state) => state.boardUsers);
+
+/**
+ * @returns true if the current user is an admin of the board
+ */
+export const useIsAdminUser = () => useKanbanStore((state) => state.isAdmin);
+
+/**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.
  * @see: https://tkdodo.eu/blog/working-with-zustand#separate-actions-from-state
  * @returns object with all actions that can be performed on the columns
@@ -224,3 +213,9 @@ export const useTasksActions = () =>
  */
 export const useSubtasksActions = () =>
     useKanbanStore((state) => state.subtasksActions);
+
+/**
+ * @returns object with all actions that can be performed on the board users
+ */
+export const useBoardUserActions = () =>
+    useKanbanStore((state) => state.boardUserActions);

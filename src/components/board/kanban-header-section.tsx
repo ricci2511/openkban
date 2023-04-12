@@ -1,20 +1,17 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';
 import { CreateTaskModal } from './task-creation/create-task-modal';
-import { ClientBoardUser } from 'types/board-types';
 import { BoardUserAvatar } from '@components/board-user-avatar';
-import { RxPlus } from 'react-icons/rx';
+import { RxCross1, RxPlus } from 'react-icons/rx';
+import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
+import { useSession } from 'next-auth/react';
 
-interface KanbanHeaderSectionProps {
-    title: string;
-    boardUsers: ClientBoardUser[];
-}
-
-export const KanbanHeaderSection = ({
-    title,
-    boardUsers,
-}: KanbanHeaderSectionProps) => {
+export const KanbanHeaderSection = ({ title }: { title: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const boardUsers = useBoardUsers();
+    const isAdmin = useIsAdminUser();
+
+    const { data: session } = useSession();
 
     return (
         <section className="flex h-auto w-full flex-wrap items-center justify-between gap-3 p-4 sm:p-6 lg:p-8">
@@ -36,15 +33,21 @@ export const KanbanHeaderSection = ({
             <div className="flex flex-wrap items-center gap-2">
                 <ul className="flex flex-wrap gap-2" aria-label="Board members">
                     {boardUsers.map((user) => (
-                        <li key={user.userId}>
+                        <li key={user.userId} className="group relative">
+                            {isAdmin && session?.user?.id !== user.userId && (
+                                <button className="btn-error invisible absolute -right-1 -top-2 rounded-full p-1 group-hover:visible">
+                                    <RxCross1 size={8} />
+                                </button>
+                            )}
                             <BoardUserAvatar boardUser={user} />
                         </li>
                     ))}
                 </ul>
-                {/* TODO: button to add users, will be visible to ADMIN only */}
-                <button className="btn-outline btn-square btn-sm btn">
-                    <RxPlus />
-                </button>
+                {isAdmin && (
+                    <button className="btn-outline btn-square btn-sm btn">
+                        <RxPlus />
+                    </button>
+                )}
             </div>
             {isModalOpen && (
                 <CreateTaskModal

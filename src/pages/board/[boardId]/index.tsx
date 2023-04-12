@@ -9,6 +9,7 @@ import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
 import { MainLayout } from '@components/layouts/main-layout';
 import { KanbanHeaderSection } from '@components/board/kanban-header-section';
 import { KanbanBodySection } from '@components/board/kanban-body-section';
+import { useSession } from 'next-auth/react';
 
 const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
@@ -16,6 +17,7 @@ const BoardPage: NextPageWithLayout = () => {
     const initStore = useInitKanbanStore();
     const { mutate: updateBoard } = useUpdateBoard();
     const storeBoardId = useBoardId();
+    const { data: session } = useSession();
 
     const { data, error, isLoading } = trpc.boardRouter.getById.useQuery(
         {
@@ -23,8 +25,10 @@ const BoardPage: NextPageWithLayout = () => {
         },
         {
             refetchOnWindowFocus: false,
-            onSuccess: ({ id, columns }) => {
-                initStore(columns);
+            onSuccess: ({ id, columns, boardUser }) => {
+                const admin = boardUser.find((bu) => bu.role === 'ADMIN');
+                const isAdmin = admin?.userId === session?.user?.id;
+                initStore(columns, boardUser, isAdmin);
                 // update lastInteractedAt only if a different board is loaded
                 if (id !== storeBoardId) {
                     updateBoard({ id, lastInteractedAt: new Date() });
@@ -53,10 +57,7 @@ const BoardPage: NextPageWithLayout = () => {
     // TODO: SEO
     return (
         <>
-            <KanbanHeaderSection
-                title={data.title}
-                boardUsers={data.boardUser}
-            />
+            <KanbanHeaderSection title={data.title} />
             <KanbanBodySection />
         </>
     );
