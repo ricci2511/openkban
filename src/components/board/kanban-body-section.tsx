@@ -4,9 +4,11 @@ import { KanbanBoard } from './kanban-board';
 
 export const KanbanBodySection = () => {
     return (
-        <section className="h-full overflow-y-clip pt-28">
-            <KanbanBoard />
-            <TaskDetailsModal />
+        <section className="relative flex-grow">
+            <div className="absolute top-0 bottom-0 left-0 right-0 mt-4 mb-1 select-none overflow-x-auto overflow-y-hidden whitespace-nowrap pb-1">
+                <KanbanBoard />
+                <TaskDetailsModal />
+            </div>
         </section>
     );
 };

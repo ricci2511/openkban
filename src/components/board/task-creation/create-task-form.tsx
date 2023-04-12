@@ -59,6 +59,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                     registerName="title"
                     registerRules={{ required: true }}
                     errors={errors}
+                    autoFocus
                 />
             </div>
             <div>

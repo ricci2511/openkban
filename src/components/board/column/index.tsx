@@ -30,9 +30,9 @@ export const Column = ({ column, tasks }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="flex h-full flex-col">
+            <li className="relative flex max-h-[95%] flex-col">
                 <div
-                    className="mb-4 flex items-center justify-between rounded-md border p-2"
+                    className="mb-4 flex items-center justify-between rounded-md border bg-base-200 p-2"
                     style={{ borderColor: color }}
                 >
                     <h2 className="font-semibold uppercase" style={{ color }}>
@@ -40,23 +40,16 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                     </h2>
                     <ColumnOptionsDropdown column={column} />
                 </div>
-                <div
-                    className={`h-[calc(100vh-250px)] overflow-y-auto overflow-x-hidden rounded-lg
-                        ${theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'}`}
+                <ul
+                    ref={setNodeRef}
+                    className={`flex min-h-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
+                        theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
+                    }`}
                 >
-                    <ul
-                        ref={setNodeRef}
-                        className="grid grid-flow-row grid-rows-1 gap-3 p-2.5"
-                    >
-                        {tasks.map((task) => (
-                            <TaskSortable
-                                key={task.id}
-                                task={task}
-                                color={color}
-                            />
-                        ))}
-                    </ul>
-                </div>
+                    {tasks.map((task) => (
+                        <TaskSortable key={task.id} task={task} color={color} />
+                    ))}
+                </ul>
             </li>
         </SortableContext>
     );

@@ -50,16 +50,26 @@ const BoardPage: NextPageWithLayout = () => {
         return <NextError title="Board not found" statusCode={404} />;
     }
 
+    // TODO: SEO
     return (
         <>
-            <KanbanHeaderSection title={data.title} />
+            <KanbanHeaderSection
+                title={data.title}
+                boardUsers={data.boardUser}
+            />
             <KanbanBodySection />
         </>
     );
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
-    return <MainLayout className="h-full">{page}</MainLayout>;
+    return (
+        <MainLayout className="relative h-full overflow-y-auto">
+            <div className="absolute bottom-0 left-0 right-0 top-0 overflow-hidden">
+                <div className="relative mr-0 flex h-full flex-col">{page}</div>
+            </div>
+        </MainLayout>
+    );
 };
 
 export default BoardPage;

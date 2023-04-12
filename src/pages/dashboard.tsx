@@ -15,6 +15,7 @@ const Dashboard = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // TODO: SEO
     return (
         <MainLayout responsive>
             <>

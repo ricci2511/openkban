@@ -33,21 +33,17 @@ export const CreateColumnForm = ({
     const ref = useClickOutside<HTMLFormElement>(stopCreatingCb);
 
     return (
-        <Form className="relative -mt-10 w-full" onSubmit={onSubmit} ref={ref}>
+        <Form className="relative mt-1 w-full" onSubmit={onSubmit} ref={ref}>
             <div>
-                <Form.Label
-                    title="Column title"
-                    htmlFor="column-title"
-                    aria-required
-                />
                 <FormInputGroup<TitleInput>
                     type="text"
                     id="column-title"
-                    placeholder="title..."
+                    placeholder="column title..."
                     className="w-full"
                     register={register}
                     registerName="title"
                     errors={errors}
+                    autoFocus
                 >
                     <Button
                         type="button"

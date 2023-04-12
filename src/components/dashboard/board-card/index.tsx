@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { BoardWithUsers } from 'types/board-types';
 import { useUpdateBoardUser } from '@hooks/mutations/use-board-user-mutations';
-import { AdminAvatar } from './admin-avatar';
 import { FavouriteButton } from './favourite-button';
 import { BoardOptionsDropdown } from './board-options-dropdown';
+import { BoardUserAvatar } from '@components/board-user-avatar';
 
 interface BoardProps {
     board: BoardWithUsers;
@@ -42,7 +42,7 @@ export const BoardCard = ({ board }: BoardProps) => {
             {/* Display the admin's avatar for boards that the user is not an admin of */}
             {admin && !isAdmin && (
                 <div className="absolute -bottom-5 -left-3">
-                    <AdminAvatar admin={admin} />
+                    <BoardUserAvatar boardUser={admin} />
                 </div>
             )}
             <div className="absolute -top-3 -left-4">

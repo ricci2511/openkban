@@ -222,7 +222,7 @@ export const KanbanBoard = () => {
             onDragOver={onDragOver}
             onDragCancel={onDragCancel}
         >
-            <ul className="grid h-full auto-cols-[minmax(285px,_1fr)] grid-flow-col gap-6 pl-4 after:w-px sm:pl-6 lg:gap-8 lg:pl-8">
+            <ul className="grid h-full auto-cols-[minmax(285px,_1fr)] grid-flow-col gap-4 pl-4 after:w-px sm:pl-6 lg:pl-8">
                 {columns.map((column) => (
                     <Column
                         key={column.id}

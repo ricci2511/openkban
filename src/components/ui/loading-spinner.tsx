@@ -7,7 +7,7 @@ interface LoadingSpinnerProps {
     height?: number;
 }
 
-const centeredClasses = 'flex min-h-screen w-full items-center justify-center';
+const centeredClasses = 'flex min-h-full w-full items-center justify-center';
 const notCenteredClasses = 'mx-auto flex items-center justify-center';
 
 export const LoadingSpinner = ({

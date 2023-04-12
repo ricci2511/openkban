@@ -32,13 +32,17 @@ export const TaskDetailsModal = () => {
         );
 
     return (
-        <Modal
-            open={!!id}
-            closeModal={() => router.back()}
-            className="max-w-3xl"
-        >
-            {fetchStatus === 'fetching' && <LoadingSpinner />}
-            {subtasks && !!id && <TaskDetails />}
-        </Modal>
+        <>
+            {!!id && (
+                <Modal
+                    open={!!id}
+                    closeModal={() => router.back()}
+                    className="min-h-[384px] max-w-3xl"
+                >
+                    {fetchStatus === 'fetching' && <LoadingSpinner centered />}
+                    {subtasks && !!id && <TaskDetails />}
+                </Modal>
+            )}
+        </>
     );
 };
