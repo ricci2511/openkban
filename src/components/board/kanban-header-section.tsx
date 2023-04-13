@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';
 import { CreateTaskModal } from './task-creation/create-task-modal';
 import { BoardUserAvatar } from '@components/board-user-avatar';
-import { RxCross1, RxPlus } from 'react-icons/rx';
+import { RxCross1, RxPerson } from 'react-icons/rx';
 import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
 import { useSession } from 'next-auth/react';
+import { Button } from 'react-daisyui';
 
 export const KanbanHeaderSection = ({ title }: { title: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,7 +31,7 @@ export const KanbanHeaderSection = ({ title }: { title: string }) => {
                     </button>
                 </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-3">
                 <ul className="flex flex-wrap gap-2" aria-label="Board members">
                     {boardUsers.map((user) => (
                         <li key={user.userId} className="group relative">
@@ -44,9 +45,12 @@ export const KanbanHeaderSection = ({ title }: { title: string }) => {
                     ))}
                 </ul>
                 {isAdmin && (
-                    <button className="btn-outline btn-square btn-sm btn">
-                        <RxPlus />
-                    </button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        shape="square"
+                        endIcon={<RxPerson />}
+                    />
                 )}
             </div>
             {isModalOpen && (

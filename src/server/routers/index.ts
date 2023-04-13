@@ -1,3 +1,4 @@
+import { userRouter } from './user-router';
 import { boardUserRouter } from './board-user-router';
 import { authRouter } from './auth-router';
 import { boardRouter } from './board-router';
@@ -12,6 +13,7 @@ export const appRouter = t.router({
     boardTaskRouter,
     boardColumnRouter,
     boardSubtaskRouter,
+    userRouter,
     boardUserRouter,
 });
 
