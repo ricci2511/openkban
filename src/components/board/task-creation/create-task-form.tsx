@@ -62,7 +62,6 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         id="task-title"
                         type="text"
                         placeholder="title..."
-                        className="w-full"
                         register={register}
                         registerName="title"
                         registerRules={{ required: true }}

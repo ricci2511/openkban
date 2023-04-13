@@ -54,7 +54,6 @@ export const CreateBoardForm = ({
                     id="board-title"
                     type="text"
                     placeholder="title..."
-                    className="w-full"
                     register={register}
                     registerName="title"
                     registerRules={{ required: true }}
@@ -74,11 +73,10 @@ export const CreateBoardForm = ({
                 title="Add it to your favourites?"
                 className="justify-start gap-3"
             >
+                {/* Will be replaced with custom checkbox component */}
                 <FormInput<BoardCreation>
                     type="checkbox"
-                    size="xs"
                     className="checkbox-primary checkbox"
-                    color="primary"
                     register={register}
                     registerName="isFavourite"
                 />

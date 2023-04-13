@@ -6,8 +6,8 @@ import { useBoardId } from 'store/kanban-store';
 import { useTitleForm } from '@hooks/use-title-form';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
-import { FormInputGroup } from '@components/ui/form-input-group';
 import { ColorPickerPopover } from '@components/color-picker-popover';
+import { FormInput } from '@components/ui/form-input';
 
 export const CreateColumnForm = ({
     stopCreatingCb,
@@ -35,11 +35,10 @@ export const CreateColumnForm = ({
     return (
         <Form className="relative mt-1 w-full" onSubmit={onSubmit} ref={ref}>
             <div>
-                <FormInputGroup<TitleInput>
+                <FormInput<TitleInput>
                     type="text"
                     id="column-title"
                     placeholder="column title..."
-                    className="w-full"
                     register={register}
                     registerName="title"
                     errors={errors}
@@ -61,7 +60,7 @@ export const CreateColumnForm = ({
                             className="absolute top-8 right-0"
                         />
                     </Button>
-                </FormInputGroup>
+                </FormInput>
             </div>
             <div className="mt-4 flex gap-2">
                 <Button

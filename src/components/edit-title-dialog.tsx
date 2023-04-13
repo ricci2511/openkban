@@ -81,14 +81,12 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                         type="text"
                         id={`new-${name}-title`}
                         placeholder={`${name} title...`}
-                        className="w-full"
-                        size="lg"
                         disabled={isLoading}
-                        autoFocus
                         register={register}
                         registerName="title"
                         registerRules={{ required: true }}
                         errors={errors}
+                        autoFocus
                     />
                 </fieldset>
             </Form>

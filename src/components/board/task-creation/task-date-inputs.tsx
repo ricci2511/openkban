@@ -24,7 +24,6 @@ export const TaskDateInputs = () => {
                     type="date"
                     defaultValue={today}
                     min={today}
-                    className="w-full"
                     register={register}
                     registerName="startDate"
                     registerRules={{ valueAsDate: true, required: true }}
@@ -38,7 +37,6 @@ export const TaskDateInputs = () => {
                     type="date"
                     defaultValue={tomorrow}
                     min={tomorrow}
-                    className="w-full"
                     register={register}
                     registerName="dueDate"
                     registerRules={{ valueAsDate: true, required: true }}

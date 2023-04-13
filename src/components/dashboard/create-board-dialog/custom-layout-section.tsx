@@ -6,8 +6,8 @@ import { MAX_COLUMNS } from '@lib/constants';
 import { FormErrors } from 'types/form-types';
 import { Button } from 'react-daisyui';
 import { InfoTooltip } from '@components/ui/info-tooltip';
-import { FormInputGroup } from '@components/ui/form-input-group';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
+import { FormInput } from '@components/ui/form-input';
 
 export type CustomColumn = {
     id: string;
@@ -73,10 +73,9 @@ export const CustomLayoutSection = () => {
                         position="right"
                     />
                 </label>
-                <FormInputGroup<BoardCreation>
+                <FormInput<BoardCreation>
                     id="column-title"
                     placeholder="title..."
-                    className="w-full"
                     title={
                         isMaxColumns
                             ? `Cannot add more than ${MAX_COLUMNS} columns`
@@ -98,7 +97,7 @@ export const CustomLayoutSection = () => {
                     >
                         Add
                     </Button>
-                </FormInputGroup>
+                </FormInput>
             </span>
             <ul className="m-4 grid w-full grid-flow-row grid-cols-2 gap-y-2 gap-x-4 self-center sm:grid-cols-3">
                 <SortableColumnItemsContainer

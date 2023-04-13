@@ -1,19 +1,20 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { FieldValues } from 'react-hook-form';
-import { Textarea } from 'react-daisyui';
 import { FormElementProps } from 'types/form-types';
 import get from 'lodash.get';
+import { TextareaProps, Textarea } from './textarea';
+import { cn } from '@lib/helpers';
 
 interface FormTextareaProps<TFormValues extends FieldValues>
     extends FormElementProps<TFormValues>,
-        ComponentProps<typeof Textarea> {}
+        TextareaProps {}
 
 export const FormTextarea = <TFormValues extends Record<string, unknown>>({
     register,
     registerName,
     registerRules,
     errors,
-    color,
+    className,
     ...rest
 }: FormTextareaProps<TFormValues>) => {
     // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
@@ -23,9 +24,7 @@ export const FormTextarea = <TFormValues extends Record<string, unknown>>({
         <>
             <Textarea
                 aria-invalid={!!(errors && errorMessages)}
-                color={errorMessages ? 'error' : color}
-                bordered
-                borderOffset
+                className={cn(errorMessages && 'textarea-error', className)}
                 {...rest}
                 {...(register && register(registerName, registerRules))}
             />
