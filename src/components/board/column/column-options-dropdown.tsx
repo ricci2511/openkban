@@ -1,13 +1,13 @@
 import { BoardColumn } from '@prisma/client';
 import React, { useState } from 'react';
-import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
+import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
 import { Button, Dropdown } from 'react-daisyui';
 import { columnTitle } from '@lib/schemas/board-schemas';
 import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
 import { DropdownButton } from '@components/ui/dropdown-button';
 import { ColorPickerPopover } from '@components/color-picker-popover';
-import { EditTitleModal } from '@components/edit-title-modal';
-import { DeleteWarningModal } from './delete-warning-modal';
+import { EditTitleDialog } from '@components/edit-title-dialog';
+import { Dialog, DialogTrigger } from '@components/ui/dialog';
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;
@@ -35,24 +35,36 @@ export const ColumnOptionsDropdown = ({
         });
     };
 
-    const [warningDialogOpen, setWarningModalOpen] = useState(false);
+    // will be used after implementing alert dialog component
+    // const [alertDialogOpen, setAlertDialogOpen] = useState(false);
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
     return (
         <>
             <Dropdown vertical="end">
                 <Button color="ghost" size="xs">
-                    <HiOutlineDotsHorizontal size={20} />
+                    <RxDotsHorizontal size={20} />
                 </Button>
                 <Dropdown.Menu className="w-48 gap-1 bg-base-300">
-                    <li>
-                        <DropdownButton
-                            text="Rename"
-                            startIcon={<HiPencil size={18} />}
-                            aria-label={`Rename ${title} column`}
-                            onClick={() => setIsEditting(true)}
+                    <Dialog open={isEditting} onOpenChange={setIsEditting}>
+                        <DialogTrigger asChild>
+                            <li>
+                                <DropdownButton
+                                    text="Rename"
+                                    startIcon={<RxPencil1 size={18} />}
+                                    aria-label={`Rename ${title} column`}
+                                />
+                            </li>
+                        </DialogTrigger>
+                        <EditTitleDialog
+                            entity={column}
+                            updateMutation={updateColumnMutation}
+                            zodString={columnTitle}
+                            name="column"
+                            oldTitle={title}
+                            closeDialog={stopEditting}
                         />
-                    </li>
+                    </Dialog>
                     <li>
                         <DropdownButton
                             text="Change color"
@@ -70,36 +82,17 @@ export const ColumnOptionsDropdown = ({
                             onClick={() => setColorPickerOpen(true)}
                         />
                     </li>
+                    {/* TODO: Open alert dialog */}
                     <li>
                         <DropdownButton
                             text="Delete"
                             color="error"
-                            startIcon={<HiTrash size={18} />}
+                            startIcon={<RxTrash size={18} />}
                             aria-label={`Delete ${title} column`}
-                            onClick={() => setWarningModalOpen(true)}
                         />
                     </li>
                 </Dropdown.Menu>
             </Dropdown>
-            {isEditting && (
-                <EditTitleModal
-                    entity={column}
-                    updateMutation={updateColumnMutation}
-                    zodString={columnTitle}
-                    name="column"
-                    oldTitle={title}
-                    open={isEditting}
-                    closeModal={stopEditting}
-                />
-            )}
-            {warningDialogOpen && (
-                <DeleteWarningModal
-                    title={title}
-                    columnId={id}
-                    open={warningDialogOpen}
-                    closeModal={() => setWarningModalOpen(false)}
-                />
-            )}
         </>
     );
 };

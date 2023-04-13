@@ -1,15 +1,19 @@
 import { FormInput } from '@components/ui/form-input';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
+import dayjs from 'dayjs';
 import React from 'react';
 import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
 
+const today = new Date().toISOString().split('T')[0];
+const tomorrow = dayjs().add(1, 'day').toISOString().split('T')[0];
+
+// TODO: Improve date input min/max logic
 export const TaskDateInputs = () => {
     const {
         register,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
-    const minDate = new Date().toISOString().split('T')[0];
 
     return (
         <>
@@ -18,8 +22,8 @@ export const TaskDateInputs = () => {
                 <FormInput<BoardTaskCreation>
                     id="start-date"
                     type="date"
-                    defaultValue={minDate}
-                    min={minDate}
+                    defaultValue={today}
+                    min={today}
                     className="w-full"
                     register={register}
                     registerName="startDate"
@@ -32,8 +36,8 @@ export const TaskDateInputs = () => {
                 <FormInput<BoardTaskCreation>
                     id="due-date"
                     type="date"
-                    defaultValue={minDate}
-                    min={minDate}
+                    defaultValue={tomorrow}
+                    min={tomorrow}
                     className="w-full"
                     register={register}
                     registerName="dueDate"

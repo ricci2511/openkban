@@ -9,7 +9,7 @@ export const TaskDetails = () => {
     const columns = useColumns();
 
     return (
-        <div className="mx-auto flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
             <section className="mb-2 flex items-center gap-3">
                 <RxActivityLog size={22} />
                 <h1 className="text-4xl font-bold">

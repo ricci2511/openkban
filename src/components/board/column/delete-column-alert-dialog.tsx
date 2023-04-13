@@ -2,36 +2,35 @@ import { Button } from 'react-daisyui';
 import React from 'react';
 import { useDeleteColumn } from '@hooks/mutations/use-column-mutations';
 import {
-    ModalActions,
-    Modal,
-    ModalType,
-    ModalHeader,
-    ModalBody,
-} from '@components/ui/modal';
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@components/ui/dialog';
 
-interface DeleteWarningModalProps extends ModalType {
+interface DeleteColumnAlertDialogProps {
     columnId: string;
     title: string;
 }
 
-export const DeleteWarningModal = ({
-    open,
-    closeModal,
+// Will be refactored to use an alert dialog component once it's implemented
+export const DeleteColumnAlertDialog = ({
     columnId,
     title,
-}: DeleteWarningModalProps) => {
+}: DeleteColumnAlertDialogProps) => {
     const { mutate: deleteColumn, isLoading } = useDeleteColumn();
 
     return (
-        <Modal open={open} closeModal={closeModal}>
-            <ModalHeader className="mt-2 text-2xl font-bold">
-                {`Delete column '${title}'`}
-            </ModalHeader>
-            <ModalBody>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>{`Delete column '${title}'`}</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
                 Are you sure you want do delete this column and all the tasks
                 within it?
-            </ModalBody>
-            <ModalActions>
+            </DialogDescription>
+            <DialogFooter>
                 <Button
                     type="button"
                     color="error"
@@ -42,14 +41,7 @@ export const DeleteWarningModal = ({
                 >
                     {isLoading ? 'Deleting...' : 'Delete Column'}
                 </Button>
-                <Button
-                    type="button"
-                    onClick={closeModal}
-                    aria-label="Cancel column deletion and close modal"
-                >
-                    Cancel
-                </Button>
-            </ModalActions>
-        </Modal>
+            </DialogFooter>
+        </DialogContent>
     );
 };

@@ -1,14 +1,15 @@
 import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-daisyui';
-import { HiOutlineDotsHorizontal, HiPencil, HiTrash } from 'react-icons/hi';
 import { taskTitle } from '@lib/schemas/board-schemas';
 import {
     useDeleteTask,
     useUpdateTask,
 } from '@hooks/mutations/use-task-mutations';
 import { DropdownButton } from '@components/ui/dropdown-button';
-import { EditTitleModal } from '@components/edit-title-modal';
+import { Dialog, DialogTrigger } from '@components/ui/dialog';
+import { EditTitleDialog } from '@components/edit-title-dialog';
+import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
@@ -26,22 +27,33 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
         <>
             <Dropdown vertical="end">
                 <Button color="ghost" size="xs">
-                    <HiOutlineDotsHorizontal size={18} />
+                    <RxDotsHorizontal size={18} />
                 </Button>
                 <Dropdown.Menu className="w-36 gap-1">
-                    <li>
-                        <DropdownButton
-                            text="Rename"
-                            startIcon={<HiPencil size={18} />}
-                            aria-label={`Rename ${title} task`}
-                            onClick={() => setIsEditting(true)}
+                    <Dialog open={isEditting} onOpenChange={setIsEditting}>
+                        <DialogTrigger asChild>
+                            <li>
+                                <DropdownButton
+                                    text="Rename"
+                                    startIcon={<RxPencil1 size={18} />}
+                                    aria-label={`Rename ${title} task`}
+                                />
+                            </li>
+                        </DialogTrigger>
+                        <EditTitleDialog
+                            entity={task}
+                            updateMutation={updateTaskMutation}
+                            zodString={taskTitle}
+                            name="task"
+                            oldTitle={title}
+                            closeDialog={stopEditting}
                         />
-                    </li>
+                    </Dialog>
                     <li>
                         <DropdownButton
                             text="Delete"
                             color="error"
-                            startIcon={<HiTrash size={18} />}
+                            startIcon={<RxTrash size={18} />}
                             loading={isLoading}
                             aria-label={`Delete ${title} task`}
                             onClick={() => deleteTask({ id })}
@@ -49,17 +61,6 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                     </li>
                 </Dropdown.Menu>
             </Dropdown>
-            {isEditting && (
-                <EditTitleModal
-                    entity={task}
-                    updateMutation={updateTaskMutation}
-                    zodString={taskTitle}
-                    name="task"
-                    oldTitle={title}
-                    open={isEditting}
-                    closeModal={stopEditting}
-                />
-            )}
         </>
     );
 };

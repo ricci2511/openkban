@@ -87,10 +87,6 @@ const useKanbanStore = create(
                     if (index === -1) return;
                     state.tasks[task.columnId][index] = task;
                 }),
-            getTaskById: (id: string) => {
-                const tasks = Object.values(get().tasks).flat();
-                return tasks.find((t) => t.id === id);
-            },
             dropTaskInColumn: (columnId, tasks, oldTaskIndex, newTaskIndex) =>
                 set((state) => {
                     state.tasks[columnId] = arrayMove(

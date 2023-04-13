@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
-import { CreateBoardModal } from '@components/dashboard/create-board-modal';
 import { BoardCard } from '@components/dashboard/board-card';
 import { MainLayout } from '@components/layouts/main-layout';
 import { useGetBoards } from '@hooks/use-get-boards';
+import { CreateBoardDialog } from '@components/dashboard/create-board-dialog';
 
 const Dashboard = () => {
     const { data: session } = useSession();
@@ -12,8 +12,6 @@ const Dashboard = () => {
         prop: 'createdAt',
         order: 'desc',
     });
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // TODO: SEO
     return (
@@ -33,20 +31,7 @@ const Dashboard = () => {
                         ))}
                     </ul>
                 )}
-                {!isLoading && (
-                    <>
-                        <button
-                            className="btn-primary btn"
-                            onClick={() => setIsModalOpen(true)}
-                        >
-                            Add Board
-                        </button>
-                        <CreateBoardModal
-                            open={isModalOpen}
-                            closeModal={() => setIsModalOpen(false)}
-                        />
-                    </>
-                )}
+                {!isLoading && <CreateBoardDialog />}
             </>
         </MainLayout>
     );

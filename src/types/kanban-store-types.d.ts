@@ -18,7 +18,6 @@ export type TasksActions = {
     addTask: (task: BoardTask) => void;
     removeTask: (taskId: string, columnId: string) => void;
     updateTask: (task: BoardTask) => void;
-    getTaskById: (id: string) => BoardTask | undefined;
     dropTaskInColumn: (
         columnId: string,
         tasks: BoardTask[],

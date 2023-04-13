@@ -9,7 +9,8 @@ import {
 } from '@hooks/mutations/use-board-mutations';
 import { useLeaveBoard } from '@hooks/mutations/use-board-user-mutations';
 import { DropdownButton } from '@components/ui/dropdown-button';
-import { EditTitleModal } from '@components/edit-title-modal';
+import { EditTitleDialog } from '@components/edit-title-dialog';
+import { Dialog, DialogTrigger } from '@components/ui/dialog';
 
 interface OptionsDropdownProps {
     board: Board;
@@ -22,13 +23,13 @@ export const BoardOptionsDropdown = ({
 }: OptionsDropdownProps) => {
     const { id, title } = board;
     const [isEditting, setIsEditting] = useState(false);
-    const toggleEditting = () => setIsEditting(!isEditting);
+    const stopEditting = () => setIsEditting(false);
 
     const { mutate, isLoading } = useDeleteBoard();
     const deleteBoard = () => (!isLoading ? mutate({ id }) : null);
     const { mutate: leaveBoard } = useLeaveBoard();
 
-    const updateBoardMutation = useUpdateBoard(toggleEditting);
+    const updateBoardMutation = useUpdateBoard(stopEditting);
 
     return (
         <>
@@ -37,14 +38,25 @@ export const BoardOptionsDropdown = ({
                     <RxDotsVertical size={19} />
                 </Button>
                 <Dropdown.Menu className="w-40 gap-1 bg-base-200">
-                    <li>
-                        <DropdownButton
-                            text="Rename"
-                            startIcon={<RxPencil1 size={18} />}
-                            aria-label={`Rename ${title} board`}
-                            onClick={toggleEditting}
+                    <Dialog open={isEditting} onOpenChange={setIsEditting}>
+                        <DialogTrigger asChild>
+                            <li>
+                                <DropdownButton
+                                    text="Rename"
+                                    startIcon={<RxPencil1 size={18} />}
+                                    aria-label={`Rename ${title} board`}
+                                />
+                            </li>
+                        </DialogTrigger>
+                        <EditTitleDialog
+                            entity={board}
+                            updateMutation={updateBoardMutation}
+                            zodString={boardTitle}
+                            name="board"
+                            oldTitle={title}
+                            closeDialog={stopEditting}
                         />
-                    </li>
+                    </Dialog>
                     <li>
                         <DropdownButton
                             text="Leave"
@@ -67,17 +79,6 @@ export const BoardOptionsDropdown = ({
                     )}
                 </Dropdown.Menu>
             </Dropdown>
-            {isEditting && (
-                <EditTitleModal
-                    entity={board}
-                    updateMutation={updateBoardMutation}
-                    zodString={boardTitle}
-                    name="board"
-                    oldTitle={title}
-                    open={isEditting}
-                    closeModal={toggleEditting}
-                />
-            )}
         </>
     );
 };

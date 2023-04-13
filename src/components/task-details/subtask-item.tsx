@@ -15,7 +15,7 @@ export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
     };
 
     return (
-        <li className="-ml-1.5 flex items-start gap-3.5 rounded-md p-2 transition-all duration-200 hover:bg-base-200">
+        <li className="-ml-1.5 flex items-start gap-3.5 rounded-md p-2 transition-all duration-200 hover:bg-base-300">
             <input
                 type="checkbox"
                 checked={isDone}
@@ -30,7 +30,10 @@ export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
                     stopEdittingCb={() => setEditting(false)}
                 />
             ) : (
-                <span className="w-full" onClick={() => setEditting(true)}>
+                <span
+                    className="-mt-0.5 w-full"
+                    onClick={() => setEditting(true)}
+                >
                     {isDone ? <s>{title}</s> : <>{title}</>}
                 </span>
             )}
