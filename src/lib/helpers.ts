@@ -2,6 +2,12 @@ import {
     AnimateLayoutChanges,
     defaultAnimateLayoutChanges,
 } from '@dnd-kit/sortable';
+import { ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export const cn = (...inputs: ClassValue[]) => {
+    return twMerge(clsx(inputs));
+};
 
 /**
  * a function that determines whether to animate layout changes when interacting with sortable items (dnd-kit)

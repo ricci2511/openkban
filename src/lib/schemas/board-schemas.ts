@@ -69,6 +69,7 @@ export const boardTaskCreationSchema = z.object({
             new Date(new Date().toLocaleDateString('en-US')),
             'The start date cannot be in the past'
         ),
+    // TODO: fix this, currently a start date can be greater than a due date
     dueDate: z
         .date({
             required_error: 'A due date must be specified',
