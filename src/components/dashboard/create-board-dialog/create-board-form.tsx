@@ -73,12 +73,10 @@ export const CreateBoardForm = ({
                 title="Add it to your favourites?"
                 className="justify-start gap-3"
             >
-                {/* Will be replaced with custom checkbox component */}
-                <FormInput<BoardCreation>
+                <input
                     type="checkbox"
                     className="checkbox-primary checkbox"
-                    register={register}
-                    registerName="isFavourite"
+                    {...register('isFavourite')}
                 />
             </Form.Label>
         </Form>
