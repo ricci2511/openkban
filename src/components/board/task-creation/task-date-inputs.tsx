@@ -1,8 +1,8 @@
 import { FormInput } from '@components/ui/form-input';
+import { Label } from '@components/ui/label';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import dayjs from 'dayjs';
 import React from 'react';
-import { Form } from 'react-daisyui';
 import { useFormContext } from 'react-hook-form';
 
 const today = new Date().toISOString().split('T')[0];
@@ -17,8 +17,8 @@ export const TaskDateInputs = () => {
 
     return (
         <>
-            <div className="w-1/2">
-                <Form.Label title="Start date" htmlFor="start-date" />
+            <div className="flex w-full flex-col">
+                <Label htmlFor="start-date">Start date</Label>
                 <FormInput<BoardTaskCreation>
                     id="start-date"
                     type="date"
@@ -30,11 +30,12 @@ export const TaskDateInputs = () => {
                     errors={errors}
                 />
             </div>
-            <div className="w-1/2">
-                <Form.Label title="Due date" htmlFor="due-date" />
+            <div className="flex w-full flex-col">
+                <Label htmlFor="due-date">Due date</Label>
                 <FormInput<BoardTaskCreation>
                     id="due-date"
                     type="date"
+                    className="justify-between"
                     defaultValue={tomorrow}
                     min={tomorrow}
                     register={register}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button, Form } from 'react-daisyui';
 import { TitleInput } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
 import { TRPCClientErrorLike } from '@trpc/client';
@@ -13,6 +12,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from './ui/dialog';
+import { Label } from './ui/label';
+import { cn } from '@lib/helpers';
 
 type HasIdAndTitle = { id: string } & TitleInput;
 
@@ -67,20 +68,19 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                     <span className="font-bold">{`'${oldTitle}'`}</span>
                 </DialogTitle>
             </DialogHeader>
-            <Form
+            <form
+                role="form"
+                id="edit-title-form"
                 className="mb-4 w-full"
                 onSubmit={onSubmit}
-                id="edit-title-form"
             >
-                <fieldset className="w-full">
-                    <Form.Label
-                        title={`New title`}
-                        htmlFor={`new-${name}-title`}
-                    />
+                <div className="w-full">
+                    <Label htmlFor={`new-${name}-title`}>New title</Label>
                     <FormInput<TitleInput>
                         type="text"
                         id={`new-${name}-title`}
                         placeholder={`${name} title...`}
+                        className="mt-1"
                         disabled={isLoading}
                         register={register}
                         registerName="title"
@@ -88,18 +88,19 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                         errors={errors}
                         autoFocus
                     />
-                </fieldset>
-            </Form>
+                </div>
+            </form>
             <DialogFooter>
-                <Button
+                <button
                     type="submit"
                     form="edit-title-form"
-                    color="primary"
-                    loading={isLoading}
-                    disabled={isLoading}
+                    className={cn(
+                        'btn-primary btn',
+                        isLoading && 'loading disabled'
+                    )}
                 >
                     Update title
-                </Button>
+                </button>
             </DialogFooter>
         </DialogContent>
     );

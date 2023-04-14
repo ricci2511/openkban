@@ -1,7 +1,6 @@
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Form } from 'react-daisyui';
 import { useColumns } from 'store/kanban-store';
 import { InfoTooltip } from '@components/ui/info-tooltip';
 import {
@@ -13,32 +12,42 @@ import {
     SelectGroup,
 } from '@components/ui/select';
 import { cn } from '@lib/helpers';
+import { Label } from '@components/ui/label';
 
 export const ColumnSelect = () => {
     const {
-        setValue, // used instead of register because it cant be used with radix-ui Select
+        setValue,
+        clearErrors,
         formState: { errors },
     } = useFormContext<BoardTaskCreation>();
+
     const selectErrors = errors.columnId;
+
+    // radix ui select doesn't play well with register, so value is set manually
+    // along with clearing any errors
+    const onValueChange = (value: string) => {
+        setValue('columnId', value);
+        if (selectErrors) clearErrors('columnId');
+    };
+
     const columns = useColumns();
 
     return (
         <>
-            <Form.Label
-                title="Column"
-                htmlFor="column"
-                className="justify-start gap-2"
-            >
+            <div className="flex items-center space-x-1">
+                <Label htmlFor="column">Column</Label>
                 <InfoTooltip
                     message="Pick the column you want to add the task to"
                     position="right"
                 />
-            </Form.Label>
-            <Select onValueChange={(colId) => setValue('columnId', colId)}>
+            </div>
+            <Select onValueChange={onValueChange}>
                 <SelectTrigger
+                    id="column"
                     className={cn(
                         'w-1/2',
-                        selectErrors && 'border-error outline-error'
+                        selectErrors &&
+                            'border-error outline-error focus:ring-error' // will be encapsulated in SelectContent once I build the design system
                     )}
                 >
                     <SelectValue placeholder="Select a column" />

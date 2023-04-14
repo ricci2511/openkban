@@ -38,10 +38,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
             ) : (
                 <Input
                     aria-invalid={!!(errors && errorMessages)}
-                    className={cn(
-                        errorMessages && 'input-error block',
-                        className
-                    )}
+                    className={cn(errorMessages && 'input-error', className)}
                     {...rest}
                     {...(register && register(registerName, registerRules))}
                 />

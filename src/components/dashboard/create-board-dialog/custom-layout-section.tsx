@@ -8,6 +8,7 @@ import { Button } from 'react-daisyui';
 import { InfoTooltip } from '@components/ui/info-tooltip';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
 import { FormInput } from '@components/ui/form-input';
+import { Label } from '@components/ui/label';
 
 export type CustomColumn = {
     id: string;
@@ -61,18 +62,15 @@ export const CustomLayoutSection = () => {
     };
 
     return (
-        <div className="form-control mt-6">
-            <span className="w-full">
-                <label
-                    className="label cursor-pointer justify-start gap-2"
-                    htmlFor="column-title"
-                >
-                    <span className="label-text">Column title</span>
+        <div className="form-control mt-4">
+            <div className="flex w-full flex-col">
+                <div className="flex items-center space-x-1">
+                    <Label htmlFor="column-title">Column title</Label>
                     <InfoTooltip
                         message={`${MAX_COLUMNS} columns can be added, sorted left to right`}
                         position="right"
                     />
-                </label>
+                </div>
                 <FormInput<BoardCreation>
                     id="column-title"
                     placeholder="title..."
@@ -98,14 +96,16 @@ export const CustomLayoutSection = () => {
                         Add
                     </Button>
                 </FormInput>
-            </span>
-            <ul className="m-4 grid w-full grid-flow-row grid-cols-2 gap-y-2 gap-x-4 self-center sm:grid-cols-3">
-                <SortableColumnItemsContainer
-                    columns={customColumns}
-                    setColumns={setCustomColumns}
-                    handleColumnDeletion={handleColumnDeletion}
-                />
-            </ul>
+            </div>
+            {customColumns.length > 0 && (
+                <ul className="m-4 grid w-full grid-flow-row grid-cols-2 gap-y-2 gap-x-4 self-center sm:grid-cols-3">
+                    <SortableColumnItemsContainer
+                        columns={customColumns}
+                        setColumns={setCustomColumns}
+                        handleColumnDeletion={handleColumnDeletion}
+                    />
+                </ul>
+            )}
         </div>
     );
 };

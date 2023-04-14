@@ -1,4 +1,3 @@
-import { Button } from 'react-daisyui';
 import React from 'react';
 import { useDeleteColumn } from '@hooks/mutations/use-column-mutations';
 import {
@@ -8,6 +7,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@components/ui/dialog';
+import { cn } from '@lib/helpers';
 
 interface DeleteColumnAlertDialogProps {
     columnId: string;
@@ -31,16 +31,17 @@ export const DeleteColumnAlertDialog = ({
                 within it?
             </DialogDescription>
             <DialogFooter>
-                <Button
+                <button
                     type="button"
-                    color="error"
-                    disabled={isLoading}
-                    loading={isLoading}
+                    className={cn(
+                        'btn-error btn',
+                        isLoading && 'loading disabled'
+                    )}
                     aria-label={`Delete ${title} column`}
                     onClick={() => deleteColumn({ id: columnId })}
                 >
                     {isLoading ? 'Deleting...' : 'Delete Column'}
-                </Button>
+                </button>
             </DialogFooter>
         </DialogContent>
     );

@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
-import { Button } from 'react-daisyui';
 import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 import { TaskOptionsDropdown } from './task-options-dropdown';
@@ -68,14 +67,12 @@ export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
             </Dialog>
             <div className="flex flex-none flex-col items-center justify-around">
                 <span className="pr-1" aria-roledescription="draggable">
-                    <Button
-                        color="ghost"
-                        size="sm"
-                        className="cursor-grab focus:cursor-grabbing"
+                    <button
+                        className="btn-ghost btn-sm btn cursor-grab focus:cursor-grabbing"
                         {...listeners}
                     >
                         <RxDragHandleDots2 className="ml-1" size={20} />
-                    </Button>
+                    </button>
                 </span>
                 <span className="">
                     <TaskOptionsDropdown task={task} />

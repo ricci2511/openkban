@@ -5,11 +5,11 @@ import {
 } from './columns-layout-section';
 import { DEFAULT_COLUMN_TITLES } from '@lib/constants';
 import { BoardCreation } from '@lib/schemas/board-schemas';
-import { Form } from 'react-daisyui';
 import { FormErrors } from 'types/form-types';
 import { useFormContext } from 'react-hook-form';
 import { CreateBoardMutation } from '@hooks/mutations/use-board-mutations';
 import { FormInput } from '@components/ui/form-input';
+import { Label } from '@radix-ui/react-label';
 
 interface CreateBoardFormProps extends ColumnsLayoutSectionProps {
     createBoard: CreateBoardMutation['mutate'];
@@ -42,43 +42,44 @@ export const CreateBoardForm = ({
     });
 
     return (
-        <Form
-            className="mt-2 w-full gap-2"
+        <form
+            role="form"
+            id="create-board-form"
+            className="flex flex-col gap-4"
             onSubmit={onSubmit}
             onKeyDown={(e) => (e.key === 'Enter' ? e.preventDefault() : null)}
-            id="create-board-form"
         >
-            <span>
-                <Form.Label title="Board title" htmlFor="board-title" />
+            <div className="flex flex-col">
+                <Label htmlFor="board-title">Title</Label>
                 <FormInput<BoardCreation>
                     id="board-title"
                     type="text"
-                    placeholder="title..."
+                    placeholder="my cool board..."
+                    className="mt-1"
                     register={register}
                     registerName="title"
                     registerRules={{ required: true }}
                     errors={errors as FormErrors<BoardCreation>}
                 />
-            </span>
-            <span>
-                <Form.Label title="Columns layout" />
+            </div>
+            <div className="flex flex-col">
+                <Label>Columns layout</Label>
                 <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
                 {errors.columnTitles && (
                     <p className="mx-auto mt-2 text-sm text-error">
                         {errors.columnTitles.message}
                     </p>
                 )}
-            </span>
-            <Form.Label
-                title="Add it to your favourites?"
-                className="justify-start gap-3"
-            >
+            </div>
+            <div className="flex items-center space-x-2">
                 <input
                     type="checkbox"
+                    id="favourite"
                     className="checkbox-primary checkbox"
                     {...register('isFavourite')}
                 />
-            </Form.Label>
-        </Form>
+                <Label htmlFor="favourite">Add it to your Favourites?</Label>
+            </div>
+        </form>
     );
 };

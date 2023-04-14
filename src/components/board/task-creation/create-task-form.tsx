@@ -5,7 +5,6 @@ import {
     boardTaskCreationSchema,
 } from '@lib/schemas/board-schemas';
 import { LexoRank } from 'lexorank';
-import { Form } from 'react-daisyui';
 import { useTasks } from 'store/kanban-store';
 import { CreateTaskMutation } from '@hooks/mutations/use-task-mutations';
 import { FormInput } from '@components/ui/form-input';
@@ -13,6 +12,7 @@ import { FormTextarea } from '@components/ui/form-textarea';
 import { ColumnSelect } from './column-select';
 import { TaskDateInputs } from './task-date-inputs';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Label } from '@components/ui/label';
 
 interface CreateTaskFormProps {
     createTask: CreateTaskMutation['mutate'];
@@ -55,9 +55,14 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
 
     return (
         <FormProvider {...formMethods}>
-            <Form id="create-task-form" onSubmit={onSubmit}>
-                <div>
-                    <Form.Label title="Task title" htmlFor="task-title" />
+            <form
+                role="form"
+                id="create-task-form"
+                className="flex flex-col gap-1"
+                onSubmit={onSubmit}
+            >
+                <div className="flex flex-col">
+                    <Label htmlFor="task-title">Title</Label>
                     <FormInput<BoardTaskCreation>
                         id="task-title"
                         type="text"
@@ -69,11 +74,8 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         autoFocus
                     />
                 </div>
-                <div>
-                    <Form.Label
-                        title="Task description"
-                        htmlFor="task-description"
-                    />
+                <div className="flex flex-col">
+                    <Label htmlFor="task-description">Description</Label>
                     <FormTextarea<BoardTaskCreation>
                         id="task-description"
                         placeholder="description..."
@@ -89,7 +91,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                 <div className="flex w-full gap-3">
                     <TaskDateInputs />
                 </div>
-            </Form>
+            </form>
         </FormProvider>
     );
 };

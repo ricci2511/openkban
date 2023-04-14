@@ -1,13 +1,13 @@
 import { PRESET_COLORS } from '@lib/constants';
 import React, { useState } from 'react';
 import { TitleInput, columnTitle } from '@lib/schemas/board-schemas';
-import { Button, Form } from 'react-daisyui';
 import { useBoardId } from 'store/kanban-store';
 import { useTitleForm } from '@hooks/use-title-form';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
 import { ColorPickerPopover } from '@components/color-picker-popover';
 import { FormInput } from '@components/ui/form-input';
+import { cn } from '@lib/helpers';
 
 export const CreateColumnForm = ({
     stopCreatingCb,
@@ -33,7 +33,12 @@ export const CreateColumnForm = ({
     const ref = useClickOutside<HTMLFormElement>(stopCreatingCb);
 
     return (
-        <Form className="relative mt-1 w-full" onSubmit={onSubmit} ref={ref}>
+        <form
+            role="form"
+            className="relative mt-1 w-full"
+            onSubmit={onSubmit}
+            ref={ref}
+        >
             <div>
                 <FormInput<TitleInput>
                     type="text"
@@ -44,10 +49,9 @@ export const CreateColumnForm = ({
                     errors={errors}
                     autoFocus
                 >
-                    <Button
+                    <button
                         type="button"
-                        shape="square"
-                        animation={false}
+                        className="no-animation btn-square btn"
                         onClick={() => setColorPickerOpen(true)}
                         aria-label="Choose a color for your new column"
                         title="Choose a color for your new column"
@@ -59,28 +63,27 @@ export const CreateColumnForm = ({
                             changeColor={setColor}
                             className="absolute top-8 right-0"
                         />
-                    </Button>
+                    </button>
                 </FormInput>
             </div>
             <div className="mt-4 flex gap-2">
-                <Button
+                <button
                     type="submit"
-                    className="w-1/2"
-                    color="primary"
-                    loading={isLoading}
-                    disabled={isLoading}
+                    className={cn(
+                        'btn-primary btn w-1/2',
+                        isLoading && 'loading disabled'
+                    )}
                 >
                     {isLoading ? 'Creating...' : 'Create'}
-                </Button>
-                <Button
+                </button>
+                <button
                     type="button"
-                    className="w-1/2"
-                    color="error"
+                    className="btn-error btn w-1/2"
                     onClick={stopCreatingCb}
                 >
                     Cancel
-                </Button>
+                </button>
             </div>
-        </Form>
+        </form>
     );
 };
