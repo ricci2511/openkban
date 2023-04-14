@@ -2,8 +2,15 @@ import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import React from 'react';
-import { MdOutlineKeyboardArrowUp } from 'react-icons/md';
-import { Button, Dropdown } from 'react-daisyui';
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuSeparator,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+} from './ui/dropdown-menu';
+import { RxChevronUp, RxExit } from 'react-icons/rx';
 
 export const SidebarUser = ({ session }: { session: Session }) => {
     if (!session.user) {
@@ -40,30 +47,29 @@ export const SidebarUser = ({ session }: { session: Session }) => {
                     </p>
                 </div>
                 <div>
-                    <Dropdown vertical="top" className="dropdown-end">
-                        <Button
-                            variant="outline"
-                            color="ghost"
-                            size="xs"
-                            shape="circle"
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="px-1 pb-2">
+                            <RxChevronUp className="h-4 w-4" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            side="top"
+                            align="end"
+                            sideOffset={10}
                         >
-                            <MdOutlineKeyboardArrowUp size={16} />
-                        </Button>
-                        <Dropdown.Menu className="mb-2 w-52 gap-2 bg-base-100">
-                            <li className="mt-1">
-                                <Button
-                                    variant="outline"
-                                    color="error"
-                                    aria-label="Sign out of your account"
-                                    onClick={() =>
-                                        signOut({ callbackUrl: '/auth/signin' })
-                                    }
-                                >
-                                    Sign out
-                                </Button>
-                            </li>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                className="focus:bg-red-400 dark:focus:bg-red-600"
+                                onClick={() =>
+                                    signOut({ callbackUrl: '/auth/signin' })
+                                }
+                                aria-label="Sign out of your account"
+                            >
+                                <RxExit className="mr-2 h-4 w-4" />
+                                <span>Sign out</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
         </article>

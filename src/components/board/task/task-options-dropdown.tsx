@@ -1,15 +1,21 @@
 import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
-import { Button, Dropdown } from 'react-daisyui';
 import { taskTitle } from '@lib/schemas/board-schemas';
 import {
     useDeleteTask,
     useUpdateTask,
 } from '@hooks/mutations/use-task-mutations';
-import { DropdownButton } from '@components/ui/dropdown-button';
-import { Dialog, DialogTrigger } from '@components/ui/dialog';
 import { EditTitleDialog } from '@components/edit-title-dialog';
 import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuDialogItem,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
@@ -24,43 +30,42 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
     const updateTaskMutation = useUpdateTask(stopEditting);
 
     return (
-        <>
-            <Dropdown vertical="end">
-                <Button color="ghost" size="xs">
-                    <RxDotsHorizontal size={18} />
-                </Button>
-                <Dropdown.Menu className="w-36 gap-1">
-                    <Dialog open={isEditting} onOpenChange={setIsEditting}>
-                        <DialogTrigger asChild>
-                            <li>
-                                <DropdownButton
-                                    text="Rename"
-                                    startIcon={<RxPencil1 size={18} />}
-                                    aria-label={`Rename ${title} task`}
-                                />
-                            </li>
-                        </DialogTrigger>
-                        <EditTitleDialog
-                            entity={task}
-                            updateMutation={updateTaskMutation}
-                            zodString={taskTitle}
-                            name="task"
-                            oldTitle={title}
-                            closeDialog={stopEditting}
-                        />
-                    </Dialog>
-                    <li>
-                        <DropdownButton
-                            text="Delete"
-                            color="error"
-                            startIcon={<RxTrash size={18} />}
-                            loading={isLoading}
-                            aria-label={`Delete ${title} task`}
-                            onClick={() => deleteTask({ id })}
-                        />
-                    </li>
-                </Dropdown.Menu>
-            </Dropdown>
-        </>
+        <DropdownMenu>
+            <DropdownMenuTrigger className="btn-ghost btn-xs btn">
+                <RxDotsHorizontal size={20} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" sideOffset={6}>
+                <DropdownMenuLabel>{title} options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuDialogItem
+                    open={isEditting}
+                    onOpenChange={setIsEditting}
+                    trigger={
+                        <>
+                            <RxPencil1 className="mr-2 h-4 w-4" />
+                            <span>Rename</span>
+                        </>
+                    }
+                    aria-label={`Rename ${title} task`}
+                >
+                    <EditTitleDialog
+                        entity={task}
+                        updateMutation={updateTaskMutation}
+                        zodString={taskTitle}
+                        name="task"
+                        oldTitle={title}
+                        closeDialog={stopEditting}
+                    />
+                </DropdownMenuDialogItem>
+                <DropdownMenuItem
+                    className="focus:bg-red-400 dark:focus:bg-red-600"
+                    aria-label={`Delete ${title} task`}
+                    onClick={() => deleteTask({ id })}
+                >
+                    <RxTrash className="mr-2 h-4 w-4" />
+                    <span>Delete</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };

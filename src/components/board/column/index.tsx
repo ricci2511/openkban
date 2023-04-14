@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import {
     SortableContext,
@@ -8,6 +8,8 @@ import { BoardColumn, BoardTask } from '@prisma/client';
 import { useTheme } from 'next-themes';
 import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { TaskSortable } from '../task-sortable';
+import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
+import { ColorPickerPopover } from '@components/color-picker-popover';
 
 interface ColumnProps {
     column: BoardColumn;
@@ -24,6 +26,18 @@ export const Column = ({ column, tasks }: ColumnProps) => {
 
     const { theme } = useTheme();
 
+    const { mutate: updateCol, isLoading } = useUpdateColumn();
+    const handleColorChange = (newColor: string) => {
+        // prevent updating if color is the same or if already mutating
+        if (color === newColor || isLoading) return;
+        updateCol({
+            id,
+            color: newColor,
+        });
+    };
+
+    const [colorPickerOpen, setColorPickerOpen] = useState(false);
+
     return (
         <SortableContext
             id={id}
@@ -35,9 +49,21 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                     className="mb-4 flex items-center justify-between rounded-md border bg-base-200 p-2"
                     style={{ borderColor: color }}
                 >
-                    <h2 className="font-semibold uppercase" style={{ color }}>
-                        {title}
-                    </h2>
+                    <div className="flex items-center gap-2">
+                        <h2
+                            className="font-semibold uppercase"
+                            style={{ color }}
+                        >
+                            {title}
+                        </h2>
+                        <ColorPickerPopover
+                            isOpen={colorPickerOpen}
+                            toggle={setColorPickerOpen}
+                            color={color}
+                            changeColor={handleColorChange}
+                            className="absolute top-9 -left-7"
+                        />
+                    </div>
                     <ColumnOptionsDropdown column={column} />
                 </div>
                 {/* Might add a custom scrollbar for consistency between os's */}
