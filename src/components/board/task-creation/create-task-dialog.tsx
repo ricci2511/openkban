@@ -10,6 +10,12 @@ import {
     DialogFooter,
     DialogTitle,
 } from '@components/ui/dialog';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@components/ui/tooltip';
 import { RxCardStackPlus } from 'react-icons/rx';
 
 export const CreateTaskDialog = () => {
@@ -21,14 +27,18 @@ export const CreateTaskDialog = () => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen} modal>
-            <div
-                className="tooltip tooltip-right tooltip-info"
-                data-tip="Add a new task"
-            >
-                <DialogTrigger className="btn-outline btn-circle btn max-h-2">
-                    <RxCardStackPlus size={16} />
-                </DialogTrigger>
-            </div>
+            <TooltipProvider delayDuration={150}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <DialogTrigger className="btn-outline btn-circle btn max-h-2">
+                            <RxCardStackPlus size={16} />
+                        </DialogTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent variant="info" side="bottom">
+                        Add a new task
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create a new Task</DialogTitle>

@@ -1,6 +1,11 @@
 import React from 'react';
-import { Button, Tooltip } from 'react-daisyui';
 import { HiOutlineStar } from 'react-icons/hi';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@components/ui/tooltip';
 
 interface FavouriteButtonProps {
     favourite: boolean;
@@ -11,25 +16,28 @@ export const FavouriteButton = ({
     updateFavourite,
 }: FavouriteButtonProps) => {
     return (
-        <Tooltip
-            message={favourite ? 'Remove from favourites' : 'Add to favourites'}
-            color={favourite ? 'error' : 'primary'}
-            position="right"
-        >
-            <Button
-                type="button"
-                aria-describedby="Click this to add the selected board to your favourites"
-                color="ghost"
-                size="xs"
-                onClick={updateFavourite}
-            >
-                <HiOutlineStar
-                    fill={favourite ? '#FFD100' : 'white'}
-                    stroke="black"
-                    strokeWidth={1}
-                    size={15}
-                />
-            </Button>
-        </Tooltip>
+        <TooltipProvider delayDuration={150}>
+            <Tooltip>
+                <TooltipTrigger onClick={updateFavourite}>
+                    <HiOutlineStar
+                        fill={favourite ? '#FFD100' : 'white'}
+                        stroke="black"
+                        strokeWidth={1}
+                        size={15}
+                    />
+                </TooltipTrigger>
+                <TooltipContent
+                    side="right"
+                    sideOffset={5}
+                    variant={favourite ? 'destructive' : 'default'}
+                >
+                    <p>
+                        {favourite
+                            ? 'Remove from favourites'
+                            : 'Add to favourites'}
+                    </p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
     );
 };

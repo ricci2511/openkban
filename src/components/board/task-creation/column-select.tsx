@@ -2,7 +2,7 @@ import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useColumns } from 'store/kanban-store';
-import { InfoTooltip } from '@components/ui/info-tooltip';
+import { InfoTooltip } from '@components/info-tooltip';
 import {
     Select,
     SelectTrigger,
@@ -38,7 +38,7 @@ export const ColumnSelect = () => {
                 <Label htmlFor="column">Column</Label>
                 <InfoTooltip
                     message="Pick the column you want to add the task to"
-                    position="right"
+                    side="right"
                 />
             </div>
             <Select onValueChange={onValueChange}>

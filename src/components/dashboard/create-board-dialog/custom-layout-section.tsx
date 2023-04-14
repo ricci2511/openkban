@@ -5,7 +5,7 @@ import { randomId } from '@lib/helpers';
 import { MAX_COLUMNS } from '@lib/constants';
 import { FormErrors } from 'types/form-types';
 import { Button } from 'react-daisyui';
-import { InfoTooltip } from '@components/ui/info-tooltip';
+import { InfoTooltip } from '@components/info-tooltip';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
 import { FormInput } from '@components/ui/form-input';
 import { Label } from '@components/ui/label';
@@ -68,7 +68,7 @@ export const CustomLayoutSection = () => {
                     <Label htmlFor="column-title">Column title</Label>
                     <InfoTooltip
                         message={`${MAX_COLUMNS} columns can be added, sorted left to right`}
-                        position="right"
+                        side="right"
                     />
                 </div>
                 <FormInput<BoardCreation>

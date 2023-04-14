@@ -45,7 +45,7 @@ export const BoardCard = ({ board }: BoardProps) => {
                     <BoardUserAvatar boardUser={admin} />
                 </div>
             )}
-            <div className="absolute -top-3 -left-4">
+            <div className="absolute -top-2.5 -left-2">
                 <FavouriteButton
                     favourite={isFavourite}
                     updateFavourite={updateFavourite}
