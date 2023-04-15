@@ -1,6 +1,5 @@
 import { BoardUserAvatar } from '@components/board-user-avatar';
 import { BoardUserRole } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import { ClientBoardUser } from 'types/board-types';
 import {
     Select,
@@ -10,48 +9,55 @@ import {
     SelectItem,
     SelectGroup,
 } from '@components/ui/select';
-import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
 import { RxTrash } from 'react-icons/rx';
+import { useUserRole } from 'store/kanban-store';
 
 const boardUserRoles = Object.values(BoardUserRole);
 
+interface BoardUserItemProps {
+    boardUser: ClientBoardUser;
+    adminCount: number;
+    isMe: boolean;
+}
+
 export const BoardUserItem = ({
     boardUser,
-}: {
-    boardUser: ClientBoardUser;
-}) => {
-    const { role, user, userId } = boardUser;
-    const amIAdmin = useIsAdminUser();
-    const boardUsers = useBoardUsers();
-
-    const me = useSession().data!.user!;
-
-    const amIBoardUser = userId === me.id;
+    adminCount,
+    isMe,
+}: BoardUserItemProps) => {
+    const {
+        role,
+        user: { email, name },
+    } = boardUser;
     const isBoardUserAdmin = role === 'ADMIN';
 
-    const adminCount = boardUsers.filter((bu) => bu.role === 'ADMIN').length;
+    const myRole = useUserRole();
+    const amIAdmin = myRole === 'ADMIN';
+    const amIMember = myRole === 'MEMBER';
+    const amIViewer = myRole === 'VIEWER';
 
     // Disable select if:
-    // - The current board user is an admin and I am not.
-    // - I am not the current board user and I am not an admin.
+    // - I am not the current board user and I am a member (only their own role can be changed).
     // - There is only one admin, because at least one admin is required.
+    // - The current board user is a viewer (cannot change any role)
     const disableSelect =
-        ((isBoardUserAdmin || !amIBoardUser) && !amIAdmin) ||
-        (adminCount === 1 && isBoardUserAdmin);
+        (!isMe && amIMember) ||
+        (adminCount === 1 && isBoardUserAdmin) ||
+        amIViewer;
 
-    const triggerTitle = () => {
+    const getTriggerTitle = () => {
         if (!disableSelect) return;
 
-        if (isBoardUserAdmin && !amIAdmin) {
-            return 'You cannot change the role of an admin';
-        }
+        if (amIViewer)
+            return 'Viewers cannot change their or other members role';
+
+        if (amIMember) return 'Members cannot change other members role';
+
         if (adminCount === 1 && isBoardUserAdmin) {
             return 'At least one admin is required';
         }
-        if (!amIBoardUser && !amIAdmin) {
-            return 'You cannot change the role of other members';
-        }
     };
+    const triggerTitle = getTriggerTitle();
 
     return (
         <li>
@@ -59,17 +65,15 @@ export const BoardUserItem = ({
                 <BoardUserAvatar boardUser={boardUser} width={36} height={36} />
                 <div className="flex flex-col gap-1">
                     <span>
-                        {user.name} {amIBoardUser && '(you)'}
+                        {name} {isMe && '(you)'}
                     </span>
-                    <span className="text text-xs font-light">
-                        {user.email}
-                    </span>
+                    <span className="text text-xs font-light">{email}</span>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
                     <Select defaultValue={role} disabled={disableSelect}>
                         <SelectTrigger
                             className="min-w-[8rem]"
-                            title={triggerTitle()}
+                            title={triggerTitle}
                         >
                             <SelectValue placeholder="Select role" />
                         </SelectTrigger>
@@ -87,7 +91,7 @@ export const BoardUserItem = ({
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    {amIAdmin && !amIBoardUser && (
+                    {amIAdmin && !isMe && (
                         <button className="btn-error btn-sm btn px-1.5">
                             <RxTrash size={16} />
                         </button>

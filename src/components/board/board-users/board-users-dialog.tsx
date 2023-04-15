@@ -12,13 +12,20 @@ import {
     TooltipTrigger,
 } from '@components/ui/tooltip';
 import { RxPerson } from 'react-icons/rx';
-import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
+import { useBoardUsers, useUserRole } from 'store/kanban-store';
 import { BoardUserItem } from './board-user-item';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
+import { useMemo } from 'react';
+import { useSession } from 'next-auth/react';
 
 export const BoardUsersDialog = () => {
     const boardUsers = useBoardUsers();
-    const isAdmin = useIsAdminUser();
+    const isAdmin = useUserRole() === 'ADMIN';
+    const me = useSession().data!.user!;
+    const adminCount = useMemo(
+        () => boardUsers.filter((user) => user.role === 'ADMIN').length,
+        [boardUsers]
+    );
 
     return (
         <Dialog>
@@ -54,7 +61,12 @@ export const BoardUsersDialog = () => {
                     >
                         <ul className="flex flex-col gap-4">
                             {boardUsers.map((bu) => (
-                                <BoardUserItem key={bu.userId} boardUser={bu} />
+                                <BoardUserItem
+                                    key={bu.userId}
+                                    boardUser={bu}
+                                    adminCount={adminCount}
+                                    isMe={bu.userId === me.id}
+                                />
                             ))}
                         </ul>
                     </TabsContent>

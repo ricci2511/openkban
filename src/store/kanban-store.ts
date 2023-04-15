@@ -4,15 +4,15 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 const useKanbanStore = create(
-    immer<KanbanStore>((set, get) => ({
+    immer<KanbanStore>((set) => ({
         boardId: '',
         columns: [],
         tasks: {},
         currentTask: undefined,
         subtasks: [],
         boardUsers: [],
-        isAdmin: false,
-        init: (columnsWithTasks, boardUsers, isAdmin) =>
+        role: 'MEMBER',
+        init: (columnsWithTasks, boardUsers, role) =>
             set((state) => {
                 state.columns = columnsWithTasks.map(
                     ({ tasks, ...col }) => col
@@ -22,7 +22,7 @@ const useKanbanStore = create(
                     return acc;
                 }, {});
                 state.boardUsers = boardUsers;
-                state.isAdmin = isAdmin;
+                state.role = role;
                 state.boardId = columnsWithTasks[0].boardId;
             }),
         columnsActions: {
@@ -186,9 +186,9 @@ export const useSubtasks = () => useKanbanStore((state) => state.subtasks);
 export const useBoardUsers = () => useKanbanStore((state) => state.boardUsers);
 
 /**
- * @returns true if the current user is an admin of the board
+ * @returns the role of the current user
  */
-export const useIsAdminUser = () => useKanbanStore((state) => state.isAdmin);
+export const useUserRole = () => useKanbanStore((state) => state.role);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.
