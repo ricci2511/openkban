@@ -3,6 +3,7 @@ import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { cn } from '@lib/helpers';
 import { RxCheck, RxChevronRight, RxCircle } from 'react-icons/rx';
 import { Dialog, DialogTrigger } from './dialog';
+import { DialogProps } from '@radix-ui/react-dialog';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -72,9 +73,16 @@ const DropdownMenuContent = React.forwardRef<
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
+type DropdownMenuItemElementRef = React.ElementRef<
+    typeof DropdownMenuPrimitive.Item
+>;
+type DropdownMenuItemPropsWithoutRef = React.ComponentPropsWithoutRef<
+    typeof DropdownMenuPrimitive.Item
+>;
+
 const DropdownMenuItem = React.forwardRef<
-    React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-    React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    DropdownMenuItemElementRef,
+    DropdownMenuItemPropsWithoutRef & {
         inset?: boolean;
     }
 >(({ className, inset, ...props }, ref) => (
@@ -186,13 +194,12 @@ const DropdownMenuShortcut = ({
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
 const DropdownMenuDialogItem = React.forwardRef<
-    React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-    React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    DropdownMenuItemElementRef,
+    DropdownMenuItemPropsWithoutRef & {
         trigger: React.ReactNode;
-        children: React.ReactNode;
         open?: boolean;
-        onOpenChange?: (open: boolean) => void;
-        onSelect?: () => void;
+        onOpenChange?: DialogProps['onOpenChange'];
+        onSelect?: DropdownMenuPrimitive.DropdownMenuItemProps['onSelect'];
     }
 >(({ trigger, children, open, onOpenChange, onSelect, ...props }, ref) => {
     return (
@@ -202,7 +209,7 @@ const DropdownMenuDialogItem = React.forwardRef<
                     ref={ref}
                     onSelect={(event) => {
                         event.preventDefault();
-                        onSelect && onSelect();
+                        onSelect && onSelect(event);
                     }}
                     {...props}
                 >

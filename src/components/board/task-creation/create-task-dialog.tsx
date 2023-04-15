@@ -29,7 +29,10 @@ export const CreateTaskDialog = () => {
             <TooltipProvider delayDuration={150}>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <DialogTrigger className="btn-outline btn-circle btn max-h-2">
+                        <DialogTrigger
+                            className="btn-outline btn-circle btn max-h-2"
+                            aria-label="Open task creation dialog"
+                        >
                             <RxCardStackPlus size={16} />
                         </DialogTrigger>
                     </TooltipTrigger>
