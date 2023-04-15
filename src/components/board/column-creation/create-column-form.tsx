@@ -7,7 +7,6 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
 import { ColorPickerPopover } from '@components/color-picker-popover';
 import { FormInput } from '@components/ui/form-input';
-import { cn } from '@lib/helpers';
 
 export const CreateColumnForm = ({
     stopCreatingCb,
@@ -69,10 +68,10 @@ export const CreateColumnForm = ({
             <div className="mt-4 flex gap-2">
                 <button
                     type="submit"
-                    className={cn(
-                        'btn-primary btn w-1/2',
-                        isLoading && 'loading disabled'
-                    )}
+                    className={`btn-primary btn w-1/2 ${
+                        isLoading && 'loading'
+                    }`}
+                    disabled={isLoading}
                 >
                     {isLoading ? 'Creating...' : 'Create'}
                 </button>

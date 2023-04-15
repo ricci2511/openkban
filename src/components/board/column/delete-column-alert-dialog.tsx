@@ -7,7 +7,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@components/ui/dialog';
-import { cn } from '@lib/helpers';
 
 interface DeleteColumnAlertDialogProps {
     columnId: string;
@@ -33,10 +32,8 @@ export const DeleteColumnAlertDialog = ({
             <DialogFooter>
                 <button
                     type="button"
-                    className={cn(
-                        'btn-error btn',
-                        isLoading && 'loading disabled'
-                    )}
+                    className={`btn-error btn ${isLoading && 'loading'}`}
+                    disabled={isLoading}
                     aria-label={`Delete ${title} column`}
                     onClick={() => deleteColumn({ id: columnId })}
                 >

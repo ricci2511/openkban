@@ -3,7 +3,6 @@ import { BoardUserAvatar } from '@components/board-user-avatar';
 import { RxCross1, RxPerson } from 'react-icons/rx';
 import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
 import { useSession } from 'next-auth/react';
-import { Button } from 'react-daisyui';
 import { CreateTaskDialog } from './task-creation/create-task-dialog';
 
 export const KanbanHeaderSection = ({ title }: { title: string }) => {
@@ -32,12 +31,9 @@ export const KanbanHeaderSection = ({ title }: { title: string }) => {
                     ))}
                 </ul>
                 {isAdmin && (
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        shape="square"
-                        endIcon={<RxPerson />}
-                    />
+                    <button className="btn-outline btn-square btn-sm btn">
+                        <RxPerson />
+                    </button>
                 )}
             </div>
         </section>

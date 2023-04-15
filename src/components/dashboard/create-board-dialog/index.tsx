@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { boardCeationSchema, BoardCreation } from '@lib/schemas/board-schemas';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Button } from 'react-daisyui';
 import { BoardColumnsLayout } from 'types/board-types';
 import { useCreateBoard } from '@hooks/mutations/use-board-mutations';
 import { CreateBoardForm } from './create-board-form';
@@ -59,25 +58,24 @@ export const CreateBoardDialog = () => {
                     />
                 </FormProvider>
                 <DialogFooter>
-                    <Button
+                    <button
                         type="submit"
                         form="create-board-form"
-                        color="primary"
-                        loading={isLoading}
+                        className={`btn-primary btn ${isLoading && 'loading'}`}
                         disabled={isLoading}
                         onClick={handleSubmitClick}
                         aria-label="Create a new board"
                     >
                         {isLoading ? 'Creating...' : 'Create Board'}
-                    </Button>
-                    <Button
+                    </button>
+                    <button
                         type="button"
-                        color="error"
+                        className="btn-error btn"
                         onClick={() => setOpen(false)}
                         aria-label="Cancel board creation and close dialog"
                     >
                         Cancel
-                    </Button>
+                    </button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

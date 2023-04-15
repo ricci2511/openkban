@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from 'react-daisyui';
-import { RiAddFill } from 'react-icons/ri';
 import { useCurrentTask, useSubtasks } from 'store/kanban-store';
-import { RxCheckbox } from 'react-icons/rx';
+import { RxCheckbox, RxPlus } from 'react-icons/rx';
 import { SubtaskItem } from './subtask-item';
 import { CreateSubtaskForm } from './create-subtask-form';
 
@@ -28,15 +26,14 @@ export const Subtasks = () => {
             {adding ? (
                 <CreateSubtaskForm stopAddingCb={stopAdding} />
             ) : (
-                <Button
-                    size="sm"
-                    className="ml-9"
-                    endIcon={<RiAddFill size={18} />}
+                <button
+                    className="btn-sm btn ml-9 flex gap-2"
                     onClick={startAdding}
                     aria-label="Add a subtask"
                 >
-                    Add a subtask
-                </Button>
+                    <span>Add a subtask</span>
+                    <RxPlus size={18} />
+                </button>
             )}
         </>
     );

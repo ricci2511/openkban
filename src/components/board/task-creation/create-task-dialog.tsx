@@ -1,4 +1,3 @@
-import { Button } from 'react-daisyui';
 import React, { useState } from 'react';
 import { useCreateTask } from '@hooks/mutations/use-task-mutations';
 import { CreateTaskForm } from './create-task-form';
@@ -45,16 +44,15 @@ export const CreateTaskDialog = () => {
                 </DialogHeader>
                 <CreateTaskForm createTask={createTask} />
                 <DialogFooter>
-                    <Button
+                    <button
                         type="submit"
                         form="create-task-form"
-                        color="primary"
-                        loading={isLoading}
+                        className={`btn-primary btn ${isLoading && 'loading'}`}
                         disabled={isLoading}
                         aria-label="Create a new task"
                     >
                         {isLoading ? 'Creating...' : 'Create Task'}
-                    </Button>
+                    </button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

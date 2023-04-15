@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { Button } from 'react-daisyui';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useCurrentTask } from 'store/kanban-store';
@@ -62,25 +61,24 @@ export const DescriptionForm = ({
                 />
             </div>
             <div className="mt-2 flex gap-3 self-start">
-                <Button
+                <button
                     type="submit"
-                    color="primary"
-                    size="sm"
-                    loading={isLoading}
+                    className={`btn-primary btn-sm btn ${
+                        isLoading && 'loading'
+                    }`}
                     disabled={isLoading}
                     aria-label={`Update description for task ${title}`}
                 >
                     {isLoading ? 'Updating...' : 'Update Description'}
-                </Button>
-                <Button
+                </button>
+                <button
                     type="button"
-                    color="error"
-                    size="sm"
+                    className="btn-error btn-sm btn"
                     onClick={stopEdittingCb}
                     aria-label="Cancel task description update"
                 >
                     Cancel
-                </Button>
+                </button>
             </div>
         </form>
     );

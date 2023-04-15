@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from 'react-daisyui';
-import { HiPencil } from 'react-icons/hi';
-import { RiAddFill } from 'react-icons/ri';
 import { useCurrentTask } from 'store/kanban-store';
-import { RxTextAlignLeft } from 'react-icons/rx';
+import { RxPencil1, RxPlus, RxTextAlignLeft } from 'react-icons/rx';
 import { DescriptionForm } from './description-form';
 
 export const Description = () => {
@@ -18,24 +15,23 @@ export const Description = () => {
                 <RxTextAlignLeft size={22} />
                 <h4 className="text-xl font-semibold">Task Description</h4>
                 {!editting && description && (
-                    <Button
-                        color="ghost"
-                        variant="outline"
-                        size="sm"
-                        endIcon={<HiPencil size={18} />}
+                    <button
+                        className="btn-outline btn-ghost btn-sm btn"
                         onClick={startEditting}
-                    />
+                    >
+                        <RxPencil1 size={18} />
+                    </button>
                 )}
             </div>
             <div className="ml-9">
                 {!description && !editting && (
-                    <Button
-                        className="mt-2"
+                    <button
+                        className="btn-sm btn mt-2 flex gap-2"
                         onClick={startEditting}
-                        endIcon={<RiAddFill size={18} />}
                     >
                         Add description
-                    </Button>
+                        <RxPlus size={18} />
+                    </button>
                 )}
                 {editting ? (
                     <DescriptionForm stopEdittingCb={stopEditting} />

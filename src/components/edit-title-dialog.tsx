@@ -13,7 +13,6 @@ import {
     DialogTitle,
 } from './ui/dialog';
 import { Label } from './ui/label';
-import { cn } from '@lib/helpers';
 
 type HasIdAndTitle = { id: string } & TitleInput;
 
@@ -94,10 +93,8 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                 <button
                     type="submit"
                     form="edit-title-form"
-                    className={cn(
-                        'btn-primary btn',
-                        isLoading && 'loading disabled'
-                    )}
+                    className={`btn-primary btn ${isLoading && 'loading'}`}
+                    disabled={isLoading}
                 >
                     Update title
                 </button>

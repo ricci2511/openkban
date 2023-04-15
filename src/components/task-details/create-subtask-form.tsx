@@ -4,7 +4,6 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
-import { Button } from 'react-daisyui';
 import { useCurrentTask } from 'store/kanban-store';
 
 export const CreateSubtaskForm = ({
@@ -41,25 +40,24 @@ export const CreateSubtaskForm = ({
                 />
             </div>
             <div className="flex gap-2 self-start">
-                <Button
+                <button
                     type="submit"
-                    color="primary"
-                    size="sm"
-                    loading={isLoading}
+                    className={`btn-primary btn-sm btn ${
+                        isLoading && 'loading'
+                    }`}
                     disabled={isLoading}
                     aria-label="Create a new subtask"
                 >
                     {isLoading ? 'Adding...' : 'Add subtask'}
-                </Button>
-                <Button
+                </button>
+                <button
                     type="button"
-                    color="error"
-                    size="sm"
+                    className="btn-error btn-sm btn"
                     onClick={stopAddingCb}
                     aria-label="Cancel subtask creation"
                 >
                     Cancel
-                </Button>
+                </button>
             </div>
         </form>
     );

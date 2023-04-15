@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 import { randomId } from '@lib/helpers';
 import { MAX_COLUMNS } from '@lib/constants';
 import { FormErrors } from 'types/form-types';
-import { Button } from 'react-daisyui';
 import { InfoTooltip } from '@components/info-tooltip';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
 import { FormInput } from '@components/ui/form-input';
@@ -88,13 +87,14 @@ export const CustomLayoutSection = () => {
                     }
                     autoFocus
                 >
-                    <Button
-                        disabled={isMaxColumns}
+                    <button
                         type="button"
+                        className="btn"
+                        disabled={isMaxColumns}
                         onClick={handleColumnAddition}
                     >
                         Add
-                    </Button>
+                    </button>
                 </FormInput>
             </div>
             {customColumns.length > 0 && (

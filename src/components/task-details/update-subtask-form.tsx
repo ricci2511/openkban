@@ -4,7 +4,6 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
-import { Button } from 'react-daisyui';
 
 interface UpdateSubtaskFormProps {
     id: string;
@@ -57,27 +56,26 @@ export const UpdateSubtaskForm = ({
                 />
             </div>
             <div className="flex gap-2 self-start">
-                <Button
+                <button
                     type="submit"
-                    color="primary"
-                    size="sm"
-                    loading={isLoading}
+                    className={`btn-primary btn-sm btn ${
+                        isLoading && 'loading'
+                    }`}
                     disabled={isLoading}
                     aria-label={`Save subtask with title: ${getValues(
                         'title'
                     )}`}
                 >
                     {isLoading ? 'Saving...' : 'Save'}
-                </Button>
-                <Button
+                </button>
+                <button
                     type="button"
-                    color="error"
-                    size="sm"
+                    className="btn-error btn-sm btn"
                     onClick={stopEdittingCb}
                     aria-label="Cancel subtask update"
                 >
                     Cancel
-                </Button>
+                </button>
             </div>
         </form>
     );
