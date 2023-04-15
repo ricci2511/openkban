@@ -14,6 +14,7 @@ import {
 import { RxPerson } from 'react-icons/rx';
 import { useBoardUsers, useIsAdminUser } from 'store/kanban-store';
 import { BoardUserItem } from './board-user-item';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 
 export const BoardUsersDialog = () => {
     const boardUsers = useBoardUsers();
@@ -32,19 +33,38 @@ export const BoardUsersDialog = () => {
                         </DialogTrigger>
                     </TooltipTrigger>
                     <TooltipContent variant="info" side="left">
-                        {isAdmin ? 'Manage board users' : 'Board users'}
+                        {isAdmin ? 'Manage board members' : 'Board members'}
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
             <DialogContent className="sm:min-w-[625px]">
                 <DialogHeader>
-                    <DialogTitle>Board users</DialogTitle>
+                    <DialogTitle>Board members</DialogTitle>
                 </DialogHeader>
-                <ul className="flex flex-col gap-4">
-                    {boardUsers.map((bu) => (
-                        <BoardUserItem key={bu.userId} boardUser={bu} />
-                    ))}
-                </ul>
+                <Tabs defaultValue="users" className="w-full">
+                    <TabsList className="w-full">
+                        <TabsTrigger value="users">Members</TabsTrigger>
+                        <TabsTrigger value="invite-users" disabled={!isAdmin}>
+                            Invite new members
+                        </TabsTrigger>
+                    </TabsList>
+                    <TabsContent
+                        value="users"
+                        className="max-h-[246px] overflow-y-auto p-2 sm:p-4"
+                    >
+                        <ul className="flex flex-col gap-4">
+                            {boardUsers.map((bu) => (
+                                <BoardUserItem key={bu.userId} boardUser={bu} />
+                            ))}
+                        </ul>
+                    </TabsContent>
+                    <TabsContent value="invite-users">
+                        {/* TODO: USER SEARCHBAR COMPONENT */}
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                            Search users to invite
+                        </p>
+                    </TabsContent>
+                </Tabs>
             </DialogContent>
         </Dialog>
     );
