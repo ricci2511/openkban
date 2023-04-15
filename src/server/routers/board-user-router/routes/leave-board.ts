@@ -25,13 +25,13 @@ const destroyBoard = async (
 
 const reassignAdmin = async (
     boardId: string,
-    userId: string,
+    sessionUserId: string,
     prisma: PrismaClient
 ) => {
     await updateBoardUserMutation(
         {
             boardId,
-            userId,
+            sessionUserId,
             role: 'ADMIN',
         },
         prisma
