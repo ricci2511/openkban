@@ -21,9 +21,9 @@ export const BoardCard = ({ board }: BoardProps) => {
     const isAdmin = role === 'ADMIN';
 
     // fav status is stored on the boardUser, each user can have its own fav status for the same board
-    const { mutate: updateBoardUser } = useUpdateBoardUser(userId);
+    const { mutate: updateBoardUser } = useUpdateBoardUser();
     const updateFavourite = () => {
-        updateBoardUser({ boardId: id, isFavourite: !isFavourite });
+        updateBoardUser({ boardId: id, isFavourite: !isFavourite, userId });
     };
 
     const admin = isAdmin ? me : boardUser.find((bu) => bu.role === 'ADMIN');

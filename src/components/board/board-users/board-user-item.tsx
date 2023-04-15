@@ -10,7 +10,16 @@ import {
     SelectGroup,
 } from '@components/ui/select';
 import { RxTrash } from 'react-icons/rx';
-import { useUserRole } from 'store/kanban-store';
+import {
+    useBoardId,
+    useBoardUserActions,
+    useSetUserRole,
+    useUserRole,
+} from 'store/kanban-store';
+import {
+    DeleteBoardUserMutation,
+    UpdateBoardUserMutation,
+} from '@hooks/mutations/use-board-user-mutations';
 
 const boardUserRoles = Object.values(BoardUserRole);
 
@@ -18,16 +27,21 @@ interface BoardUserItemProps {
     boardUser: ClientBoardUser;
     adminCount: number;
     isMe: boolean;
+    updateRole: UpdateBoardUserMutation['mutate'];
+    deleteBoardUser: DeleteBoardUserMutation['mutate'];
 }
 
 export const BoardUserItem = ({
     boardUser,
     adminCount,
     isMe,
+    updateRole,
+    deleteBoardUser,
 }: BoardUserItemProps) => {
     const {
         role,
         user: { email, name },
+        userId,
     } = boardUser;
     const isBoardUserAdmin = role === 'ADMIN';
 
@@ -45,7 +59,11 @@ export const BoardUserItem = ({
         (adminCount === 1 && isBoardUserAdmin) ||
         amIViewer;
 
-    const getTriggerTitle = () => {
+    /**
+     * iife to immediately return the title attribute for the select button
+     * @returns Title attribute for the select button to explain why it is disabled or undefined
+     */
+    const triggerTitle = (() => {
         if (!disableSelect) return;
 
         if (amIViewer)
@@ -56,8 +74,33 @@ export const BoardUserItem = ({
         if (adminCount === 1 && isBoardUserAdmin) {
             return 'At least one admin is required';
         }
+    })();
+
+    const boardId = useBoardId();
+    const { updateBoardUser, removeBoardUser } = useBoardUserActions();
+    const setUserRole = useSetUserRole();
+
+    const onRoleChange = (role: BoardUserRole) => {
+        // update the board user in the store
+        updateBoardUser({ ...boardUser, role });
+
+        if (isMe) {
+            // update the user role in the store
+            setUserRole(role);
+            // if changing my own role, specifying the userId is not necessary
+            updateRole({ boardId, role });
+            return;
+        }
+
+        updateRole({ boardId, userId, role });
     };
-    const triggerTitle = getTriggerTitle();
+
+    const onBoardUserDelete = () => {
+        // remove the board user from the store
+        removeBoardUser(userId);
+        // delete board user api call
+        deleteBoardUser({ boardId, userId });
+    };
 
     return (
         <li>
@@ -70,7 +113,11 @@ export const BoardUserItem = ({
                     <span className="text text-xs font-light">{email}</span>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
-                    <Select defaultValue={role} disabled={disableSelect}>
+                    <Select
+                        defaultValue={role}
+                        disabled={disableSelect}
+                        onValueChange={onRoleChange}
+                    >
                         <SelectTrigger
                             className="min-w-[8rem]"
                             title={triggerTitle}
@@ -92,7 +139,10 @@ export const BoardUserItem = ({
                         </SelectContent>
                     </Select>
                     {amIAdmin && !isMe && (
-                        <button className="btn-error btn-sm btn px-1.5">
+                        <button
+                            className="btn-error btn-sm btn px-1.5"
+                            onClick={onBoardUserDelete}
+                        >
                             <RxTrash size={16} />
                         </button>
                     )}

@@ -17,6 +17,10 @@ import { BoardUserItem } from './board-user-item';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 import { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
+import {
+    useDeleteBoardUser,
+    useUpdateBoardUser,
+} from '@hooks/mutations/use-board-user-mutations';
 
 export const BoardUsersDialog = () => {
     const boardUsers = useBoardUsers();
@@ -26,6 +30,9 @@ export const BoardUsersDialog = () => {
         () => boardUsers.filter((user) => user.role === 'ADMIN').length,
         [boardUsers]
     );
+
+    const { mutate: updateUserRole } = useUpdateBoardUser();
+    const { mutate: deleteBoardUser } = useDeleteBoardUser();
 
     return (
         <Dialog>
@@ -66,6 +73,8 @@ export const BoardUsersDialog = () => {
                                     boardUser={bu}
                                     adminCount={adminCount}
                                     isMe={bu.userId === me.id}
+                                    updateRole={updateUserRole}
+                                    deleteBoardUser={deleteBoardUser}
                                 />
                             ))}
                         </ul>

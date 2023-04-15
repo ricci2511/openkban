@@ -25,6 +25,10 @@ const useKanbanStore = create(
                 state.role = role;
                 state.boardId = columnsWithTasks[0].boardId;
             }),
+        setRole: (role) =>
+            set((state) => {
+                state.role = role;
+            }),
         columnsActions: {
             setColumns: (columns) =>
                 set((state) => {
@@ -189,6 +193,8 @@ export const useBoardUsers = () => useKanbanStore((state) => state.boardUsers);
  * @returns the role of the current user
  */
 export const useUserRole = () => useKanbanStore((state) => state.role);
+
+export const useSetUserRole = () => useKanbanStore((state) => state.setRole);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.

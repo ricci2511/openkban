@@ -57,6 +57,7 @@ export type KanbanStore = {
     boardUsers: ClientBoardUser[];
     // whether the current user is the admin of the board
     role: BoardUserRole;
+    setRole: (role: BoardUserRole) => void;
     init: (
         columnsWithTasks: BoardColumnWithTasks[],
         boardUsers: ClientBoardUser[],

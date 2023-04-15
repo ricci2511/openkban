@@ -53,7 +53,7 @@ export type LeaveBoardMutation = ReturnType<typeof useLeaveBoard>;
  * @param userId id of the user to update
  * @param successCb callback to run after successful board user update
  */
-export const useUpdateBoardUser = (userId: string, successCb?: () => void) => {
+export const useUpdateBoardUser = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
 
     const updateBoardUserMutation = trpc.boardUserRouter.update.useMutation({
@@ -71,7 +71,9 @@ export const useUpdateBoardUser = (userId: string, successCb?: () => void) => {
                     if (boardIndex === -1) return prevBoards;
                     const boardUserIndex = draft[
                         boardIndex
-                    ].boardUser.findIndex((user) => user.userId === userId);
+                    ].boardUser.findIndex(
+                        (user) => user.userId === boardUser.userId
+                    );
                     if (boardUserIndex === -1) return prevBoards;
                     const oldBoardUser =
                         draft[boardIndex].boardUser[boardUserIndex];
