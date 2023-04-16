@@ -22,6 +22,9 @@ export type TaskWithSubTasks = BoardTask & {
     subtasks: BoardSubtask[];
 };
 
+// map of columnId to tasks
+export type TasksMap = Record<string, BoardTask[]>;
+
 export type ClientBoardUser = {
     role: BoardUserRole;
     isFavourite: boolean;
@@ -33,7 +36,11 @@ export type BoardWithUsers = Board & {
     boardUser: ClientBoardUser[];
 };
 
-export type BoardData = Board & {
+export type UnnormalizedBoardData = BoardWithUsers & {
     columns: BoardColumnWithTasks[];
-    boardUser: BoardWithUsers['boardUser'];
+};
+
+export type BoardData = BoardWithUsers & {
+    columns: BoardColumn[];
+    tasks: TasksMap;
 };

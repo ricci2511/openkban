@@ -19,7 +19,7 @@ import {
 import { trpc } from '@lib/trpc';
 import { MAX_COLUMNS } from '@lib/constants';
 import { useColumns, useTasks, useTasksActions } from 'store/kanban-store';
-import { TasksMap } from 'types/kanban-store-types';
+import { TasksMap } from 'types/board-types';
 import { DndDragOverlay } from '@components/dnd-drag-overlay';
 import { CreateColumnButton } from './column-creation/create-column-button';
 import { Column } from './column';

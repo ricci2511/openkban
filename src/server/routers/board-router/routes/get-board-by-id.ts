@@ -2,7 +2,7 @@ import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
 import { internalServerError, notFound } from '@server/helpers/error-helpers';
 import { getSavedBoardById, saveBoard } from '@server/redis/board';
 import { upsertBoardIds } from '@server/redis/user-board-ids';
-import { BoardData } from 'types/board-types';
+import { BoardData, TasksMap, UnnormalizedBoardData } from 'types/board-types';
 import { z } from 'zod';
 import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
@@ -10,13 +10,17 @@ import { queryError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { boardUserInclude } from './get-all-boards';
 
-const sortTasksOfBoard = (board: BoardData): BoardData => {
+const normalizeBoardData = (board: UnnormalizedBoardData): BoardData => {
+    const tasksMap: TasksMap = {};
+    const columns = board.columns.map(({ tasks, ...column }) => {
+        tasksMap[column.id] = tasks.sort(sortByLexoRankAsc);
+        return column;
+    });
+
     return {
         ...board,
-        columns: board.columns.map((column) => ({
-            ...column,
-            tasks: column.tasks.sort(sortByLexoRankAsc),
-        })),
+        columns,
+        tasks: tasksMap,
     };
 };
 
@@ -35,7 +39,7 @@ export const getBoardById = authedRateLimitedProcedure
                 boardId
             );
 
-            return sortTasksOfBoard({
+            return normalizeBoardData({
                 ...savedBoard,
                 columns: columnsWithTasks,
             });
@@ -72,7 +76,7 @@ export const getBoardById = authedRateLimitedProcedure
                 }
             );
 
-            return sortTasksOfBoard(board);
+            return normalizeBoardData(board);
         } catch (error) {
             const message = queryError('board', true);
             throw internalServerError(message, error);

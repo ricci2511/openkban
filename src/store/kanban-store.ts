@@ -1,5 +1,5 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { KanbanStore, TasksMap } from 'types/kanban-store-types';
+import { KanbanStore } from 'types/kanban-store-types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
@@ -12,18 +12,13 @@ const useKanbanStore = create(
         subtasks: [],
         boardUsers: [],
         role: 'MEMBER',
-        init: (columnsWithTasks, boardUsers, role) =>
+        init: (columns, tasks, boardUsers, role) =>
             set((state) => {
-                state.columns = columnsWithTasks.map(
-                    ({ tasks, ...col }) => col
-                );
-                state.tasks = columnsWithTasks.reduce((acc: TasksMap, cur) => {
-                    acc[cur.id] = [...cur.tasks];
-                    return acc;
-                }, {});
+                state.columns = columns;
+                state.tasks = tasks;
                 state.boardUsers = boardUsers;
                 state.role = role;
-                state.boardId = columnsWithTasks[0].boardId;
+                state.boardId = columns[0].boardId;
             }),
         setRole: (role) =>
             set((state) => {
