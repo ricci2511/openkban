@@ -51,10 +51,7 @@ export const BoardUsersContent = () => {
                 value="invite-users"
                 className="min-h-[198px] border-0 p-2 sm:border sm:p-4"
             >
-                {/* TODO: USER SEARCHBAR COMPONENT */}
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Search users to invite
-                </p>
+                <BoardUserInviteSection />
             </TabsContent>
         </Tabs>
     );
