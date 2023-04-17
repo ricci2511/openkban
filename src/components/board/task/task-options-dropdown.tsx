@@ -5,7 +5,6 @@ import {
     useDeleteTask,
     useUpdateTask,
 } from '@hooks/mutations/use-task-mutations';
-import { EditTitleDialog } from '@components/edit-title-dialog';
 import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
 import {
     DropdownMenu,
@@ -16,6 +15,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
+import dynamic from 'next/dynamic';
+
+const EditTitleDialog = dynamic(
+    () =>
+        import('@components/edit-title-dialog').then(
+            (mod) => mod.EditTitleDialog
+        ),
+    { ssr: false }
+);
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;

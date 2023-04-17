@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { BoardColumnsLayout } from 'types/board-types';
 import { useCreateBoard } from '@hooks/mutations/use-board-mutations';
-import { CreateBoardForm } from './create-board-form';
 import {
     Dialog,
     DialogHeader,
@@ -13,6 +12,14 @@ import {
     DialogFooter,
     DialogTrigger,
 } from '@components/ui/dialog';
+import dynamic from 'next/dynamic';
+
+const CreateBoardForm = dynamic(
+    () => import('./create-board-form').then((mod) => mod.CreateBoardForm),
+    {
+        ssr: false,
+    }
+);
 
 export const CreateBoardDialog = () => {
     const formMethods = useForm<BoardCreation>({

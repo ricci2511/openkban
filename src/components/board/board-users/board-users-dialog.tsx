@@ -13,7 +13,12 @@ import {
 } from '@components/ui/tooltip';
 import { RxPerson } from 'react-icons/rx';
 import { useUserRole } from 'store/kanban-store';
-import { BoardUsersContent } from './board-users-content';
+import dynamic from 'next/dynamic';
+
+const BoardUsersContent = dynamic(
+    () => import('./board-users-content').then((mod) => mod.BoardUsersContent),
+    { ssr: false }
+);
 
 export const BoardUsersDialog = () => {
     const isAdmin = useUserRole() === 'ADMIN';

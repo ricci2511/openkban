@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
 import { columnTitle } from '@lib/schemas/board-schemas';
 import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
-import { EditTitleDialog } from '@components/edit-title-dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,6 +12,15 @@ import {
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { DeleteColumnAlertDialog } from './delete-column-alert-dialog';
+import dynamic from 'next/dynamic';
+
+const EditTitleDialog = dynamic(
+    () =>
+        import('@components/edit-title-dialog').then(
+            (mod) => mod.EditTitleDialog
+        ),
+    { ssr: false }
+);
 
 interface ColumnOptionsDropdownProps {
     column: BoardColumn;

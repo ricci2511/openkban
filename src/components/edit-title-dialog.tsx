@@ -6,12 +6,7 @@ import { AppRouter } from '@server/routers';
 import { UseTRPCMutationResult } from '@trpc/react-query/shared';
 import { useTitleForm } from '@hooks/use-title-form';
 import { FormInput } from './ui/form-input';
-import {
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from './ui/dialog';
+import { DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { Label } from './ui/label';
 
 type HasIdAndTitle = { id: string } & TitleInput;
@@ -60,7 +55,7 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
     });
 
     return (
-        <DialogContent>
+        <>
             <DialogHeader>
                 <DialogTitle>
                     Edit {name} title of{' '}
@@ -99,6 +94,6 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                     Update title
                 </button>
             </DialogFooter>
-        </DialogContent>
+        </>
     );
 };

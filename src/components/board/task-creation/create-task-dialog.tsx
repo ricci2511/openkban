@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useCreateTask } from '@hooks/mutations/use-task-mutations';
-import { CreateTaskForm } from './create-task-form';
 import {
     Dialog,
     DialogContent,
@@ -16,6 +15,12 @@ import {
     TooltipTrigger,
 } from '@components/ui/tooltip';
 import { RxCardStackPlus } from 'react-icons/rx';
+import dynamic from 'next/dynamic';
+
+const CreateTaskForm = dynamic(
+    () => import('./create-task-form').then((mod) => mod.CreateTaskForm),
+    { ssr: false }
+);
 
 export const CreateTaskDialog = () => {
     const [open, setOpen] = useState(false);

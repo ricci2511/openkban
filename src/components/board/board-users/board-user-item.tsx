@@ -13,8 +13,11 @@ import {
     UpdateBoardUserMutation,
 } from '@hooks/mutations/use-board-user-mutations';
 import { UserRolesSelect } from './user-roles-select';
-
-const boardUserRoles = Object.values(BoardUserRole);
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@components/ui/popover';
 
 interface BoardUserItemProps {
     boardUser: ClientBoardUser;
@@ -117,12 +120,22 @@ export const BoardUserItem = ({
                         title={triggerTitle}
                     />
                     {amIAdmin && !isMe && (
-                        <button
-                            className="btn-error btn-sm btn px-1.5"
-                            onClick={onBoardUserDelete}
-                        >
-                            <RxTrash size={16} />
-                        </button>
+                        <Popover>
+                            <PopoverTrigger className="btn-error btn-sm btn px-1.5">
+                                <RxTrash size={16} />
+                            </PopoverTrigger>
+                            <PopoverContent align="end">
+                                <p className="text-sm">
+                                    {name} will be removed from this board.
+                                </p>
+                                <button
+                                    className="btn-error btn-sm btn mt-2 w-full"
+                                    onClick={onBoardUserDelete}
+                                >
+                                    Remove
+                                </button>
+                            </PopoverContent>
+                        </Popover>
                     )}
                 </div>
             </div>

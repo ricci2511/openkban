@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { cn } from '@lib/helpers';
 import { RxCheck, RxChevronRight, RxCircle } from 'react-icons/rx';
-import { Dialog, DialogTrigger } from './dialog';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { DialogProps } from '@radix-ui/react-dialog';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
@@ -216,7 +216,7 @@ const DropdownMenuDialogItem = React.forwardRef<
                     {trigger}
                 </DropdownMenuItem>
             </DialogTrigger>
-            {children}
+            <DialogContent>{children}</DialogContent>
         </Dialog>
     );
 });
