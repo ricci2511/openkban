@@ -1,14 +1,6 @@
 import { BoardUserAvatar } from '@components/board-user-avatar';
 import { BoardUserRole } from '@prisma/client';
 import { ClientBoardUser } from 'types/board-types';
-import {
-    Select,
-    SelectTrigger,
-    SelectContent,
-    SelectValue,
-    SelectItem,
-    SelectGroup,
-} from '@components/ui/select';
 import { RxTrash } from 'react-icons/rx';
 import {
     useBoardId,
@@ -20,6 +12,7 @@ import {
     DeleteBoardUserMutation,
     UpdateBoardUserMutation,
 } from '@hooks/mutations/use-board-user-mutations';
+import { UserRolesSelect } from './user-roles-select';
 
 const boardUserRoles = Object.values(BoardUserRole);
 
@@ -107,37 +100,22 @@ export const BoardUserItem = ({
             <div className="flex items-center gap-3">
                 <BoardUserAvatar boardUser={boardUser} width={36} height={36} />
                 <div className="flex flex-col gap-1">
-                    <span>
+                    <span className="break-word text-sm sm:text-base">
                         {name} {isMe && '(you)'}
                     </span>
-                    <span className="text text-xs font-light">{email}</span>
+                    <span className="break-word text-xs font-light">
+                        {email}
+                    </span>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
-                    <Select
+                    <UserRolesSelect
+                        admin={amIAdmin}
                         defaultValue={role}
                         disabled={disableSelect}
-                        onValueChange={onRoleChange}
-                    >
-                        <SelectTrigger
-                            className="min-w-[8rem]"
-                            title={triggerTitle}
-                        >
-                            <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {boardUserRoles.map((role) => (
-                                    <SelectItem
-                                        key={role}
-                                        value={role}
-                                        disabled={role === 'ADMIN' && !amIAdmin}
-                                    >
-                                        {role}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                        onRoleChange={onRoleChange}
+                        className="min-w-[8rem]"
+                        title={triggerTitle}
+                    />
                     {amIAdmin && !isMe && (
                         <button
                             className="btn-error btn-sm btn px-1.5"

@@ -12,27 +12,11 @@ import {
     TooltipTrigger,
 } from '@components/ui/tooltip';
 import { RxPerson } from 'react-icons/rx';
-import { useBoardUsers, useUserRole } from 'store/kanban-store';
-import { BoardUserItem } from './board-user-item';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
-import { useMemo } from 'react';
-import { useSession } from 'next-auth/react';
-import {
-    useDeleteBoardUser,
-    useUpdateBoardUser,
-} from '@hooks/mutations/use-board-user-mutations';
+import { useUserRole } from 'store/kanban-store';
+import { BoardUsersContent } from './board-users-content';
 
 export const BoardUsersDialog = () => {
-    const boardUsers = useBoardUsers();
     const isAdmin = useUserRole() === 'ADMIN';
-    const me = useSession().data!.user!;
-    const adminCount = useMemo(
-        () => boardUsers.filter((user) => user.role === 'ADMIN').length,
-        [boardUsers]
-    );
-
-    const { mutate: updateUserRole } = useUpdateBoardUser();
-    const { mutate: deleteBoardUser } = useDeleteBoardUser();
 
     return (
         <Dialog>
@@ -55,37 +39,7 @@ export const BoardUsersDialog = () => {
                 <DialogHeader>
                     <DialogTitle>Board members</DialogTitle>
                 </DialogHeader>
-                <Tabs defaultValue="users" className="w-full">
-                    <TabsList className="w-full">
-                        <TabsTrigger value="users">Members</TabsTrigger>
-                        <TabsTrigger value="invite-users" disabled={!isAdmin}>
-                            Invite new members
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent
-                        value="users"
-                        className="max-h-[246px] overflow-y-auto p-2 sm:p-4"
-                    >
-                        <ul className="flex flex-col gap-4">
-                            {boardUsers.map((bu) => (
-                                <BoardUserItem
-                                    key={bu.userId}
-                                    boardUser={bu}
-                                    adminCount={adminCount}
-                                    isMe={bu.userId === me.id}
-                                    updateRole={updateUserRole}
-                                    deleteBoardUser={deleteBoardUser}
-                                />
-                            ))}
-                        </ul>
-                    </TabsContent>
-                    <TabsContent value="invite-users">
-                        {/* TODO: USER SEARCHBAR COMPONENT */}
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                            Search users to invite
-                        </p>
-                    </TabsContent>
-                </Tabs>
+                <BoardUsersContent />
             </DialogContent>
         </Dialog>
     );
