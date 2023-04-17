@@ -126,9 +126,9 @@ const useKanbanStore = create(
                 set((state) => {
                     state.boardUsers = users;
                 }),
-            addBoardUser: (user) =>
+            addBoardUsers: (users) =>
                 set((state) => {
-                    state.boardUsers.push(user);
+                    state.boardUsers = [...state.boardUsers, ...users];
                 }),
             removeBoardUser: (userId) =>
                 set((state) => {

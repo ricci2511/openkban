@@ -8,8 +8,7 @@ import {
 } from '@components/ui/select';
 import { BoardUserRole } from '@prisma/client';
 import { SelectTriggerProps } from '@radix-ui/react-select';
-
-const boardUserRoles = Object.values(BoardUserRole);
+import { BOARD_USER_ROLES } from '@lib/constants';
 
 interface UserRolesSelectProps extends SelectTriggerProps {
     admin: boolean;
@@ -36,7 +35,7 @@ export const UserRolesSelect = ({
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    {boardUserRoles.map((role) => (
+                    {BOARD_USER_ROLES.map((role) => (
                         <SelectItem
                             key={role}
                             value={role}

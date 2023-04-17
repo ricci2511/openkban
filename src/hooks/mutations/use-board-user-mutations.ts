@@ -1,7 +1,22 @@
 import { trpc } from '@lib/trpc';
 import produce from 'immer';
 
-// TODO: create board user mutation
+export const useCreateBoardUser = (successCb?: () => void) => {
+    const utils = trpc.useContext().boardRouter.getAll;
+
+    const createBoardUserMutation = trpc.boardUserRouter.create.useMutation({
+        onSuccess: async () => {
+            if (utils.getData()) {
+                // invalidate boards query cache if it exists
+                utils.invalidate();
+            }
+
+            successCb?.();
+        },
+    });
+
+    return createBoardUserMutation;
+};
 
 export const useDeleteBoardUser = () => {
     const utils = trpc.useContext().boardRouter.getAll;

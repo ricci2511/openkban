@@ -36,7 +36,7 @@ export type SubtasksActions = {
 
 export type BoardUserActions = {
     setBoardUsers: (users: ClientBoardUser[]) => void;
-    addBoardUser: (user: ClientBoardUser) => void;
+    addBoardUsers: (user: ClientBoardUser[]) => void;
     removeBoardUser: (userId: string) => void;
     updateBoardUser: (user: ClientBoardUser) => void;
 };

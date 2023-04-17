@@ -5,8 +5,8 @@ import Image from 'next/image';
 interface UserSearchResultsProps {
     users: User[];
     handleUserSelect: (user: User) => void;
-    currentBoardUserIds: Set<string>;
-    invitedUserIds: Set<string>;
+    currentBoardUserIds: string[];
+    invitedUserIds: string[];
 }
 
 export const UserSearchResults = ({
@@ -23,8 +23,8 @@ export const UserSearchResults = ({
                     className={cn(
                         'flex cursor-pointer items-center gap-3 rounded-md p-1 transition-all duration-200 hover:bg-base-300',
                         // disable selection if user is already a member or invited
-                        (currentBoardUserIds.has(id) ||
-                            invitedUserIds.has(id)) &&
+                        (currentBoardUserIds.includes(id) ||
+                            invitedUserIds.includes(id)) &&
                             'cursor-not-allowed opacity-50'
                     )}
                     onClick={() =>

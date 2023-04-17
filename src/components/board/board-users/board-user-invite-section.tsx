@@ -1,19 +1,27 @@
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { Popover, PopoverAnchor, PopoverContent } from '@components/ui/popover';
-import { useBoardUsers } from 'store/kanban-store';
-import { useCallback, useMemo, useState } from 'react';
+import {
+    useBoardId,
+    useBoardUserActions,
+    useBoardUsers,
+} from 'store/kanban-store';
+import { useCallback, useState } from 'react';
 import { trpc } from '@lib/trpc';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
-import { User } from '@prisma/client';
+import { BoardUserRole, User } from '@prisma/client';
 import useDebounce from 'use-debouncy/lib/effect';
 import { UserRolesSelect } from './user-roles-select';
 import { UserSearchResults } from './user-search-results';
 import { BoardUsersInviteList } from './board-users-invite-list';
+import { useCreateBoardUser } from '@hooks/mutations/use-board-user-mutations';
+import { ClientBoardUser } from 'types/board-types';
+import { MAX_BOARD_USERS } from '@lib/constants';
 
 export const BoardUserInviteSection = () => {
+    const [open, setOpen] = useState(false); // popover open state
     const [popoverWidth, setPopoverWidth] = useState<number>(0);
-    const refCallback = useCallback((node: HTMLDivElement | null) => {
+    const refCallback = useCallback((node: HTMLInputElement | null) => {
         if (!node) return;
         // observe width changes to keep popover width in sync with the input
         const resizeObserver = new ResizeObserver(() => {
@@ -23,26 +31,20 @@ export const BoardUserInviteSection = () => {
         return () => resizeObserver.disconnect();
     }, []);
 
-    // popover state
-    const [open, setOpen] = useState(false);
     const [invitedUsers, setInvitedUsers] = useState<User[]>([]);
+    const [role, setRole] = useState<BoardUserRole>('MEMBER');
 
     // to keep track of users who are already members of the board
-    const boardUserIdsSet = new Set(
-        useBoardUsers().map((boardUser) => boardUser.userId)
-    );
-    // to keep track of users already invited when adding new users
-    const invitedUserIdsSet = useMemo(
-        () => new Set(invitedUsers.map((u) => u.id)),
-        [invitedUsers]
-    );
+    const boardUserIds = useBoardUsers().map((boardUser) => boardUser.userId);
+    // to keep track of users already on the invite list
+    const invitedUserIds = invitedUsers.map((u) => u.id);
 
     const deleteInvitedUser = (id: string) => {
         setInvitedUsers((prev) => prev.filter((user) => user.id !== id));
     };
     const handleUserSelect = (user: User) => {
         const userId = user.id;
-        if (boardUserIdsSet.has(userId) || invitedUserIdsSet.has(userId))
+        if (boardUserIds.includes(userId) || invitedUserIds.includes(userId))
             return;
         setInvitedUsers((prev) => [...prev, user]);
         setOpen(false);
@@ -70,13 +72,43 @@ export const BoardUserInviteSection = () => {
         setOpen(true);
         fetchUsers();
     };
-    // run searchUsers cb after 500ms of no input
-    useDebounce(searchUsers, 500, [nameOrEmail]);
+    // run searchUsers cb after 600ms of no input
+    useDebounce(searchUsers, 600, [nameOrEmail]);
 
-    // TODO: add board user create mutation
-    const inviteUsers = () => {
+    const { addBoardUsers } = useBoardUserActions();
+    const onAddUsersSuccess = () => {
+        // add users to kanban store
+        const newBoardUsers: ClientBoardUser[] = invitedUsers.map(
+            ({ emailVerified, ...user }) => {
+                return {
+                    userId: user.id,
+                    user,
+                    role,
+                    isFavourite: false,
+                };
+            }
+        );
+        addBoardUsers(newBoardUsers);
+
+        // reset state
         setNameOrEmail('');
         setInvitedUsers([]);
+    };
+
+    const { mutate: addUsers, isLoading } =
+        useCreateBoardUser(onAddUsersSuccess);
+
+    const boardId = useBoardId();
+
+    const inviteUsers = () => {
+        if (!invitedUsers.length) return;
+        const users = invitedUsers.map((user) => ({
+            userId: user.id,
+            role,
+            boardId,
+        }));
+        // add users to board api call
+        addUsers(users);
     };
 
     return (
@@ -89,24 +121,29 @@ export const BoardUserInviteSection = () => {
                             <Input
                                 id="user-search"
                                 type="text"
+                                value={nameOrEmail}
                                 onChange={(e) =>
                                     setNameOrEmail(e.currentTarget.value)
                                 }
                                 ref={refCallback}
-                                disabled={invitedUsers.length > 5}
+                                disabled={invitedUsers.length > MAX_BOARD_USERS}
                             />
                         </PopoverAnchor>
                     </div>
                     <div>
                         <UserRolesSelect
-                            defaultValue="MEMBER"
+                            defaultValue={role}
+                            onRoleChange={(role) => setRole(role)}
                             title="Select role for new user"
                             className="h-full min-w-[7rem]"
                             admin // no need to check since this section is only visible to admins
                         />
                     </div>
                     <button
-                        className="btn w-full sm:w-auto"
+                        className={`btn w-full sm:w-auto ${
+                            isLoading && 'loading'
+                        }`}
+                        disabled={isLoading}
                         onClick={inviteUsers}
                     >
                         Invite
@@ -129,8 +166,8 @@ export const BoardUserInviteSection = () => {
                         <UserSearchResults
                             users={users}
                             handleUserSelect={handleUserSelect}
-                            currentBoardUserIds={boardUserIdsSet}
-                            invitedUserIds={invitedUserIdsSet}
+                            currentBoardUserIds={boardUserIds}
+                            invitedUserIds={invitedUserIds}
                         />
                     )}
                 </PopoverContent>

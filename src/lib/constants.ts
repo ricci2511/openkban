@@ -1,4 +1,9 @@
+import { BoardUserRole } from '@prisma/client';
+
+export const BOARD_USER_ROLES = Object.values(BoardUserRole);
+
 export const MAX_COLUMNS = 8;
+export const MAX_BOARD_USERS = 6;
 
 export const DEFAULT_COLUMN_TITLES = [
     'To Do',
