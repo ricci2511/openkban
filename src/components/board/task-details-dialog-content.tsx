@@ -5,12 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useSubtasksActions, useTasksActions } from 'store/kanban-store';
 import { DialogContent } from '@components/ui/dialog';
-import dynamic from 'next/dynamic';
-
-const TaskDetails = dynamic(
-    () => import('@components/task-details').then((mod) => mod.TaskDetails),
-    { ssr: false }
-);
+import { TaskDetails } from '@components/task-details';
 
 /**
  * @returns Dialog using the route as modal pattern to display task data.

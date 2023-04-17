@@ -12,14 +12,7 @@ import {
     DialogFooter,
     DialogTrigger,
 } from '@components/ui/dialog';
-import dynamic from 'next/dynamic';
-
-const CreateBoardForm = dynamic(
-    () => import('./create-board-form').then((mod) => mod.CreateBoardForm),
-    {
-        ssr: false,
-    }
-);
+import { CreateBoardForm } from './create-board-form';
 
 export const CreateBoardDialog = () => {
     const formMethods = useForm<BoardCreation>({

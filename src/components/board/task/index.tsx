@@ -8,14 +8,20 @@ import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 import { TaskOptionsDropdown } from './task-options-dropdown';
 import { Dialog, DialogTrigger } from '@components/ui/dialog';
-import { TaskDetailsDialogContent } from '../task-details-dialog-content';
 
-// dynamically import the due date warning tooltip
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
     {
         ssr: false,
     }
+);
+
+const TaskDetailsDialogContent = dynamic(
+    () =>
+        import('@components/board/task-details-dialog-content').then(
+            (mod) => mod.TaskDetailsDialogContent
+        ),
+    { ssr: false }
 );
 
 export interface TaskProps {

@@ -1,6 +1,20 @@
 import React from 'react';
-import { CreateTaskDialog } from './task-creation/create-task-dialog';
-import { BoardUsersDialog } from './board-users/board-users-dialog';
+import dynamic from 'next/dynamic';
+
+const BoardUsersDialog = dynamic(
+    () =>
+        import('./board-users/board-users-dialog').then(
+            (mod) => mod.BoardUsersDialog
+        ),
+    { ssr: false }
+);
+const CreateTaskDialog = dynamic(
+    () =>
+        import('./task-creation/create-task-dialog').then(
+            (mod) => mod.CreateTaskDialog
+        ),
+    { ssr: false }
+);
 
 export const KanbanHeaderSection = ({ title }: { title: string }) => {
     return (

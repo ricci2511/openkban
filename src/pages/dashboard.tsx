@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSession } from 'next-auth/react';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { BoardCard } from '@components/dashboard/board-card';
 import { MainLayout } from '@components/layouts/main-layout';
 import { useGetBoards } from '@hooks/use-get-boards';
-import { CreateBoardDialog } from '@components/dashboard/create-board-dialog';
+import dynamic from 'next/dynamic';
+
+const CreateBoardDialog = dynamic(
+    () =>
+        import('@components/dashboard/create-board-dialog').then(
+            (mod) => mod.CreateBoardDialog
+        ),
+    { ssr: false }
+);
 
 const Dashboard = () => {
     const { data: session } = useSession();
