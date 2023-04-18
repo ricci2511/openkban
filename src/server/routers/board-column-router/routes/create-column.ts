@@ -11,6 +11,11 @@ export const createColumn = authedProcedure
                 data: {
                     title: input.title,
                     color: input.color,
+                    createdBy: {
+                        connect: {
+                            id: ctx.session.user.id,
+                        },
+                    },
                     tasks: {
                         create: [],
                     },

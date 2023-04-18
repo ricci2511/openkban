@@ -33,6 +33,11 @@ export const boardTaskRouter = t.router({
                     startDate: input.startDate,
                     dueDate: input.dueDate,
                     rank: input.rank,
+                    createdBy: {
+                        connect: {
+                            id: ctx.session.user.id,
+                        },
+                    },
                 },
             });
             return createTask;

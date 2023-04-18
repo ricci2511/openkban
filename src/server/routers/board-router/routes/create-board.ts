@@ -4,7 +4,6 @@ import { boardCeationSchema } from '@lib/schemas/board-schemas';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { saveBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
-import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
 import { upsertBoardIds } from '@server/redis/user-board-ids';
 import { createError } from '@server/routers/common-errors';
 import { boardUserInclude } from './get-all-boards';
@@ -23,6 +22,11 @@ export const createBoard = authedProcedure
                         create: input.columnTitles.map((title) => ({
                             title: title,
                             color: randomColor(),
+                            createdBy: {
+                                connect: {
+                                    id: userId,
+                                },
+                            },
                         })),
                     },
                     boardUser: {
@@ -41,13 +45,9 @@ export const createBoard = authedProcedure
             });
 
             // cache the new board metadata
-            await saveBoard(board).catch((error) => {
-                throw internalServerError(BOARD_METADATA_CACHE_ERROR, error);
-            });
+            await saveBoard(board);
             // cache the new board ID
-            await upsertBoardIds(userId, board.id).catch((error) => {
-                throw internalServerError(BOARD_IDS_CACHE_ERROR, error);
-            });
+            await upsertBoardIds(userId, board.id);
 
             return board;
         } catch (error) {

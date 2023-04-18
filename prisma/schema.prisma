@@ -45,15 +45,18 @@ model Session {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String?
-  email         String?     @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  boards        Board[]
-  boardUsers    BoardUser[]
+  id                String              @id @default(cuid())
+  name              String?
+  email             String?             @unique
+  emailVerified     DateTime?
+  image             String?
+  accounts          Account[]
+  sessions          Session[]
+  boards            Board[]
+  boardUsers        BoardUser[]
+  BoardColumn       BoardColumn[]
+  BoardTask         BoardTask[]
+  BoardTaskAssignee BoardTaskAssignee[]
 
   @@index([name])
   @@index([email])
@@ -101,30 +104,49 @@ model Board {
 }
 
 model BoardColumn {
-  id        String      @id @default(cuid())
-  createdAt DateTime    @default(now())
-  title     String
-  board     Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId   String
-  tasks     BoardTask[]
-  color     String      @default("#0ea5e9")
+  id          String      @id @default(cuid())
+  createdAt   DateTime    @default(now())
+  title       String
+  board       Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String
+  tasks       BoardTask[]
+  color       String      @default("#0ea5e9")
+  createdBy   User        @relation(fields: [createdById], references: [id])
+  createdById String
 
   @@index([boardId])
+  @@index([createdById])
 }
 
 model BoardTask {
-  id          String         @id @default(cuid())
-  createdAt   DateTime       @default(now())
-  startDate   DateTime       @default(now())
-  dueDate     DateTime       @default(now())
-  rank        String         @default("0|000000:")
+  id          String              @id @default(cuid())
+  createdAt   DateTime            @default(now())
+  startDate   DateTime            @default(now())
+  dueDate     DateTime            @default(now())
+  rank        String              @default("0|000000:")
   title       String
   description String?
-  column      BoardColumn    @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  column      BoardColumn         @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId    String
   subtasks    BoardSubtask[]
+  createdBy   User                @relation(fields: [createdById], references: [id])
+  createdById String
+  asignees    BoardTaskAssignee[]
 
   @@index([columnId])
+  @@index([createdById])
+}
+
+model BoardTaskAssignee {
+  id          String    @id @default(cuid())
+  boardTask   BoardTask @relation(fields: [boardTaskId], references: [id])
+  boardTaskId String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+
+  @@unique([boardTaskId, userId])
+  @@index([boardTaskId])
+  @@index([userId])
 }
 
 model BoardSubtask {
