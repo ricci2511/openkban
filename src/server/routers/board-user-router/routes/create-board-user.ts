@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { queryBoardUserRole } from './get-board-user-role';
 import { invalidateSavedBoard } from '@server/redis/board';
 import { MAX_BOARD_USERS } from '@lib/constants';
+import { addBoardIdOrIds, idsSetExists } from '@server/redis/user-board-ids';
 
 const schema = z.array(
     z.object({
@@ -55,6 +56,11 @@ export const createBoardUser = authedRateLimitedProcedure
             });
 
             await invalidateSavedBoard(boardId);
+            input.forEach(async ({ userId, boardId }) => {
+                // if there is no cached set of board ids for the user, don't bother adding anything to it
+                if (!(await idsSetExists(userId))) return;
+                await addBoardIdOrIds(userId, boardId);
+            });
 
             return boardUsers;
         } catch (error) {
