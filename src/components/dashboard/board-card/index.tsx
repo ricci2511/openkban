@@ -31,7 +31,7 @@ export const BoardCard = ({ board }: BoardProps) => {
     return (
         <li
             key={id}
-            className="relative mb-4 flex min-h-[85px] items-center justify-between gap-2 rounded-sm bg-base-300 py-3 pl-3 pr-1"
+            className="relative mb-4 flex min-h-[85px] items-center justify-between gap-2 rounded-sm bg-primary/10 py-3 pl-3 pr-1"
         >
             <Link
                 href={`/board/${id}`}
@@ -45,7 +45,7 @@ export const BoardCard = ({ board }: BoardProps) => {
                     <BoardUserAvatar boardUser={admin} />
                 </div>
             )}
-            <div className="absolute -top-2.5 -left-2">
+            <div className="absolute -top-4 -left-3">
                 <FavouriteButton
                     favourite={isFavourite}
                     updateFavourite={updateFavourite}

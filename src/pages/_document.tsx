@@ -4,7 +4,7 @@ export default function Document() {
     return (
         <Html>
             <Head />
-            <body>
+            <body className="bg-background font-sans antialiased">
                 <Main />
                 <div id="portal-root" />
                 <NextScript />

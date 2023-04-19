@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Board } from '@prisma/client';
 import { boardTitle } from '@lib/schemas/board-schemas';
-import { RxDotsVertical, RxExit, RxPencil1, RxTrash } from 'react-icons/rx';
 import {
     useDeleteBoard,
     useUpdateBoard,
@@ -17,6 +16,8 @@ import {
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import dynamic from 'next/dynamic';
+import { Button } from '@components/ui/button';
+import { DoorOpen, MoreVertical, Pencil, Trash2 } from 'lucide-react';
 
 const EditTitleDialog = dynamic(
     () =>
@@ -47,10 +48,16 @@ export const BoardOptionsDropdown = ({
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="btn-ghost h-9 rounded-lg px-1">
-                <RxDotsVertical size={20} />
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="mr-1 px-0">
+                    <MoreVertical />
+                </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" sideOffset={6}>
+            <DropdownMenuContent
+                align="end"
+                sideOffset={6}
+                className="max-w-[10rem]"
+            >
                 <DropdownMenuLabel>{title} options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuDialogItem
@@ -58,7 +65,7 @@ export const BoardOptionsDropdown = ({
                     onOpenChange={setIsEditting}
                     trigger={
                         <>
-                            <RxPencil1 className="mr-2 h-4 w-4" />
+                            <Pencil className="mr-2 h-4 w-4" />
                             <span>Rename</span>
                         </>
                     }
@@ -74,16 +81,16 @@ export const BoardOptionsDropdown = ({
                     />
                 </DropdownMenuDialogItem>
                 <DropdownMenuItem onClick={() => leaveBoard({ boardId: id })}>
-                    <RxExit className="mr-2 h-4 w-4" />
+                    <DoorOpen className="mr-2 h-4 w-4" />
                     <span>Leave</span>
                 </DropdownMenuItem>
                 {isAdmin && (
                     <DropdownMenuItem
-                        className="focus:bg-red-400 dark:focus:bg-red-600"
                         aria-label={`Delete ${title} board`}
                         onClick={deleteBoard}
+                        destructive
                     >
-                        <RxTrash className="mr-2 h-4 w-4" />
+                        <Trash2 className="mr-2 h-4 w-4" />
                         <span>Delete</span>
                     </DropdownMenuItem>
                 )}

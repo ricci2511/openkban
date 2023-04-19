@@ -15,7 +15,7 @@ import { RxChevronUp, RxExit } from 'react-icons/rx';
 export const SidebarUser = ({ session }: { session: Session }) => {
     if (!session.user) {
         return (
-            <article className="my-2 flex flex-col items-center gap-2 border-t border-t-base-100">
+            <article className="border-t-base-100 my-2 flex flex-col items-center gap-2 border-t">
                 <p className="pt-2 font-semibold">Oops, user not found...</p>
             </article>
         );
@@ -23,7 +23,7 @@ export const SidebarUser = ({ session }: { session: Session }) => {
 
     const { email, image, name } = session.user;
     return (
-        <article className="my-2 mx-auto border-t border-t-base-100">
+        <article className="border-t-base-100 my-2 mx-auto border-t">
             <div className="flex gap-2 pt-3">
                 {image && (
                     <div className="avatar m-auto inline-block">
@@ -59,11 +59,11 @@ export const SidebarUser = ({ session }: { session: Session }) => {
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                className="focus:bg-red-400 dark:focus:bg-red-600"
                                 onClick={() =>
                                     signOut({ callbackUrl: '/auth/signin' })
                                 }
                                 aria-label="Sign out of your account"
+                                destructive
                             >
                                 <RxExit className="mr-2 h-4 w-4" />
                                 <span>Sign out</span>

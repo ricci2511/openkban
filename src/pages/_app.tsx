@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import 'styles/index.css';
+import 'styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import { trpc } from '@lib/trpc';
 import { ThemeProvider } from 'next-themes';
@@ -35,8 +35,7 @@ const App = ({
                     content="minimum-scale=1, initial-scale=1, width=device-width"
                 />
             </Head>
-
-            <ThemeProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                 <SessionProvider session={session}>
                     {getLayout(<Component {...pageProps} />)}
                 </SessionProvider>

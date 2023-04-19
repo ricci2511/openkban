@@ -13,6 +13,7 @@ import {
     DialogTrigger,
 } from '@components/ui/dialog';
 import { CreateBoardForm } from './create-board-form';
+import { Button } from '@components/ui/button';
 
 export const CreateBoardDialog = () => {
     const formMethods = useForm<BoardCreation>({
@@ -45,7 +46,11 @@ export const CreateBoardDialog = () => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen} modal>
-            <DialogTrigger className="btn-primary btn">Add Board</DialogTrigger>
+            <DialogTrigger asChild>
+                <Button variant="default" size="lg">
+                    Add Board
+                </Button>
+            </DialogTrigger>
             <DialogContent className="sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>Create a new board</DialogTitle>
