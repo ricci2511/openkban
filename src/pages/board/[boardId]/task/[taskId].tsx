@@ -89,7 +89,11 @@ const TaskPage: NextPageWithLayout = () => {
 };
 
 TaskPage.getLayout = function getLayout(page: ReactElement) {
-    return <MainLayout responsive>{page}</MainLayout>;
+    return (
+        <MainLayout className="container mx-auto p-4 sm:p-6 lg:p-8">
+            {page}
+        </MainLayout>
+    );
 };
 
 export default TaskPage;

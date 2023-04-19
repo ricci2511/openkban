@@ -23,7 +23,7 @@ const Dashboard = () => {
 
     // TODO: SEO
     return (
-        <MainLayout responsive>
+        <MainLayout className="container mx-auto p-4 sm:p-6 lg:p-8">
             <>
                 <h1 className="mb-12 text-xl font-semibold">
                     {session && session.user

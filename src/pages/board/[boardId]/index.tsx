@@ -66,7 +66,7 @@ const BoardPage: NextPageWithLayout = () => {
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
     return (
-        <MainLayout className="relative h-full overflow-y-auto">
+        <MainLayout className="h-full overflow-y-auto">
             <div className="absolute inset-0 overflow-hidden">
                 <div className="relative mr-0 flex h-full flex-col">{page}</div>
             </div>
