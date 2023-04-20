@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeSwitchButton } from './theme-switch-button';
+import { ThemeToggle } from './theme-toggle';
 import { Sidebar } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -16,7 +16,7 @@ export const Header = () => {
                     <a className="text-2xl font-bold normal-case">OpenKBan</a>
                 </div>
                 <div className="flex-none">
-                    <ThemeSwitchButton />
+                    <ThemeToggle />
                 </div>
             </div>
         </header>

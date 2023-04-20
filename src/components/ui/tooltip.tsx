@@ -16,15 +16,12 @@ const tooltipVariants = cva(
     {
         variants: {
             variant: {
-                default: 'bg-popover text-popover-foreground',
+                default: 'bg-popover/80 text-popover-foreground',
                 destructive:
-                    'border-destructive bg-destructive/75 text-destructive-foreground',
-                // TODO: Tweak these variants after updating colour palette
-                info: 'border-sky-500 bg-sky-50 text-sky-700 dark:border-sky-600 dark:bg-sky-800 dark:text-sky-100',
-                warning:
-                    'border-yellow-500 bg-yellow-50 text-yellow-700 dark:border-yellow-600 dark:bg-yellow-800 dark:text-yellow-100',
-                success:
-                    'border-green-500 bg-green-50 text-green-700 dark:border-green-600 dark:bg-green-800 dark:text-green-100',
+                    'border-destructive bg-destructive/80 text-destructive-foreground',
+                info: 'border-info bg-info/80 text-info-foreground',
+                warning: 'border-warning bg-warning/80 text-warning-foreground',
+                success: 'border-success bg-success/80 text-success-foreground',
             },
         },
         defaultVariants: {

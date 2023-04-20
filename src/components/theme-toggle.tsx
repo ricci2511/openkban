@@ -10,7 +10,7 @@ import {
 import { Sun, Moon, Laptop2 } from 'lucide-react';
 import { Button } from './ui/button';
 
-export const ThemeSwitchButton = () => {
+export const ThemeToggle = () => {
     const [mounted, setMounted] = useState(false);
     const { theme, setTheme } = useTheme();
 
