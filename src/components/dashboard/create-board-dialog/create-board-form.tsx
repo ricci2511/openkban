@@ -8,9 +8,9 @@ import { BoardCreation } from '@lib/schemas/board-schemas';
 import { FormErrors } from 'types/form-types';
 import { useFormContext } from 'react-hook-form';
 import { CreateBoardMutation } from '@hooks/mutations/use-board-mutations';
-import { FormInput } from '@components/ui/form-input';
 import { Label } from '@components/ui/label';
-import { Checkbox } from '@components/ui/checkbox';
+import { FormCheckbox } from '@components/form-checkbox';
+import { FormInput } from '@components/form-input';
 
 interface CreateBoardFormProps extends ColumnsLayoutSectionProps {
     createBoard: CreateBoardMutation['mutate'];
@@ -24,6 +24,7 @@ export const CreateBoardForm = ({
     const {
         register,
         setValue,
+        control,
         handleSubmit,
         formState: { errors },
     } = useFormContext<BoardCreation>();
@@ -58,8 +59,8 @@ export const CreateBoardForm = ({
                     placeholder="my cool board..."
                     className="mt-1"
                     register={register}
-                    registerName="title"
-                    registerRules={{ required: true }}
+                    name="title"
+                    rules={{ required: true }}
                     errors={errors as FormErrors<BoardCreation>}
                 />
             </div>
@@ -73,8 +74,13 @@ export const CreateBoardForm = ({
                 )}
             </div>
             <div className="flex items-center space-x-2">
-                <Checkbox id="favourite" />
-                <Label htmlFor="favourite">Add it to your Favourites?</Label>
+                <FormCheckbox<BoardCreation>
+                    id="favourite"
+                    name="isFavourite"
+                    control={control}
+                >
+                    Add it to your Favourites?
+                </FormCheckbox>
             </div>
         </form>
     );

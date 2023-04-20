@@ -6,9 +6,9 @@ import { MAX_COLUMNS } from '@lib/constants';
 import { FormErrors } from 'types/form-types';
 import { InfoTooltip } from '@components/info-tooltip';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
-import { FormInput } from '@components/ui/form-input';
 import { Label } from '@components/ui/label';
 import { Button } from '@components/ui/button';
+import { FormInput } from '@components/form-input';
 
 export type CustomColumn = {
     id: string;
@@ -81,8 +81,8 @@ export const CustomLayoutSection = () => {
                             : 'Set your column title'
                     }
                     register={register}
-                    registerName={titleInput}
-                    registerRules={{ disabled: isMaxColumns }}
+                    name={titleInput}
+                    rules={{ disabled: isMaxColumns }}
                     errors={errors as FormErrors<BoardCreation>}
                     onKeyDown={(e) =>
                         e.key === 'Enter' ? handleColumnAddition() : null

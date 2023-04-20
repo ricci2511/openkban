@@ -1,4 +1,4 @@
-import { FormTextarea } from '@components/ui/form-textarea';
+import { FormTextarea } from '@components/form-textarea';
 import { useCreateSubtask } from '@hooks/mutations/use-subtask-mutations';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
@@ -35,7 +35,7 @@ export const CreateSubtaskForm = ({
                     autoFocus
                     className="w-full"
                     register={register}
-                    registerName="title"
+                    name="title"
                     errors={errors}
                 />
             </div>

@@ -1,4 +1,4 @@
-import { FormInput } from '@components/ui/form-input';
+import { FormInput } from '@components/form-input';
 import { Label } from '@components/ui/label';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
 import dayjs from 'dayjs';
@@ -25,8 +25,8 @@ export const TaskDateInputs = () => {
                     defaultValue={today}
                     min={today}
                     register={register}
-                    registerName="startDate"
-                    registerRules={{ valueAsDate: true, required: true }}
+                    name="startDate"
+                    rules={{ valueAsDate: true, required: true }}
                     errors={errors}
                 />
             </div>
@@ -39,8 +39,8 @@ export const TaskDateInputs = () => {
                     defaultValue={tomorrow}
                     min={tomorrow}
                     register={register}
-                    registerName="dueDate"
-                    registerRules={{ valueAsDate: true, required: true }}
+                    name="dueDate"
+                    rules={{ valueAsDate: true, required: true }}
                     errors={errors}
                 />
             </div>

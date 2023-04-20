@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { useCurrentTask } from 'store/kanban-store';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useUpdateTask } from '@hooks/mutations/use-task-mutations';
-import { FormTextarea } from '@components/ui/form-textarea';
+import { FormTextarea } from '@components/form-textarea';
 
 // TODO: maybe reuse boardTaskCreationSchema for this?
 const descriptionSchema = z.object({
@@ -56,7 +56,7 @@ export const DescriptionForm = ({
                     autoFocus
                     className="w-full"
                     register={register}
-                    registerName="taskDescription"
+                    name="taskDescription"
                     errors={errors}
                 />
             </div>

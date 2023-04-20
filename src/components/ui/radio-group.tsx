@@ -18,21 +18,24 @@ const RadioGroup = React.forwardRef<
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
-const radioCircleVariants = cva('text-foreground h-2.5 w-2.5', {
-    variants: {
-        variant: {
-            default: 'fill-foreground',
-            primary: 'fill-primary',
-            destructive: 'fill-destructive',
-            info: 'fill-info',
-            warning: 'fill-warning',
-            success: 'fill-success',
+const radioCircleVariants = cva(
+    'text-foreground h-2.5 w-2.5 animate-in zoom-in-50',
+    {
+        variants: {
+            variant: {
+                default: 'fill-foreground',
+                primary: 'fill-primary',
+                destructive: 'fill-destructive',
+                info: 'fill-info',
+                warning: 'fill-warning',
+                success: 'fill-success',
+            },
         },
-    },
-    defaultVariants: {
-        variant: 'default',
-    },
-});
+        defaultVariants: {
+            variant: 'default',
+        },
+    }
+);
 
 interface RadioGroupItemProps
     extends React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>,

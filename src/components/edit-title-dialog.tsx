@@ -5,10 +5,10 @@ import { TRPCClientErrorLike } from '@trpc/client';
 import { AppRouter } from '@server/routers';
 import { UseTRPCMutationResult } from '@trpc/react-query/shared';
 import { useTitleForm } from '@hooks/use-title-form';
-import { FormInput } from './ui/form-input';
 import { DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { Label } from './ui/label';
 import { Button } from './ui/button';
+import { FormInput } from './form-input';
 
 type HasIdAndTitle = { id: string } & TitleInput;
 
@@ -78,8 +78,8 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                         className="mt-1"
                         disabled={isLoading}
                         register={register}
-                        registerName="title"
-                        registerRules={{ required: true }}
+                        name="title"
+                        rules={{ required: true }}
                         errors={errors}
                         autoFocus
                     />

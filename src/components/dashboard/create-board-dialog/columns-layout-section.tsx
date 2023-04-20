@@ -19,7 +19,6 @@ export const ColumnsLayoutSection = ({
     const { setValue, clearErrors } = useFormContext<BoardCreation>();
 
     const handleLayoutChange = (value: BoardColumnsLayout) => {
-        console.log(value);
         setLayout(value);
         // set the columns state depending on the layout
         setValue(

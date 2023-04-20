@@ -2,23 +2,23 @@ import React from 'react';
 import { FieldValues } from 'react-hook-form';
 import { FormElementProps } from 'types/form-types';
 import get from 'lodash.get';
-import { TextareaProps, Textarea } from './textarea';
 import { cn } from '@lib/helpers';
+import { TextareaProps, Textarea } from './ui/textarea';
 
 interface FormTextareaProps<TFormValues extends FieldValues>
     extends FormElementProps<TFormValues>,
-        TextareaProps {}
+        Omit<TextareaProps, 'name'> {} // name attribute is overriden by register
 
 export const FormTextarea = <TFormValues extends Record<string, unknown>>({
     register,
-    registerName,
-    registerRules,
+    name,
+    rules,
     errors,
     className,
     ...rest
 }: FormTextareaProps<TFormValues>) => {
     // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
-    const errorMessages = get(errors, registerName);
+    const errorMessages = get(errors, name);
 
     return (
         <>
@@ -26,10 +26,10 @@ export const FormTextarea = <TFormValues extends Record<string, unknown>>({
                 aria-invalid={!!(errors && errorMessages)}
                 className={cn(errorMessages && 'textarea-error', className)}
                 {...rest}
-                {...(register && register(registerName, registerRules))}
+                {...(register && register(name, rules))}
             />
             {errorMessages && (
-                <p className="mt-2 text-sm text-error">
+                <p className="text-error mt-2 text-sm">
                     {errorMessages.message}
                 </p>
             )}

@@ -7,12 +7,12 @@ import {
 import { LexoRank } from 'lexorank';
 import { useTasks } from 'store/kanban-store';
 import { CreateTaskMutation } from '@hooks/mutations/use-task-mutations';
-import { FormInput } from '@components/ui/form-input';
-import { FormTextarea } from '@components/ui/form-textarea';
 import { ColumnSelect } from './column-select';
 import { TaskDateInputs } from './task-date-inputs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@components/ui/label';
+import { FormInput } from '@components/form-input';
+import { FormTextarea } from '@components/form-textarea';
 
 interface CreateTaskFormProps {
     createTask: CreateTaskMutation['mutate'];
@@ -68,8 +68,8 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         type="text"
                         placeholder="title..."
                         register={register}
-                        registerName="title"
-                        registerRules={{ required: true }}
+                        name="title"
+                        rules={{ required: true }}
                         errors={errors}
                         autoFocus
                     />
@@ -81,7 +81,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         placeholder="description..."
                         className="w-full"
                         register={register}
-                        registerName="description"
+                        name="description"
                         errors={errors}
                     />
                 </div>

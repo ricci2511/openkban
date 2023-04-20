@@ -67,7 +67,7 @@ export const CreateBoardDialog = () => {
                         type="submit"
                         form="create-board-form"
                         variant="success"
-                        disabled={isLoading}
+                        loading={isLoading}
                         onClick={handleSubmitClick}
                         aria-label="Create a new board"
                     >
@@ -75,6 +75,7 @@ export const CreateBoardDialog = () => {
                     </Button>
                     <Button
                         type="button"
+                        disabled={isLoading}
                         onClick={() => setOpen(false)}
                         aria-label="Cancel board creation and close dialog"
                     >

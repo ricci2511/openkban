@@ -1,24 +1,24 @@
 import React from 'react';
 import { FormElementProps } from 'types/form-types';
 import get from 'lodash.get';
-import { Input, InputProps } from './input';
 import { cn } from '@lib/helpers';
+import { Input, InputProps } from './ui/input';
 
 interface FormInputProps<TFormValues>
     extends FormElementProps<TFormValues>,
-        InputProps {}
+        Omit<InputProps, 'name'> {} // name attribute is overriden by register
 
 export const FormInput = <TFormValues extends Record<string, unknown>>({
     register,
-    registerName,
-    registerRules,
+    name,
+    rules,
     errors,
     className,
     children,
     ...rest
 }: FormInputProps<TFormValues>) => {
     // lodash get is used in case errors includes nested fields of type FieldError[] (e.g. columnTitles.0)
-    const errorMessages = get(errors, registerName);
+    const errorMessages = get(errors, name);
 
     return (
         <>
@@ -31,7 +31,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
                             className
                         )}
                         {...rest}
-                        {...(register && register(registerName, registerRules))}
+                        {...(register && register(name, rules))}
                     />
                     {children}
                 </div>
@@ -43,7 +43,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
                         className
                     )}
                     {...rest}
-                    {...(register && register(registerName, registerRules))}
+                    {...(register && register(name, rules))}
                 />
             )}
             {errorMessages && (

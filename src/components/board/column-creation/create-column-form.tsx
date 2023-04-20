@@ -6,7 +6,7 @@ import { useTitleForm } from '@hooks/use-title-form';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
 import { ColorPickerPopover } from '@components/color-picker-popover';
-import { FormInput } from '@components/ui/form-input';
+import { FormInput } from '@components/form-input';
 
 export const CreateColumnForm = ({
     stopCreatingCb,
@@ -44,7 +44,7 @@ export const CreateColumnForm = ({
                     id="column-title"
                     placeholder="column title..."
                     register={register}
-                    registerName="title"
+                    name="title"
                     errors={errors}
                     autoFocus
                 >

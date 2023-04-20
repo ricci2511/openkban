@@ -12,7 +12,12 @@ export type FormErrors<TFormValues> = Partial<DeepMap<TFormValues, FieldError>>;
 
 export type FormElementProps<TFormValues> = {
     register: UseFormRegister<TFormValues>;
-    registerName: FieldPath<TFormValues>;
-    registerRules?: RegisterOptions;
+    name: FieldPath<TFormValues>;
+    rules?: RegisterOptions;
     errors?: FormErrors<TFormValues>;
 };
+
+export type FormElmentPropsWithoutRegister<TFormValues> = Omit<
+    FormElementProps<TFormValues>,
+    'register'
+>;
