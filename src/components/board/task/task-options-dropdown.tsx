@@ -5,7 +5,6 @@ import {
     useDeleteTask,
     useUpdateTask,
 } from '@hooks/mutations/use-task-mutations';
-import { RxDotsHorizontal, RxPencil1, RxTrash } from 'react-icons/rx';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -16,6 +15,8 @@ import {
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import dynamic from 'next/dynamic';
+import { Button } from '@components/ui/button';
+import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 
 const EditTitleDialog = dynamic(
     () =>
@@ -39,8 +40,10 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="btn-ghost btn-xs btn">
-                <RxDotsHorizontal size={20} />
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-6 w-9 px-0">
+                    <MoreHorizontal className="h-4 w-4" />
+                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={6}>
                 <DropdownMenuLabel>{title} options</DropdownMenuLabel>
@@ -50,7 +53,7 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                     onOpenChange={setIsEditting}
                     trigger={
                         <>
-                            <RxPencil1 className="mr-2 h-4 w-4" />
+                            <Pencil className="mr-2 h-4 w-4" />
                             <span>Rename</span>
                         </>
                     }
@@ -70,7 +73,7 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
                     aria-label={`Delete ${title} task`}
                     onClick={() => deleteTask({ id })}
                 >
-                    <RxTrash className="mr-2 h-4 w-4" />
+                    <Trash className="mr-2 h-4 w-4" />
                     <span>Delete</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>

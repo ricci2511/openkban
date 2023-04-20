@@ -51,10 +51,15 @@ export const ColumnsLayoutSection = ({
                         variant="success"
                     />
                     <Label htmlFor="default">
-                        <span className={`${isDefault && 'text-success'}`}>
+                        <span
+                            className={cn(
+                                'text-base',
+                                isDefault && 'text-success'
+                            )}
+                        >
                             Default
                         </span>
-                        <p className="mt-2 text-sm md:text-base">
+                        <p className="mt-2 text-xs md:text-sm">
                             To do, In progress, Testing, Done
                         </p>
                     </Label>
@@ -72,10 +77,15 @@ export const ColumnsLayoutSection = ({
                         variant="success"
                     />
                     <Label htmlFor="custom">
-                        <span className={`${!isDefault && 'text-success'}`}>
+                        <span
+                            className={cn(
+                                'text-base',
+                                !isDefault && 'text-success'
+                            )}
+                        >
                             Custom
                         </span>
-                        <p className="mt-2 text-sm md:text-base">
+                        <p className="mt-2 text-xs md:text-sm">
                             Create your own column layout
                         </p>
                     </Label>

@@ -31,7 +31,7 @@ export const CreateTaskDialog = () => {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <DialogTrigger asChild>
-                            <Button variant="outline" className="rounded-full">
+                            <Button variant="accent" className="rounded-full">
                                 <ClipboardList
                                     className="h-4 w-4 sm:h-5 sm:w-5"
                                     size="lg"
@@ -50,15 +50,15 @@ export const CreateTaskDialog = () => {
                 </DialogHeader>
                 <CreateTaskForm createTask={createTask} />
                 <DialogFooter>
-                    <button
+                    <Button
                         type="submit"
                         form="create-task-form"
-                        className={`btn-primary btn ${isLoading && 'loading'}`}
-                        disabled={isLoading}
+                        variant="success"
+                        loading={isLoading}
                         aria-label="Create a new task"
                     >
                         {isLoading ? 'Creating...' : 'Create Task'}
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

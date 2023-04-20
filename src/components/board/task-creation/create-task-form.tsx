@@ -58,10 +58,10 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
             <form
                 role="form"
                 id="create-task-form"
-                className="flex flex-col gap-1"
+                className="flex flex-col gap-2.5"
                 onSubmit={onSubmit}
             >
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                     <Label htmlFor="task-title">Title</Label>
                     <FormInput<BoardTaskCreation>
                         id="task-title"
@@ -74,7 +74,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         autoFocus
                     />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                     <Label htmlFor="task-description">Description</Label>
                     <FormTextarea<BoardTaskCreation>
                         id="task-description"
@@ -85,7 +85,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                         errors={errors}
                     />
                 </div>
-                <div>
+                <div className="flex flex-col gap-1">
                     <ColumnSelect />
                 </div>
                 <div className="flex w-full gap-3">

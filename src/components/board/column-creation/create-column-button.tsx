@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { RiAddFill } from 'react-icons/ri';
 import { CreateColumnForm } from './create-column-form';
+import { Button } from '@components/ui/button';
+import { Plus } from 'lucide-react';
 
 export const CreateColumnButton = () => {
     const [creating, setCreating] = useState(false);
@@ -8,13 +9,15 @@ export const CreateColumnButton = () => {
     return (
         <li>
             {!creating && (
-                <button
-                    className="btn flex w-full gap-3"
+                <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex w-full gap-3"
                     onClick={() => setCreating(true)}
                 >
                     <span>Add column</span>
-                    <RiAddFill size={20} />
-                </button>
+                    <Plus className="h-5 w-5" />
+                </Button>
             )}
             {creating && (
                 <CreateColumnForm stopCreatingCb={() => setCreating(false)} />

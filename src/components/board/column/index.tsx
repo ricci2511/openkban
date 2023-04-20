@@ -46,14 +46,11 @@ export const Column = ({ column, tasks }: ColumnProps) => {
         >
             <li className="relative flex h-[calc(100vh-225px)] flex-col">
                 <div
-                    className="mb-4 flex items-center justify-between rounded-md border bg-base-200 p-2"
+                    className="mb-4 flex items-center justify-between rounded-md border bg-secondary p-2"
                     style={{ borderColor: color }}
                 >
                     <div className="flex items-center gap-2">
-                        <h2
-                            className="font-semibold uppercase"
-                            style={{ color }}
-                        >
+                        <h2 className="text-sm font-semibold uppercase sm:text-base">
                             {title}
                         </h2>
                         <ColorPickerPopover
@@ -69,9 +66,7 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                 {/* Might add a custom scrollbar for consistency between os's */}
                 <ul
                     ref={setNodeRef}
-                    className={`flex h-full flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md p-2 ${
-                        theme === 'dark' ? 'bg-gray-700' : 'bg-slate-300'
-                    }`}
+                    className="flex h-full flex-1 flex-col gap-3 overflow-x-hidden overflow-y-scroll rounded-md bg-muted p-2"
                 >
                     {tasks.map((task) => (
                         <TaskSortable key={task.id} task={task} color={color} />

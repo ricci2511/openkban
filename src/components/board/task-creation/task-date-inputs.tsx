@@ -17,7 +17,7 @@ export const TaskDateInputs = () => {
 
     return (
         <>
-            <div className="flex w-full flex-col">
+            <div className="flex w-1/2 flex-col gap-1">
                 <Label htmlFor="start-date">Start date</Label>
                 <FormInput<BoardTaskCreation>
                     id="start-date"
@@ -30,12 +30,11 @@ export const TaskDateInputs = () => {
                     errors={errors}
                 />
             </div>
-            <div className="flex w-full flex-col">
+            <div className="flex w-1/2 flex-col gap-1">
                 <Label htmlFor="due-date">Due date</Label>
                 <FormInput<BoardTaskCreation>
                     id="due-date"
                     type="date"
-                    className="justify-between"
                     defaultValue={tomorrow}
                     min={tomorrow}
                     register={register}

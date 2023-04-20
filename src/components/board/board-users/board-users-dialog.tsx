@@ -11,7 +11,6 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@components/ui/tooltip';
-import { RxPerson } from 'react-icons/rx';
 import { useUserRole } from 'store/kanban-store';
 import { BoardUsersContent } from './board-users-content';
 import { Button } from '@components/ui/button';

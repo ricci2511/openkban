@@ -13,7 +13,7 @@
     --popover: 220 100% 98%;
     --popover-foreground: 210 11% 15%;
  
-    --card: 220 100% 98%;
+    --card: 0 0% 100%;
     --card-foreground: 210 11% 15%;
  
     --border: 210 14% 83%;
@@ -22,7 +22,7 @@
     --primary: 247 100% 66%;
     --primary-foreground: 0 0% 100%;
  
-    --secondary: 220 100% 98%;
+    --secondary: 220 100% 95%;
     --secondary-foreground: 210 11% 15%;
  
     --accent: 349 100% 74%;
@@ -64,7 +64,7 @@
     --primary: 247 100% 72%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 11% 18%;
+    --secondary: 210 11% 20%;
     --secondary-foreground: 220 100% 98%;
  
     --accent: 351 100% 71%;

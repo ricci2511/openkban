@@ -7,6 +7,7 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
 import { ColorPickerPopover } from '@components/color-picker-popover';
 import { FormInput } from '@components/form-input';
+import { Button } from '@components/ui/button';
 
 export const CreateColumnForm = ({
     stopCreatingCb,
@@ -48,9 +49,9 @@ export const CreateColumnForm = ({
                     errors={errors}
                     autoFocus
                 >
-                    <button
+                    <Button
                         type="button"
-                        className="no-animation btn-square btn"
+                        variant="secondary"
                         onClick={() => setColorPickerOpen(true)}
                         aria-label="Choose a color for your new column"
                         title="Choose a color for your new column"
@@ -62,26 +63,25 @@ export const CreateColumnForm = ({
                             changeColor={setColor}
                             className="absolute top-8 right-0"
                         />
-                    </button>
+                    </Button>
                 </FormInput>
             </div>
             <div className="mt-4 flex gap-2">
-                <button
+                <Button
                     type="submit"
-                    className={`btn-primary btn w-1/2 ${
-                        isLoading && 'loading'
-                    }`}
-                    disabled={isLoading}
+                    variant="primary"
+                    className="w-1/2"
+                    loading={isLoading}
                 >
                     {isLoading ? 'Creating...' : 'Create'}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
-                    className="btn-error btn w-1/2"
+                    className="w-1/2"
                     onClick={stopCreatingCb}
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </form>
     );

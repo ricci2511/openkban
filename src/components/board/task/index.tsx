@@ -8,6 +8,8 @@ import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 import { TaskOptionsDropdown } from './task-options-dropdown';
 import { Dialog, DialogTrigger } from '@components/ui/dialog';
+import { Grip } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
@@ -34,7 +36,7 @@ export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const { id, title, dueDate } = task;
     const boardId = useBoardId();
 
-    const taskClasses = `flex bg-base-200 border-l-2
+    const taskClasses = `flex bg-card border-l-2
         ${isDragging && 'opacity-50'}`;
 
     const dueDateToday = dayjs().isSame(dueDate, 'day');
@@ -72,15 +74,17 @@ export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
                 <TaskDetailsDialogContent task={task} />
             </Dialog>
             <div className="flex flex-none flex-col items-center justify-around">
-                <span className="pr-1" aria-roledescription="draggable">
-                    <button
-                        className="btn-ghost btn-sm btn cursor-grab focus:cursor-grabbing"
+                <span className="pr-2" aria-roledescription="draggable">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-9 cursor-grab px-0 focus:cursor-grabbing"
                         {...listeners}
                     >
-                        <RxDragHandleDots2 className="ml-1" size={20} />
-                    </button>
+                        <Grip className="h-5 w-5" />
+                    </Button>
                 </span>
-                <span className="">
+                <span className="mr-1">
                     <TaskOptionsDropdown task={task} />
                 </span>
             </div>
