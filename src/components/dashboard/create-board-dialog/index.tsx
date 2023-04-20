@@ -47,7 +47,7 @@ export const CreateBoardDialog = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen} modal>
             <DialogTrigger asChild>
-                <Button variant="default" size="lg">
+                <Button variant="primary" size="lg">
                     Add Board
                 </Button>
             </DialogTrigger>
@@ -63,24 +63,23 @@ export const CreateBoardDialog = () => {
                     />
                 </FormProvider>
                 <DialogFooter>
-                    <button
+                    <Button
                         type="submit"
                         form="create-board-form"
-                        className={`btn-primary btn ${isLoading && 'loading'}`}
+                        variant="success"
                         disabled={isLoading}
                         onClick={handleSubmitClick}
                         aria-label="Create a new board"
                     >
                         {isLoading ? 'Creating...' : 'Create Board'}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         type="button"
-                        className="btn-error btn"
                         onClick={() => setOpen(false)}
                         aria-label="Cancel board creation and close dialog"
                     >
                         Cancel
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -8,6 +8,7 @@ import { InfoTooltip } from '@components/info-tooltip';
 import { SortableColumnItemsContainer } from './sortable-column-items-container';
 import { FormInput } from '@components/ui/form-input';
 import { Label } from '@components/ui/label';
+import { Button } from '@components/ui/button';
 
 export type CustomColumn = {
     id: string;
@@ -61,8 +62,8 @@ export const CustomLayoutSection = () => {
     };
 
     return (
-        <div className="form-control mt-4">
-            <div className="flex w-full flex-col">
+        <div className="mt-4 flex flex-col gap-4">
+            <div className="flex w-full flex-col gap-1">
                 <div className="flex items-center space-x-1">
                     <Label htmlFor="column-title">Column title</Label>
                     <InfoTooltip
@@ -72,6 +73,7 @@ export const CustomLayoutSection = () => {
                 </div>
                 <FormInput<BoardCreation>
                     id="column-title"
+                    className="flex-1"
                     placeholder="title..."
                     title={
                         isMaxColumns
@@ -87,14 +89,13 @@ export const CustomLayoutSection = () => {
                     }
                     autoFocus
                 >
-                    <button
+                    <Button
                         type="button"
-                        className="btn"
                         disabled={isMaxColumns}
                         onClick={handleColumnAddition}
                     >
                         Add
-                    </button>
+                    </Button>
                 </FormInput>
             </div>
             {customColumns.length > 0 && (

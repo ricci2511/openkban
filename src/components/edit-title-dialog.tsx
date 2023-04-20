@@ -8,6 +8,7 @@ import { useTitleForm } from '@hooks/use-title-form';
 import { FormInput } from './ui/form-input';
 import { DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { Label } from './ui/label';
+import { Button } from './ui/button';
 
 type HasIdAndTitle = { id: string } & TitleInput;
 
@@ -85,14 +86,14 @@ export const EditTitleDialog = <TEntity extends HasIdAndTitle>({
                 </div>
             </form>
             <DialogFooter>
-                <button
+                <Button
                     type="submit"
                     form="edit-title-form"
-                    className={`btn-primary btn ${isLoading && 'loading'}`}
+                    variant="primary"
                     disabled={isLoading}
                 >
                     Update title
-                </button>
+                </Button>
             </DialogFooter>
         </>
     );

@@ -9,7 +9,8 @@ import { FormErrors } from 'types/form-types';
 import { useFormContext } from 'react-hook-form';
 import { CreateBoardMutation } from '@hooks/mutations/use-board-mutations';
 import { FormInput } from '@components/ui/form-input';
-import { Label } from '@radix-ui/react-label';
+import { Label } from '@components/ui/label';
+import { Checkbox } from '@components/ui/checkbox';
 
 interface CreateBoardFormProps extends ColumnsLayoutSectionProps {
     createBoard: CreateBoardMutation['mutate'];
@@ -45,7 +46,7 @@ export const CreateBoardForm = ({
         <form
             role="form"
             id="create-board-form"
-            className="flex flex-col gap-4"
+            className="mt-2 flex flex-col gap-4"
             onSubmit={onSubmit}
             onKeyDown={(e) => (e.key === 'Enter' ? e.preventDefault() : null)}
         >
@@ -66,18 +67,13 @@ export const CreateBoardForm = ({
                 <Label>Columns layout</Label>
                 <ColumnsLayoutSection layout={layout} setLayout={setLayout} />
                 {errors.columnTitles && (
-                    <p className="mx-auto mt-2 text-sm text-error">
+                    <p className="text-error mx-auto mt-2 text-sm">
                         {errors.columnTitles.message}
                     </p>
                 )}
             </div>
             <div className="flex items-center space-x-2">
-                <input
-                    type="checkbox"
-                    id="favourite"
-                    className="checkbox-primary checkbox"
-                    {...register('isFavourite')}
-                />
+                <Checkbox id="favourite" />
                 <Label htmlFor="favourite">Add it to your Favourites?</Label>
             </div>
         </form>

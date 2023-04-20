@@ -2,6 +2,7 @@ import React from 'react';
 import { RiCloseFill } from 'react-icons/ri';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { ColumnItemSortableProps } from './column-item-sortable';
+import { Button } from '@components/ui/button';
 
 interface ColumnItemProps extends ColumnItemSortableProps {
     listeners?: SyntheticListenerMap | undefined;
@@ -14,7 +15,7 @@ export const ColumnItem = ({
     listeners,
 }: ColumnItemProps) => {
     return (
-        <div className="flex w-full cursor-default items-center justify-between gap-3 rounded-lg bg-base-300 p-0">
+        <div className="flex w-full cursor-default items-center justify-between gap-3 rounded-lg bg-muted p-0">
             <div
                 className="grid h-full flex-1 cursor-grab items-center truncate"
                 aria-roledescription="draggable"
@@ -25,14 +26,16 @@ export const ColumnItem = ({
                     {column.title}
                 </span>
             </div>
-            <button
+            <Button
                 type="button"
-                className="btn-error btn-xs btn h-full rounded-lg p-1"
+                variant="destructive"
+                size="sm"
+                className="h-full rounded-lg p-1"
                 onClick={() => handleColumnDeletion(column.id as string)}
                 aria-label="Delete column item"
             >
                 <RiCloseFill />
-            </button>
+            </Button>
         </div>
     );
 };

@@ -23,28 +23,31 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
     return (
         <>
             {children ? (
-                <label className="input-group">
+                <div className="flex gap-2">
                     <Input
                         aria-invalid={!!(errors && errorMessages)}
                         className={cn(
-                            errorMessages && 'input-error',
+                            errorMessages && 'border-destructive/80',
                             className
                         )}
                         {...rest}
                         {...(register && register(registerName, registerRules))}
                     />
                     {children}
-                </label>
+                </div>
             ) : (
                 <Input
                     aria-invalid={!!(errors && errorMessages)}
-                    className={cn(errorMessages && 'input-error', className)}
+                    className={cn(
+                        errorMessages && 'border-destructive/80',
+                        className
+                    )}
                     {...rest}
                     {...(register && register(registerName, registerRules))}
                 />
             )}
             {errorMessages && (
-                <p className="mt-2 text-sm text-error">
+                <p className="mt-2 text-sm text-destructive">
                     {errorMessages.message}
                 </p>
             )}

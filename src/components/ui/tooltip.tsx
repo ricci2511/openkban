@@ -12,20 +12,26 @@ const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;
 
 const tooltipVariants = cva(
-    'z-50 overflow-hidden rounded-md border px-3 py-1.5 text-sm shadow-md animate-in fade-in-50 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1',
+    'z-50 overflow-hidden rounded-md border shadow-md animate-in fade-in-50 data-[side=bottom]:slide-in-from-top-1 data-[side=top]:slide-in-from-bottom-1 data-[side=left]:slide-in-from-right-1 data-[side=right]:slide-in-from-left-1',
     {
         variants: {
             variant: {
-                default: 'bg-popover/80 text-popover-foreground',
+                default: 'bg-popover/90 text-popover-foreground',
                 destructive:
-                    'border-destructive bg-destructive/80 text-destructive-foreground',
-                info: 'border-info bg-info/80 text-info-foreground',
-                warning: 'border-warning bg-warning/80 text-warning-foreground',
-                success: 'border-success bg-success/80 text-success-foreground',
+                    'border-destructive bg-destructive/90 text-destructive-foreground',
+                info: 'border-info bg-info/90 text-info-foreground',
+                warning: 'border-warning bg-warning/90 text-warning-foreground',
+                success: 'border-success bg-success/90 text-success-foreground',
+            },
+            size: {
+                default: 'px-3 py-1.5 text-sm',
+                sm: 'px-2 py-1 text-xs',
+                lg: 'px-4 py-2 text-base',
             },
         },
         defaultVariants: {
             variant: 'default',
+            size: 'default',
         },
     }
 );
@@ -36,11 +42,11 @@ export interface TooltipProps
 const TooltipContent = React.forwardRef<
     React.ElementRef<typeof TooltipPrimitive.Content>,
     TooltipProps
->(({ className, variant, sideOffset = 4, ...props }, ref) => (
+>(({ className, variant, size, sideOffset = 4, ...props }, ref) => (
     <TooltipPrimitive.Content
         ref={ref}
         sideOffset={sideOffset}
-        className={cn(tooltipVariants({ variant, className }))}
+        className={cn(tooltipVariants({ variant, size, className }))}
         {...props}
     />
 ));
