@@ -1,46 +1,45 @@
-import { FormInput } from '@components/form-input';
+import { CalendarDatePickerWithPresets } from '@components/calendar-date-picker';
 import { Label } from '@components/ui/label';
 import { BoardTaskCreation } from '@lib/schemas/board-schemas';
-import dayjs from 'dayjs';
+import { addDays } from 'date-fns';
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-const today = new Date().toISOString().split('T')[0];
-const tomorrow = dayjs().add(1, 'day').toISOString().split('T')[0];
-
-// TODO: Improve date input min/max logic
 export const TaskDateInputs = () => {
-    const {
-        register,
-        formState: { errors },
-    } = useFormContext<BoardTaskCreation>();
+    const { getValues, control } = useFormContext<BoardTaskCreation>();
 
     return (
         <>
             <div className="flex w-1/2 flex-col gap-1">
                 <Label htmlFor="start-date">Start date</Label>
-                <FormInput<BoardTaskCreation>
-                    id="start-date"
-                    type="date"
-                    defaultValue={today}
-                    min={today}
-                    register={register}
+                <Controller
                     name="startDate"
-                    rules={{ valueAsDate: true, required: true }}
-                    errors={errors}
+                    control={control}
+                    render={({ field }) => (
+                        <CalendarDatePickerWithPresets
+                            value={field.value ?? new Date()}
+                            onDateChange={(date) => field.onChange(date)}
+                            fromDate={new Date()}
+                        />
+                    )}
                 />
             </div>
             <div className="flex w-1/2 flex-col gap-1">
                 <Label htmlFor="due-date">Due date</Label>
-                <FormInput<BoardTaskCreation>
-                    id="due-date"
-                    type="date"
-                    defaultValue={tomorrow}
-                    min={tomorrow}
-                    register={register}
+                <Controller
                     name="dueDate"
-                    rules={{ valueAsDate: true, required: true }}
-                    errors={errors}
+                    control={control}
+                    render={({ field }) => (
+                        <CalendarDatePickerWithPresets
+                            value={field.value ?? addDays(new Date(), 5)}
+                            onDateChange={(date) => field.onChange(date)}
+                            fromDate={
+                                getValues('startDate')
+                                    ? addDays(getValues('startDate'), 1)
+                                    : new Date()
+                            }
+                        />
+                    )}
                 />
             </div>
         </>

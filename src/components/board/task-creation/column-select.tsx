@@ -47,7 +47,7 @@ export const ColumnSelect = () => {
                     className={cn(
                         'w-1/2',
                         selectErrors &&
-                            'border-error outline-error focus:ring-error' // will be encapsulated in SelectContent once I build the design system
+                            'border-destructive outline-destructive focus:ring-destructive'
                     )}
                 >
                     <SelectValue placeholder="Select a column" />
@@ -63,7 +63,7 @@ export const ColumnSelect = () => {
                 </SelectContent>
             </Select>
             {selectErrors && (
-                <p className="mt-2 text-sm text-error">
+                <p className="text-sm text-destructive">
                     {selectErrors.message}
                 </p>
             )}

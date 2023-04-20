@@ -37,7 +37,6 @@
     "class-variance-authority": "^0.5.2",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.3",
-    "dayjs": "^1.11.7",
     "immer": "^9.0.19",
     "lexorank": "^1.0.5",
     "lodash.get": "^4.4.2",

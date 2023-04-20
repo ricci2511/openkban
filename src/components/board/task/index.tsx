@@ -1,8 +1,6 @@
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { BoardTask } from '@prisma/client';
-import dayjs from 'dayjs';
 import React from 'react';
-import { RxDragHandleDots2 } from 'react-icons/rx';
 import Link from 'next/link';
 import { useBoardId } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
@@ -10,6 +8,7 @@ import { TaskOptionsDropdown } from './task-options-dropdown';
 import { Dialog, DialogTrigger } from '@components/ui/dialog';
 import { Grip } from 'lucide-react';
 import { Button } from '@components/ui/button';
+import { isPast, isToday, format } from 'date-fns';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
@@ -39,8 +38,8 @@ export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
     const taskClasses = `flex bg-card border-l-2
         ${isDragging && 'opacity-50'}`;
 
-    const dueDateToday = dayjs().isSame(dueDate, 'day');
-    const dueDateOverdue = dayjs().isAfter(dueDate, 'day');
+    const dueDateToday = isToday(dueDate);
+    const dueDateOverdue = isPast(dueDate);
 
     return (
         <div className={taskClasses} style={{ borderLeftColor: color }}>
@@ -56,10 +55,11 @@ export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
                         <div className="flex flex-col space-y-4 p-3">
                             <span>{title}</span>
                             <div className="flex items-center gap-4">
-                                <span className="text-xs font-extralight">
-                                    {`${dayjs()
-                                        .month(dueDate.getMonth())
-                                        .format('MMM')} ${dueDate.getDate()}`}
+                                <span className="text-xs font-light">
+                                    {`${format(
+                                        dueDate,
+                                        'MMM'
+                                    )} ${dueDate.getDate()}`}
                                 </span>
                             </div>
                             {(dueDateToday || dueDateOverdue) && (
