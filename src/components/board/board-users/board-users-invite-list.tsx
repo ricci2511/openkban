@@ -1,5 +1,6 @@
+import { Badge } from '@components/ui/badge';
 import { User } from '@prisma/client';
-import { RxCross1 } from 'react-icons/rx';
+import { X } from 'lucide-react';
 
 interface BoardUsersInviteListProps {
     users: User[];
@@ -13,15 +14,18 @@ export const BoardUsersInviteList = ({
     return (
         <div className="mt-3 flex flex-wrap gap-2">
             {users.map(({ id, name }) => (
-                <div key={id} className="badge py-3">
-                    <span className="text-xs">{name}</span>
+                <Badge key={id}>
+                    <span>{name}</span>
                     <button>
-                        <RxCross1
+                        <X
                             className="ml-2 h-3 w-3"
                             onClick={() => deleteInvitedUser(id)}
                         />
+                        <span className="sr-only">
+                            Remove {name} from invite list
+                        </span>
                     </button>
-                </div>
+                </Badge>
             ))}
         </div>
     );

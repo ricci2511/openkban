@@ -14,8 +14,9 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@components/ui/tooltip';
-import { RxCardStackPlus } from 'react-icons/rx';
 import { CreateTaskForm } from './create-task-form';
+import { Button } from '@components/ui/button';
+import { ClipboardList } from 'lucide-react';
 
 export const CreateTaskDialog = () => {
     const [open, setOpen] = useState(false);
@@ -29,11 +30,13 @@ export const CreateTaskDialog = () => {
             <TooltipProvider delayDuration={150}>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <DialogTrigger
-                            className="btn-outline btn-circle btn max-h-2"
-                            aria-label="Open task creation dialog"
-                        >
-                            <RxCardStackPlus size={16} />
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="rounded-full">
+                                <ClipboardList
+                                    className="h-4 w-4 sm:h-5 sm:w-5"
+                                    size="lg"
+                                />
+                            </Button>
                         </DialogTrigger>
                     </TooltipTrigger>
                     <TooltipContent variant="info" side="bottom">

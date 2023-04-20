@@ -17,6 +17,7 @@ import { BoardUsersInviteList } from './board-users-invite-list';
 import { useCreateBoardUser } from '@hooks/mutations/use-board-user-mutations';
 import { ClientBoardUser } from 'types/board-types';
 import { MAX_BOARD_USERS } from '@lib/constants';
+import { Button } from '@components/ui/button';
 
 export const BoardUserInviteSection = () => {
     const [open, setOpen] = useState(false); // popover open state
@@ -112,7 +113,7 @@ export const BoardUserInviteSection = () => {
     };
 
     return (
-        <div className="relative -mt-2 flex flex-col">
+        <div className="relative -mt-2 flex flex-col gap-1">
             <Popover open={open} onOpenChange={setOpen}>
                 <Label htmlFor="user-search">User search</Label>
                 <div className="flex flex-wrap gap-2">
@@ -139,15 +140,14 @@ export const BoardUserInviteSection = () => {
                             admin // no need to check since this section is only visible to admins
                         />
                     </div>
-                    <button
-                        className={`btn w-full sm:w-auto ${
-                            isLoading && 'loading'
-                        }`}
-                        disabled={isLoading}
+                    <Button
+                        className="w-full sm:w-auto"
+                        variant="success"
+                        loading={isLoading}
                         onClick={inviteUsers}
                     >
                         Invite
-                    </button>
+                    </Button>
                 </div>
                 {invitedUsers.length > 0 && (
                     <BoardUsersInviteList

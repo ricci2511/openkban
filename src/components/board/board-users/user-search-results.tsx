@@ -21,7 +21,7 @@ export const UserSearchResults = ({
                 <li
                     key={id}
                     className={cn(
-                        'flex cursor-pointer items-center gap-3 rounded-md p-1 transition-all duration-200 hover:bg-base-300',
+                        'flex cursor-pointer items-center gap-3 rounded-md p-1 transition-all duration-200 hover:bg-muted',
                         // disable selection if user is already a member or invited
                         (currentBoardUserIds.includes(id) ||
                             invitedUserIds.includes(id)) &&

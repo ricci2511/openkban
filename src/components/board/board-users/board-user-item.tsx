@@ -18,6 +18,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@components/ui/popover';
+import { Button } from '@components/ui/button';
+import { Trash } from 'lucide-react';
 
 interface BoardUserItemProps {
     boardUser: ClientBoardUser;
@@ -121,19 +123,27 @@ export const BoardUserItem = ({
                     />
                     {amIAdmin && !isMe && (
                         <Popover>
-                            <PopoverTrigger className="btn-error btn-sm btn px-1.5">
-                                <RxTrash size={16} />
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="px-1.5"
+                                >
+                                    <Trash className="h-4 w-4" />
+                                </Button>
                             </PopoverTrigger>
                             <PopoverContent align="end">
                                 <p className="text-sm">
-                                    {name} will be removed from this board.
+                                    Remove <strong>{name}</strong> from this
+                                    board?
                                 </p>
-                                <button
+                                <Button
+                                    variant="destructive"
                                     className="btn-error btn-sm btn mt-2 w-full"
                                     onClick={onBoardUserDelete}
                                 >
                                     Remove
-                                </button>
+                                </Button>
                             </PopoverContent>
                         </Popover>
                     )}

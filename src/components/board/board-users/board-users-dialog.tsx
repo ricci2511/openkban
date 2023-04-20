@@ -14,6 +14,8 @@ import {
 import { RxPerson } from 'react-icons/rx';
 import { useUserRole } from 'store/kanban-store';
 import { BoardUsersContent } from './board-users-content';
+import { Button } from '@components/ui/button';
+import { User } from 'lucide-react';
 
 export const BoardUsersDialog = () => {
     const isAdmin = useUserRole() === 'ADMIN';
@@ -23,11 +25,10 @@ export const BoardUsersDialog = () => {
             <TooltipProvider delayDuration={150}>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <DialogTrigger
-                            className="btn-outline btn-circle btn max-h-2"
-                            aria-label="Open board users management dialog"
-                        >
-                            <RxPerson size={16} />
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="rounded-full">
+                                <User className="h-4 w-4" />
+                            </Button>
                         </DialogTrigger>
                     </TooltipTrigger>
                     <TooltipContent variant="info" side="left">
