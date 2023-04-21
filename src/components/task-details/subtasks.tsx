@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useCurrentTask, useSubtasks } from 'store/kanban-store';
-import { RxCheckbox, RxPlus } from 'react-icons/rx';
 import { SubtaskItem } from './subtask-item';
 import { CreateSubtaskForm } from './create-subtask-form';
+import { ListChecks, Plus } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 export const Subtasks = () => {
     const { title } = useCurrentTask()!;
@@ -15,7 +16,7 @@ export const Subtasks = () => {
     return (
         <>
             <span className="flex items-center gap-3">
-                <RxCheckbox size={22} />
+                <ListChecks className="h-5 w-5" />
                 <h4 className="text-xl font-semibold">Subtasks</h4>
             </span>
             <ul className="my-3" aria-label={`Subtasks list of ${title}`}>
@@ -26,14 +27,15 @@ export const Subtasks = () => {
             {adding ? (
                 <CreateSubtaskForm stopAddingCb={stopAdding} />
             ) : (
-                <button
-                    className="btn-sm btn ml-9 flex gap-2"
+                <Button
+                    size="sm"
+                    className="ml-9 flex gap-2"
                     onClick={startAdding}
                     aria-label="Add a subtask"
                 >
                     <span>Add a subtask</span>
-                    <RxPlus size={18} />
-                </button>
+                    <Plus className="h-4 w-4" />
+                </Button>
             )}
         </>
     );

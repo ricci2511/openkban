@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useCurrentTask } from 'store/kanban-store';
-import { RxPencil1, RxPlus, RxTextAlignLeft } from 'react-icons/rx';
 import { DescriptionForm } from './description-form';
+import { AlignLeft, Pencil, Plus } from 'lucide-react';
+import { Button } from '@components/ui/button';
 
 export const Description = () => {
     const { title, description } = useCurrentTask()!;
@@ -12,26 +13,24 @@ export const Description = () => {
     return (
         <>
             <div className="mb-2 flex items-center gap-3">
-                <RxTextAlignLeft size={22} />
+                <AlignLeft className="h-5 w-5" />
                 <h4 className="text-xl font-semibold">Task Description</h4>
                 {!editting && description && (
-                    <button
-                        className="btn-outline btn-ghost btn-sm btn"
-                        onClick={startEditting}
-                    >
-                        <RxPencil1 size={18} />
-                    </button>
+                    <Button variant="outline" size="sm" onClick={startEditting}>
+                        <Pencil className="h-4 w-4" />
+                    </Button>
                 )}
             </div>
             <div className="ml-9">
                 {!description && !editting && (
-                    <button
-                        className="btn-sm btn mt-2 flex gap-2"
+                    <Button
+                        size="sm"
+                        className="mt-2 flex gap-2"
                         onClick={startEditting}
                     >
                         Add description
-                        <RxPlus size={18} />
-                    </button>
+                        <Plus className="h-4 w-4" />
+                    </Button>
                 )}
                 {editting ? (
                     <DescriptionForm stopEdittingCb={stopEditting} />

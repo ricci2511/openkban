@@ -6,6 +6,7 @@ import { useCurrentTask } from 'store/kanban-store';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useUpdateTask } from '@hooks/mutations/use-task-mutations';
 import { FormTextarea } from '@components/form-textarea';
+import { Button } from '@components/ui/button';
 
 // TODO: maybe reuse boardTaskCreationSchema for this?
 const descriptionSchema = z.object({
@@ -48,7 +49,7 @@ export const DescriptionForm = ({
     const ref = useClickOutside<HTMLFormElement>(stopEdittingCb);
 
     return (
-        <form onSubmit={onSubmit} className="form-control" ref={ref}>
+        <form onSubmit={onSubmit} className="flex flex-col gap-2" ref={ref}>
             <div>
                 <FormTextarea<TaskDescription>
                     id="description"
@@ -61,24 +62,23 @@ export const DescriptionForm = ({
                 />
             </div>
             <div className="mt-2 flex gap-3 self-start">
-                <button
+                <Button
                     type="submit"
-                    className={`btn-primary btn-sm btn ${
-                        isLoading && 'loading'
-                    }`}
-                    disabled={isLoading}
+                    variant="primary"
+                    size="sm"
+                    loading={isLoading}
                     aria-label={`Update description for task ${title}`}
                 >
                     {isLoading ? 'Updating...' : 'Update Description'}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
-                    className="btn-error btn-sm btn"
+                    size="sm"
                     onClick={stopEdittingCb}
                     aria-label="Cancel task description update"
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </form>
     );

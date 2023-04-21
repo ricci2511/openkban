@@ -4,6 +4,7 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
+import { Button } from '@components/ui/button';
 
 interface UpdateSubtaskFormProps {
     id: string;
@@ -41,7 +42,7 @@ export const UpdateSubtaskForm = ({
     return (
         <form
             onSubmit={onSubmit}
-            className="form-control w-full gap-2"
+            className="flex w-full flex-col gap-2"
             ref={ref}
         >
             <div>
@@ -55,27 +56,26 @@ export const UpdateSubtaskForm = ({
                     errors={errors}
                 />
             </div>
-            <div className="flex gap-2 self-start">
-                <button
+            <div className="flex gap-2">
+                <Button
                     type="submit"
-                    className={`btn-primary btn-sm btn ${
-                        isLoading && 'loading'
-                    }`}
-                    disabled={isLoading}
+                    variant="primary"
+                    size="sm"
+                    loading={isLoading}
                     aria-label={`Save subtask with title: ${getValues(
                         'title'
                     )}`}
                 >
                     {isLoading ? 'Saving...' : 'Save'}
-                </button>
-                <button
+                </Button>
+                <Button
                     type="button"
-                    className="btn-error btn-sm btn"
+                    size="sm"
                     onClick={stopEdittingCb}
                     aria-label="Cancel subtask update"
                 >
                     Cancel
-                </button>
+                </Button>
             </div>
         </form>
     );
