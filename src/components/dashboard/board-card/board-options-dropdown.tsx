@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { Board } from '@prisma/client';
-import { boardTitle } from '@lib/schemas/board-schemas';
-import {
-    useDeleteBoard,
-    useUpdateBoard,
-} from '@hooks/mutations/use-board-mutations';
 import { useLeaveBoard } from '@hooks/mutations/use-board-user-mutations';
 import {
     DropdownMenu,
@@ -15,9 +10,19 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import dynamic from 'next/dynamic';
 import { Button } from '@components/ui/button';
-import { DoorOpen, MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { DoorOpen, MoreVertical, Pencil, Trash, Trash2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const DeleteBoardAlertDialog = dynamic(
+    () =>
+        import('./delete-board-alert-dialog').then(
+            (mod) => mod.DeleteBoardAlertDialog
+        ),
+    {
+        ssr: false,
+    }
+);
 
 interface OptionsDropdownProps {
     board: Board;
@@ -32,9 +37,9 @@ export const BoardOptionsDropdown = ({
 }: OptionsDropdownProps) => {
     const { id, title } = board;
 
-    const { mutate, isLoading } = useDeleteBoard();
-    const deleteBoard = () => (!isLoading ? mutate({ id }) : null);
     const { mutate: leaveBoard } = useLeaveBoard();
+
+    const [isDeleting, setIsDeleting] = useState(false);
 
     return (
         <DropdownMenu>
@@ -48,7 +53,7 @@ export const BoardOptionsDropdown = ({
                 sideOffset={6}
                 className="max-w-[10rem]"
             >
-                <DropdownMenuLabel>{title} options</DropdownMenuLabel>
+                <DropdownMenuLabel>Board options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     onClick={startEditting}
@@ -62,14 +67,25 @@ export const BoardOptionsDropdown = ({
                     <span>Leave</span>
                 </DropdownMenuItem>
                 {isAdmin && (
-                    <DropdownMenuItem
-                        aria-label={`Delete ${title} board`}
-                        onClick={deleteBoard}
+                    <DropdownMenuDialogItem
+                        open={isDeleting}
+                        onOpenChange={setIsDeleting}
+                        aria-label={`Delete ${title} task`}
+                        trigger={
+                            <>
+                                <Trash className="mr-2 h-4 w-4" />
+                                <span>Delete</span>
+                            </>
+                        }
+                        alert
                         destructive
                     >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete</span>
-                    </DropdownMenuItem>
+                        <DeleteBoardAlertDialog
+                            boardId={id}
+                            title={title}
+                            closeAlert={() => setIsDeleting(false)}
+                        />
+                    </DropdownMenuDialogItem>
                 )}
             </DropdownMenuContent>
         </DropdownMenu>

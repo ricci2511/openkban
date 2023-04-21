@@ -6,29 +6,29 @@ import {
     AlertDialogFooter,
 } from '@components/ui/alert-dialog';
 import { Button } from '@components/ui/button';
-import { useDeleteTask } from '@hooks/mutations/use-task-mutations';
+import { useDeleteBoard } from '@hooks/mutations/use-board-mutations';
 
-interface DeleteTaskAlertDialogProps {
-    taskId: string;
+interface DeleteBoardAlertDialogProps {
+    boardId: string;
     title: string;
     closeAlert: () => void;
 }
 
-export const DeleteTaskAlertDialog = ({
-    taskId,
+export const DeleteBoardAlertDialog = ({
+    boardId,
     title,
     closeAlert,
-}: DeleteTaskAlertDialogProps) => {
-    const { mutate: deleteTask, isLoading } = useDeleteTask();
+}: DeleteBoardAlertDialogProps) => {
+    const { mutate: deleteBoard, isLoading } = useDeleteBoard();
 
     return (
         <>
             <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription>
-                This will delete the task <strong>{title}</strong> and all of
-                its contents.
+                This will delete the Board <strong>{title}</strong> and all of
+                its contents, including all tasks.
             </AlertDialogDescription>
             <AlertDialogFooter>
                 <Button
@@ -36,9 +36,9 @@ export const DeleteTaskAlertDialog = ({
                     variant="destructive"
                     loading={isLoading}
                     aria-label={`Delete ${title} column`}
-                    onClick={() => deleteTask({ id: taskId })}
+                    onClick={() => deleteBoard({ id: boardId })}
                 >
-                    {isLoading ? 'Deleting...' : 'Yes, delete task'}
+                    {isLoading ? 'Deleting...' : 'Yes, delete board'}
                 </Button>
                 <Button type="button" onClick={closeAlert}>
                     Cancel

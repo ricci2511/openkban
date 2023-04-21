@@ -14,7 +14,6 @@ interface DeleteColumnAlertDialogProps {
     closeAlert: () => void;
 }
 
-// Will be refactored to use an alert dialog component once it's implemented
 export const DeleteColumnAlertDialog = ({
     columnId,
     title,

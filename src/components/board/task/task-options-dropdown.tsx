@@ -11,7 +11,17 @@ import {
 } from '@components/ui/dropdown-menu';
 import { Button } from '@components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
-import { DeleteTaskAlertDialog } from './delete-task-alert-dialog';
+import dynamic from 'next/dynamic';
+
+const DeleteTaskAlertDialog = dynamic(
+    () =>
+        import('./delete-task-alert-dialog').then(
+            (mod) => mod.DeleteTaskAlertDialog
+        ),
+    {
+        ssr: false,
+    }
+);
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
@@ -33,7 +43,7 @@ export const TaskOptionsDropdown = ({
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={6}>
-                <DropdownMenuLabel>{title} options</DropdownMenuLabel>
+                <DropdownMenuLabel>Task options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     aria-label={`Rename ${title} task`}
@@ -45,7 +55,6 @@ export const TaskOptionsDropdown = ({
                 <DropdownMenuDialogItem
                     open={isDeleting}
                     onOpenChange={setIsDeleting}
-                    className="focus:bg-red-400 dark:focus:bg-red-600"
                     aria-label={`Delete ${title} task`}
                     trigger={
                         <>
@@ -54,6 +63,7 @@ export const TaskOptionsDropdown = ({
                         </>
                     }
                     alert
+                    destructive
                 >
                     <DeleteTaskAlertDialog
                         taskId={id}

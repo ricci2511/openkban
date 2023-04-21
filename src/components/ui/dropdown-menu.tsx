@@ -83,14 +83,15 @@ type DropdownMenuItemElementRef = React.ElementRef<
 >;
 type DropdownMenuItemPropsWithoutRef = React.ComponentPropsWithoutRef<
     typeof DropdownMenuPrimitive.Item
->;
+> & {
+    inset?: boolean;
+    // for dropdown items there is either the default or destructive variant
+    destructive?: boolean;
+};
 
 const DropdownMenuItem = React.forwardRef<
     DropdownMenuItemElementRef,
-    DropdownMenuItemPropsWithoutRef & {
-        destructive?: boolean; // for dropdown items there is either the default or destructive variant
-        inset?: boolean;
-    }
+    DropdownMenuItemPropsWithoutRef
 >(({ className, destructive, inset, ...props }, ref) => (
     <DropdownMenuPrimitive.Item
         ref={ref}
