@@ -3,20 +3,16 @@ import { ComponentPropsWithoutRef, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import useDebounce from 'use-debouncy/lib/effect';
 
-export interface ColorPickerProps extends ComponentPropsWithoutRef<'div'> {
+export interface ColorPickerProps {
     color: string;
     changeColor:
         | React.Dispatch<React.SetStateAction<string>>
         | ((color: string) => void);
 }
 
-export const ColorPicker = ({
-    color,
-    changeColor,
-    ...rest
-}: ColorPickerProps) => {
+export const ColorPicker = ({ color, changeColor }: ColorPickerProps) => {
     const [value, setValue] = useState(color);
-    useDebounce(() => changeColor(value), 300, [value]);
+    useDebounce(() => changeColor(value), 600, [value]);
 
     return (
         <div className="max-w-[200px] rounded-xl bg-secondary shadow-md">

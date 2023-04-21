@@ -62,7 +62,13 @@ export const CreateColumnForm = ({
                             toggle={setColorPickerOpen}
                             color={color}
                             changeColor={setColor}
-                        />
+                            alignOffset={-14}
+                        >
+                            <div
+                                className="h-4 w-4 rounded-lg"
+                                style={{ backgroundColor: color }}
+                            />
+                        </ColorPickerPopover>
                     </Button>
                 </FormInput>
             </div>

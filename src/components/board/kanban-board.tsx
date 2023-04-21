@@ -219,11 +219,12 @@ export const KanbanBoard = () => {
             onDragCancel={onDragCancel}
         >
             <ul className="grid h-full auto-cols-[minmax(285px,_1fr)] grid-flow-col gap-4 pl-4 after:w-px sm:pl-6 lg:pl-8">
-                {columns.map((column) => (
+                {columns.map((column, i) => (
                     <Column
                         key={column.id}
                         column={column}
                         tasks={tasks[column.id]}
+                        position={i}
                     />
                 ))}
                 {columns.length < MAX_COLUMNS && <CreateColumnButton />}

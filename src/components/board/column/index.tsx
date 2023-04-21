@@ -7,18 +7,17 @@ import {
 import { BoardColumn, BoardTask } from '@prisma/client';
 import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { TaskSortable } from '../task-sortable';
-import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
-import { ColorPickerPopover } from '@components/color-picker-popover';
-import { EditableTitleInput } from '@components/editable-title-input';
-import { columnTitle } from '@lib/schemas/board-schemas';
 import { Button } from '@components/ui/button';
+import { ColumnTitleEditable } from './column-title-editable';
+import { ColumnColorPicker } from './column-color-picker';
 
 interface ColumnProps {
     column: BoardColumn;
     tasks: BoardTask[];
+    position: number;
 }
 
-export const Column = ({ column, tasks }: ColumnProps) => {
+export const Column = ({ column, tasks, position }: ColumnProps) => {
     const { id, title, color } = column;
     const taskIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
     // each column is a droppable area
@@ -26,30 +25,10 @@ export const Column = ({ column, tasks }: ColumnProps) => {
         id,
     });
 
-    const { mutate: updateColumn, isLoading } = useUpdateColumn();
-    const handleColorChange = (newColor: string) => {
-        // prevent updating if color is the same or if already mutating
-        if (color === newColor || isLoading) return;
-        updateColumn({
-            id,
-            color: newColor,
-        });
-    };
-
-    const [colorPickerOpen, setColorPickerOpen] = useState(false);
+    // column title editting state
     const [isEditting, setIsEditting] = useState(false);
-
-    const updateTitle = (newTitle: string) => {
-        updateColumn(
-            {
-                id,
-                title: newTitle,
-            },
-            {
-                onSuccess: () => setIsEditting(false),
-            }
-        );
-    };
+    // column color picker state
+    const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
     return (
         <SortableContext
@@ -60,12 +39,10 @@ export const Column = ({ column, tasks }: ColumnProps) => {
             <li className="relative mt-1 flex h-[calc(100vh-225px)] flex-col">
                 {isEditting ? (
                     <div className="mb-4 rounded-md border">
-                        <EditableTitleInput
+                        <ColumnTitleEditable
+                            id={id}
                             title={title}
                             stopEditting={() => setIsEditting(false)}
-                            updater={updateTitle}
-                            loading={isLoading}
-                            zodString={columnTitle}
                         />
                     </div>
                 ) : (
@@ -89,13 +66,20 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                                 onClick={() => setColorPickerOpen(true)}
                                 title="Modifty the color for your column"
                             >
-                                <ColorPickerPopover
-                                    isOpen={colorPickerOpen}
-                                    toggle={setColorPickerOpen}
-                                    color={color}
-                                    changeColor={handleColorChange}
+                                <div
+                                    className="h-4 w-4 rounded-lg"
+                                    style={{ backgroundColor: color }}
                                 />
                             </Button>
+                            {colorPickerOpen && (
+                                <ColumnColorPicker
+                                    id={id}
+                                    color={color}
+                                    toggle={setColorPickerOpen}
+                                    // color picker on the first column should be centered to avoid it being cut off
+                                    align={position === 0 ? 'center' : 'end'}
+                                />
+                            )}
                         </div>
                         <ColumnOptionsDropdown column={column} />
                     </div>

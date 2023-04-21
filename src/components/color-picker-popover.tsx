@@ -1,29 +1,40 @@
 import React from 'react';
 import { ColorPickerProps, ColorPicker } from './color-picker';
 import { Popover, PopoverAnchor, PopoverContent } from '@components/ui/popover';
+import { PopoverContentProps } from '@radix-ui/react-popover';
 
-interface PopoverPickerProps extends ColorPickerProps {
+// ColorPickerProps has a color prop that is required, hence the need to omit it
+export type PopoverContentPropsWithoutColor = Omit<
+    PopoverContentProps,
+    'color' | 'unstyled'
+>;
+
+interface PopoverPickerProps
+    extends ColorPickerProps,
+        PopoverContentPropsWithoutColor {
     isOpen: boolean;
     toggle: React.Dispatch<React.SetStateAction<boolean>>;
+    children?: React.ReactNode;
 }
 export const ColorPickerPopover = ({
     isOpen,
     toggle,
     color,
     changeColor,
+    children, // optional element to position the PopoverContent against, if not provided, an invisible PopoverAnchor will be used
+    ...props
 }: PopoverPickerProps) => {
     return (
         <Popover open={isOpen} onOpenChange={toggle}>
-            <PopoverAnchor asChild>
-                <div
-                    className="h-4 w-4 rounded-lg"
-                    style={{ backgroundColor: color }}
-                />
-            </PopoverAnchor>
+            {children ? (
+                <PopoverAnchor asChild>{children}</PopoverAnchor>
+            ) : (
+                <PopoverAnchor />
+            )}
             <PopoverContent
-                align="end"
-                alignOffset={-15}
-                sideOffset={16}
+                {...props}
+                align={props.align ?? 'end'}
+                sideOffset={22 ?? props.sideOffset}
                 unstyled
             >
                 <ColorPicker color={color} changeColor={changeColor} />
