@@ -4,6 +4,11 @@ import { Check, ChevronRight, Circle } from 'lucide-react';
 import { cn } from '@lib/helpers';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogTrigger,
+} from './alert-dialog';
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 
@@ -193,33 +198,61 @@ const DropdownMenuShortcut = ({
 };
 DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';
 
+interface DropdownMenuDialogItemProps extends DropdownMenuItemPropsWithoutRef {
+    trigger: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: DialogProps['onOpenChange'];
+    onSelect?: DropdownMenuPrimitive.DropdownMenuItemProps['onSelect'];
+    alert?: boolean; // wether to use an alert dialog or a regular dialog
+}
+
 const DropdownMenuDialogItem = React.forwardRef<
     DropdownMenuItemElementRef,
-    DropdownMenuItemPropsWithoutRef & {
-        trigger: React.ReactNode;
-        open?: boolean;
-        onOpenChange?: DialogProps['onOpenChange'];
-        onSelect?: DropdownMenuPrimitive.DropdownMenuItemProps['onSelect'];
+    DropdownMenuDialogItemProps
+>(
+    (
+        { trigger, children, open, onOpenChange, onSelect, alert, ...props },
+        ref
+    ) => {
+        return (
+            <>
+                {alert ? (
+                    <AlertDialog open={open} onOpenChange={onOpenChange}>
+                        <AlertDialogTrigger asChild>
+                            <DropdownMenuItem
+                                ref={ref}
+                                onSelect={(event) => {
+                                    event.preventDefault();
+                                    onSelect && onSelect(event);
+                                }}
+                                {...props}
+                            >
+                                {trigger}
+                            </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>{children}</AlertDialogContent>
+                    </AlertDialog>
+                ) : (
+                    <Dialog open={open} onOpenChange={onOpenChange}>
+                        <DialogTrigger asChild>
+                            <DropdownMenuItem
+                                ref={ref}
+                                onSelect={(event) => {
+                                    event.preventDefault();
+                                    onSelect && onSelect(event);
+                                }}
+                                {...props}
+                            >
+                                {trigger}
+                            </DropdownMenuItem>
+                        </DialogTrigger>
+                        <DialogContent>{children}</DialogContent>
+                    </Dialog>
+                )}
+            </>
+        );
     }
->(({ trigger, children, open, onOpenChange, onSelect, ...props }, ref) => {
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <DropdownMenuItem
-                    ref={ref}
-                    onSelect={(event) => {
-                        event.preventDefault();
-                        onSelect && onSelect(event);
-                    }}
-                    {...props}
-                >
-                    {trigger}
-                </DropdownMenuItem>
-            </DialogTrigger>
-            <DialogContent>{children}</DialogContent>
-        </Dialog>
-    );
-});
+);
 DropdownMenuDialogItem.displayName = 'DropdownMenuDialogItem';
 
 export {

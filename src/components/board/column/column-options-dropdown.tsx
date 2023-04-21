@@ -38,6 +38,8 @@ export const ColumnOptionsDropdown = ({
         isEditting ? stopEditting : undefined
     );
 
+    const [isDeleting, setIsDeleting] = useState(false);
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -68,6 +70,8 @@ export const ColumnOptionsDropdown = ({
                     />
                 </DropdownMenuDialogItem>
                 <DropdownMenuDialogItem
+                    open={isDeleting}
+                    onOpenChange={setIsDeleting}
                     className="focus:bg-red-400 dark:focus:bg-red-600"
                     trigger={
                         <>
@@ -75,8 +79,13 @@ export const ColumnOptionsDropdown = ({
                             <span>Delete</span>
                         </>
                     }
+                    alert
                 >
-                    <DeleteColumnAlertDialog columnId={id} title={title} />
+                    <DeleteColumnAlertDialog
+                        columnId={id}
+                        title={title}
+                        closeAlert={() => setIsDeleting(false)}
+                    />
                 </DropdownMenuDialogItem>
             </DropdownMenuContent>
         </DropdownMenu>

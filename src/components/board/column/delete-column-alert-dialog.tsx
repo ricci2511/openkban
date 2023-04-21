@@ -1,45 +1,50 @@
 import React from 'react';
 import { useDeleteColumn } from '@hooks/mutations/use-column-mutations';
 import {
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@components/ui/dialog';
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+} from '@components/ui/alert-dialog';
+import { Button } from '@components/ui/button';
 
 interface DeleteColumnAlertDialogProps {
     columnId: string;
     title: string;
+    closeAlert: () => void;
 }
 
 // Will be refactored to use an alert dialog component once it's implemented
 export const DeleteColumnAlertDialog = ({
     columnId,
     title,
+    closeAlert,
 }: DeleteColumnAlertDialogProps) => {
     const { mutate: deleteColumn, isLoading } = useDeleteColumn();
 
     return (
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>{`Delete column '${title}'`}</DialogTitle>
-            </DialogHeader>
-            <DialogDescription>
+        <>
+            <AlertDialogHeader>
+                <AlertDialogTitle>{`Delete column '${title}'`}</AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription>
                 Are you sure you want do delete this column and all the tasks
                 within it?
-            </DialogDescription>
-            <DialogFooter>
-                <button
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+                <Button
                     type="button"
-                    className={`btn-error btn ${isLoading && 'loading'}`}
-                    disabled={isLoading}
+                    variant="destructive"
+                    loading={isLoading}
                     aria-label={`Delete ${title} column`}
                     onClick={() => deleteColumn({ id: columnId })}
                 >
                     {isLoading ? 'Deleting...' : 'Delete Column'}
-                </button>
-            </DialogFooter>
-        </DialogContent>
+                </Button>
+                <Button type="button" onClick={closeAlert}>
+                    Cancel
+                </Button>
+            </AlertDialogFooter>
+        </>
     );
 };
