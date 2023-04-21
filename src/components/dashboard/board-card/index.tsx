@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { BoardWithUsers } from 'types/board-types';
@@ -6,6 +6,15 @@ import { useUpdateBoardUser } from '@hooks/mutations/use-board-user-mutations';
 import { FavouriteButton } from './favourite-button';
 import { BoardOptionsDropdown } from './board-options-dropdown';
 import { BoardUserAvatar } from '@components/board-user-avatar';
+import dynamic from 'next/dynamic';
+
+const BoardTitleEditable = dynamic(
+    () =>
+        import('./board-title-editable').then((mod) => mod.BoardTitleEditable),
+    {
+        ssr: false,
+    }
+);
 
 interface BoardProps {
     board: BoardWithUsers;
@@ -28,17 +37,27 @@ export const BoardCard = ({ board }: BoardProps) => {
 
     const admin = isAdmin ? me : boardUser.find((bu) => bu.role === 'ADMIN');
 
+    const [isEditting, setIsEditting] = useState(false);
+
     return (
         <li
             key={id}
-            className="relative mb-4 flex min-h-[85px] items-center justify-between gap-2 rounded-sm bg-muted py-3 pl-3 pr-1"
+            className="group relative mb-4 flex min-h-[85px] items-center justify-between gap-2 rounded-sm bg-muted py-3 pl-3 pr-1"
         >
-            <Link
-                href={`/board/${id}`}
-                className="flex-1 cursor-pointer break-all text-base"
-            >
-                {title}
-            </Link>
+            {isEditting ? (
+                <div className="my-auto w-full px-1">
+                    <BoardTitleEditable
+                        id={id}
+                        title={title}
+                        stopEditting={() => setIsEditting(false)}
+                    />
+                </div>
+            ) : (
+                <Link href={`/board/${id}`} className="flex-1 cursor-pointer">
+                    <span className="break-word text-base">{title}</span>
+                </Link>
+            )}
+
             {/* Display the admin's avatar for boards that the user is not an admin of */}
             {admin && !isAdmin && (
                 <div className="absolute -bottom-5 -left-3">
@@ -51,7 +70,13 @@ export const BoardCard = ({ board }: BoardProps) => {
                     updateFavourite={updateFavourite}
                 />
             </div>
-            <BoardOptionsDropdown board={board} isAdmin={isAdmin} />
+            {!isEditting && (
+                <BoardOptionsDropdown
+                    board={board}
+                    isAdmin={isAdmin}
+                    startEditting={() => setIsEditting(true)}
+                />
+            )}
         </li>
     );
 };

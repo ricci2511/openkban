@@ -8,8 +8,18 @@ import { BoardColumn, BoardTask } from '@prisma/client';
 import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { TaskSortable } from '../task-sortable';
 import { Button } from '@components/ui/button';
-import { ColumnTitleEditable } from './column-title-editable';
 import { ColumnColorPicker } from './column-color-picker';
+import dynamic from 'next/dynamic';
+
+const ColumnTitleEditable = dynamic(
+    () =>
+        import('./column-title-editable').then(
+            (mod) => mod.ColumnTitleEditable
+        ),
+    {
+        ssr: false,
+    }
+);
 
 interface ColumnProps {
     column: BoardColumn;
@@ -36,9 +46,9 @@ export const Column = ({ column, tasks, position }: ColumnProps) => {
             items={taskIds}
             strategy={verticalListSortingStrategy}
         >
-            <li className="relative mt-1 flex h-[calc(100vh-225px)] flex-col">
+            <li className="relative mt-1 flex h-[calc(100vh-225px)] flex-col gap-4">
                 {isEditting ? (
-                    <div className="mb-4 rounded-md border">
+                    <div className="mt-0.5">
                         <ColumnTitleEditable
                             id={id}
                             title={title}
@@ -47,7 +57,7 @@ export const Column = ({ column, tasks, position }: ColumnProps) => {
                     </div>
                 ) : (
                     <div
-                        className="mb-4 flex items-center justify-between rounded-md border bg-secondary p-2"
+                        className="flex items-center justify-between rounded-md border bg-secondary p-2"
                         style={{ borderColor: color }}
                     >
                         <div className="flex items-center gap-2">

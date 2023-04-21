@@ -47,7 +47,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
                 />
             )}
             {errorMessages && (
-                <p className="mt-2 text-sm text-destructive">
+                <p className="mt-1 text-sm text-destructive">
                     {errorMessages.message}
                 </p>
             )}

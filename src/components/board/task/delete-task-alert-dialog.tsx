@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDeleteColumn } from '@hooks/mutations/use-column-mutations';
 import {
     AlertDialogHeader,
     AlertDialogTitle,
@@ -7,20 +6,21 @@ import {
     AlertDialogFooter,
 } from '@components/ui/alert-dialog';
 import { Button } from '@components/ui/button';
+import { useDeleteTask } from '@hooks/mutations/use-task-mutations';
 
-interface DeleteColumnAlertDialogProps {
-    columnId: string;
+interface DeleteTaskAlertDialogProps {
+    taskId: string;
     title: string;
     closeAlert: () => void;
 }
 
 // Will be refactored to use an alert dialog component once it's implemented
-export const DeleteColumnAlertDialog = ({
-    columnId,
+export const DeleteTaskAlertDialog = ({
+    taskId,
     title,
     closeAlert,
-}: DeleteColumnAlertDialogProps) => {
-    const { mutate: deleteColumn, isLoading } = useDeleteColumn();
+}: DeleteTaskAlertDialogProps) => {
+    const { mutate: deleteTask, isLoading } = useDeleteTask();
 
     return (
         <>
@@ -28,8 +28,8 @@ export const DeleteColumnAlertDialog = ({
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription>
-                This action will delete the column <strong>{title}</strong> and
-                all of its tasks.
+                This will delete the task <strong>{title}</strong> and all of
+                its contents.
             </AlertDialogDescription>
             <AlertDialogFooter>
                 <Button
@@ -37,9 +37,9 @@ export const DeleteColumnAlertDialog = ({
                     variant="destructive"
                     loading={isLoading}
                     aria-label={`Delete ${title} column`}
-                    onClick={() => deleteColumn({ id: columnId })}
+                    onClick={() => deleteTask({ id: taskId })}
                 >
-                    {isLoading ? 'Deleting...' : 'Yes, delete column'}
+                    {isLoading ? 'Deleting...' : 'Yes, delete task'}
                 </Button>
                 <Button type="button" onClick={closeAlert}>
                     Cancel

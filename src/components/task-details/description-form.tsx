@@ -34,9 +34,9 @@ export const DescriptionForm = ({
         values: { taskDescription: description ?? '' },
     });
 
-    const { mutate, isLoading } = useUpdateTask(stopEdittingCb);
+    const { mutate, isLoading } = useUpdateTask();
     const updateDescription = (description: string) =>
-        mutate({ id, description });
+        mutate({ id, description }, { onSuccess: stopEdittingCb });
 
     const onSubmit = handleSubmit(({ taskDescription }) => {
         if (description === taskDescription) {

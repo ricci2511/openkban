@@ -2,18 +2,18 @@ import {
     EditableTitleInput,
     ElementTitleEditableProps,
 } from '@components/editable-title-input';
-import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
-import { columnTitle } from '@lib/schemas/board-schemas';
+import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
+import { boardTitle } from '@lib/schemas/board-schemas';
 
-export const ColumnTitleEditable = ({
+export const BoardTitleEditable = ({
     id,
-    title,
     stopEditting,
+    title,
 }: ElementTitleEditableProps) => {
-    const { mutate: updateColumn, isLoading } = useUpdateColumn();
+    const { mutate: updateBoard, isLoading } = useUpdateBoard();
 
     const updateTitle = (newTitle: string) => {
-        updateColumn(
+        updateBoard(
             {
                 id,
                 title: newTitle,
@@ -30,7 +30,7 @@ export const ColumnTitleEditable = ({
             stopEditting={stopEditting}
             updater={updateTitle}
             loading={isLoading}
-            zodString={columnTitle}
+            zodString={boardTitle}
         />
     );
 };

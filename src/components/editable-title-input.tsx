@@ -1,15 +1,22 @@
-import { Input } from '@components/ui/input';
 import { useClickOutside } from '@hooks/use-click-outside';
-import { cn } from '@lib/helpers';
-import { useState } from 'react';
+import { useTitleForm } from '@hooks/use-title-form';
 import { z } from 'zod';
+import { TitleInput } from '@lib/schemas/board-schemas';
+import { FormInput } from './form-input';
+import { Button } from './ui/button';
+import { Check } from 'lucide-react';
 
-interface EditableTitleInputProps {
+export interface ElementTitleEditableProps {
+    id: string;
     title: string;
     stopEditting: () => void;
+}
+
+interface EditableTitleInputProps
+    extends Omit<ElementTitleEditableProps, 'id'> {
     updater: (newTitle: string) => void;
+    zodString: z.ZodString; // zod string to validate the title against
     loading?: boolean; // optional loading state to disable input
-    zodString?: z.ZodString; // optional zod string to validate the title against
 }
 
 export const EditableTitleInput = ({
@@ -19,37 +26,59 @@ export const EditableTitleInput = ({
     loading,
     zodString,
 }: EditableTitleInputProps) => {
-    const [value, setValue] = useState(title);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useTitleForm(zodString, {
+        defaultValues: { title },
+    });
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' || e.key === 'Escape') {
-            handleTitleChange();
+        if (e.key === 'Escape') {
+            stopEditting();
+        }
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            onSubmit();
         }
     };
 
-    const handleTitleChange = () => {
-        if (title === value || !value) {
+    const onSubmit = handleSubmit(({ title: newTitle }) => {
+        if (newTitle === title) {
             stopEditting();
             return;
         }
+        updater(newTitle);
+    });
 
-        // validate title before updating if zodString is provided
-        if (!zodString?.safeParse(value).success) return;
-
-        updater(value);
-    };
-
-    const inputRef = useClickOutside<HTMLInputElement>(handleTitleChange);
+    const ref = useClickOutside<HTMLFormElement>(onSubmit);
 
     return (
-        <Input
-            className={cn(loading && 'cursor-wait')}
-            value={value}
-            onChange={(e) => setValue(e.currentTarget.value)}
-            onKeyDown={onKeyDown}
-            autoFocus
-            onFocus={(e) => e.target.select()}
-            ref={inputRef}
-        />
+        <form ref={ref} className="flex items-center gap-2" onSubmit={onSubmit}>
+            <FormInput<TitleInput>
+                type="text"
+                name="title"
+                register={register}
+                rules={{ required: true }}
+                errors={errors}
+                disabled={loading}
+                onKeyDown={onKeyDown}
+                autoFocus
+                onFocus={(e) => e.target.select()}
+                className="text-sm sm:text-base"
+            />
+            <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                loading={loading}
+                title="Save changes"
+            >
+                {!loading && <Check className="h-4 w-4" />}
+                <span className="sr-only">Save changes</span>
+            </Button>
+        </form>
     );
 };

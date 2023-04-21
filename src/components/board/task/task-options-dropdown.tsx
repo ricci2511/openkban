@@ -1,10 +1,5 @@
 import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
-import { taskTitle } from '@lib/schemas/board-schemas';
-import {
-    useDeleteTask,
-    useUpdateTask,
-} from '@hooks/mutations/use-task-mutations';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,29 +9,21 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import dynamic from 'next/dynamic';
 import { Button } from '@components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
-
-const EditTitleDialog = dynamic(
-    () =>
-        import('@components/edit-title-dialog').then(
-            (mod) => mod.EditTitleDialog
-        ),
-    { ssr: false }
-);
+import { DeleteTaskAlertDialog } from './delete-task-alert-dialog';
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
+    startEditting: () => void;
 }
 
-export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
+export const TaskOptionsDropdown = ({
+    task,
+    startEditting,
+}: TaskOptionsDropdownProps) => {
     const { id, title } = task;
-    const { mutate: deleteTask, isLoading } = useDeleteTask();
-
-    const [isEditting, setIsEditting] = useState(false);
-    const stopEditting = () => setIsEditting(false);
-    const updateTaskMutation = useUpdateTask(stopEditting);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     return (
         <DropdownMenu>
@@ -48,34 +35,32 @@ export const TaskOptionsDropdown = ({ task }: TaskOptionsDropdownProps) => {
             <DropdownMenuContent align="end" sideOffset={6}>
                 <DropdownMenuLabel>{title} options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuDialogItem
-                    open={isEditting}
-                    onOpenChange={setIsEditting}
-                    trigger={
-                        <>
-                            <Pencil className="mr-2 h-4 w-4" />
-                            <span>Rename</span>
-                        </>
-                    }
-                    aria-label={`Rename ${title} task`}
-                >
-                    <EditTitleDialog
-                        entity={task}
-                        updateMutation={updateTaskMutation}
-                        zodString={taskTitle}
-                        name="task"
-                        oldTitle={title}
-                        closeDialog={stopEditting}
-                    />
-                </DropdownMenuDialogItem>
                 <DropdownMenuItem
+                    aria-label={`Rename ${title} task`}
+                    onClick={startEditting}
+                >
+                    <Pencil className="mr-2 h-4 w-4" />
+                    <span>Rename</span>
+                </DropdownMenuItem>
+                <DropdownMenuDialogItem
+                    open={isDeleting}
+                    onOpenChange={setIsDeleting}
                     className="focus:bg-red-400 dark:focus:bg-red-600"
                     aria-label={`Delete ${title} task`}
-                    onClick={() => deleteTask({ id })}
+                    trigger={
+                        <>
+                            <Trash className="mr-2 h-4 w-4" />
+                            <span>Delete</span>
+                        </>
+                    }
+                    alert
                 >
-                    <Trash className="mr-2 h-4 w-4" />
-                    <span>Delete</span>
-                </DropdownMenuItem>
+                    <DeleteTaskAlertDialog
+                        taskId={id}
+                        title={title}
+                        closeAlert={() => setIsDeleting(false)}
+                    />
+                </DropdownMenuDialogItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

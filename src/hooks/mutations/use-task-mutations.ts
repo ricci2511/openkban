@@ -39,13 +39,12 @@ export type DeleteTaskMutation = ReturnType<typeof useDeleteTask>;
  * @param successCb callback to run after successful task update
  * @returns update task trpc mutation object
  */
-export const useUpdateTask = (successCb?: () => void) => {
+export const useUpdateTask = () => {
     const { updateTask } = useTasksActions();
 
     const updateTaskMutation = trpc.boardTaskRouter.update.useMutation({
         onSuccess: (task) => {
             updateTask(task);
-            successCb?.();
         },
     });
     return updateTaskMutation;
