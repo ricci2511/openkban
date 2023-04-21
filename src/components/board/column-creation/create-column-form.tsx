@@ -52,6 +52,7 @@ export const CreateColumnForm = ({
                     <Button
                         type="button"
                         variant="secondary"
+                        className="shadow-sm"
                         onClick={() => setColorPickerOpen(true)}
                         aria-label="Choose a color for your new column"
                         title="Choose a color for your new column"
@@ -61,7 +62,6 @@ export const CreateColumnForm = ({
                             toggle={setColorPickerOpen}
                             color={color}
                             changeColor={setColor}
-                            className="absolute top-8 right-0"
                         />
                     </Button>
                 </FormInput>

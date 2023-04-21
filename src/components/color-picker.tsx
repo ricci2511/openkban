@@ -19,7 +19,7 @@ export const ColorPicker = ({
     useDebounce(() => changeColor(value), 300, [value]);
 
     return (
-        <div className="rounded-xl bg-gray-200">
+        <div className="max-w-[200px] rounded-xl bg-secondary shadow-md">
             <HexColorPicker color={color} onChange={setValue} />
             <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 p-3">
                 {PRESET_COLORS.map((presetColor) => (

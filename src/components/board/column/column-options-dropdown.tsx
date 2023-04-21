@@ -27,7 +27,7 @@ export const ColumnOptionsDropdown = ({
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-6 w-10 px-0">
+                <Button variant="ghost" size="xs">
                     <MoreHorizontal className="h-5 w-5" />
                 </Button>
             </DropdownMenuTrigger>

@@ -9,7 +9,9 @@ import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { TaskSortable } from '../task-sortable';
 import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
 import { ColorPickerPopover } from '@components/color-picker-popover';
-import { EditableTitleInput } from './editable-title-input';
+import { EditableTitleInput } from '@components/editable-title-input';
+import { columnTitle } from '@lib/schemas/board-schemas';
+import { Button } from '@components/ui/button';
 
 interface ColumnProps {
     column: BoardColumn;
@@ -37,6 +39,18 @@ export const Column = ({ column, tasks }: ColumnProps) => {
     const [colorPickerOpen, setColorPickerOpen] = useState(false);
     const [isEditting, setIsEditting] = useState(false);
 
+    const updateTitle = (newTitle: string) => {
+        updateColumn(
+            {
+                id,
+                title: newTitle,
+            },
+            {
+                onSuccess: () => setIsEditting(false),
+            }
+        );
+    };
+
     return (
         <SortableContext
             id={id}
@@ -47,9 +61,11 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                 {isEditting ? (
                     <div className="mb-4 rounded-md border">
                         <EditableTitleInput
-                            columnId={id}
                             title={title}
                             stopEditting={() => setIsEditting(false)}
+                            updater={updateTitle}
+                            loading={isLoading}
+                            zodString={columnTitle}
                         />
                     </div>
                 ) : (
@@ -66,13 +82,20 @@ export const Column = ({ column, tasks }: ColumnProps) => {
                                     {title}
                                 </h2>
                             </div>
-                            <ColorPickerPopover
-                                isOpen={colorPickerOpen}
-                                toggle={setColorPickerOpen}
-                                color={color}
-                                changeColor={handleColorChange}
-                                className="absolute top-9 -left-7"
-                            />
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="xs"
+                                onClick={() => setColorPickerOpen(true)}
+                                title="Modifty the color for your column"
+                            >
+                                <ColorPickerPopover
+                                    isOpen={colorPickerOpen}
+                                    toggle={setColorPickerOpen}
+                                    color={color}
+                                    changeColor={handleColorChange}
+                                />
+                            </Button>
                         </div>
                         <ColumnOptionsDropdown column={column} />
                     </div>

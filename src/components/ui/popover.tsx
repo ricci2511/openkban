@@ -16,23 +16,32 @@ type PopoverContentElementRef = React.ElementRef<
 >;
 type PopoverContentProps = React.ComponentPropsWithoutRef<
     typeof PopoverPrimitive.Content
->;
+> & {
+    unstyled?: boolean;
+};
 
 const PopoverContentBase = React.forwardRef<
     PopoverContentElementRef,
     PopoverContentProps
->(({ className, align = 'center', sideOffset = 4, ...props }, ref) => (
-    <PopoverPrimitive.Content
-        ref={ref}
-        align={align}
-        sideOffset={sideOffset}
-        className={cn(
-            'z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-            className
-        )}
-        {...props}
-    />
-));
+>(
+    (
+        { className, align = 'center', sideOffset = 4, unstyled, ...props },
+        ref
+    ) => (
+        <PopoverPrimitive.Content
+            ref={ref}
+            align={align}
+            sideOffset={sideOffset}
+            className={cn(
+                'z-50 outline-none animate-in data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+                !unstyled &&
+                    'w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md',
+                className
+            )}
+            {...props}
+        />
+    )
+);
 PopoverContentBase.displayName = 'PopoverContentBase';
 
 /**
@@ -43,13 +52,23 @@ PopoverContentBase.displayName = 'PopoverContentBase';
 const PopoverContent = React.forwardRef<
     PopoverContentElementRef,
     PopoverContentProps & { portal?: boolean }
->(({ className, portal, ...props }, ref) => {
+>(({ className, portal, unstyled, ...props }, ref) => {
     return portal ? (
         <PopoverPrimitive.Portal>
-            <PopoverContentBase ref={ref} className={className} {...props} />
+            <PopoverContentBase
+                ref={ref}
+                className={className}
+                unstyled={unstyled}
+                {...props}
+            />
         </PopoverPrimitive.Portal>
     ) : (
-        <PopoverContentBase ref={ref} className={className} {...props} />
+        <PopoverContentBase
+            ref={ref}
+            className={className}
+            unstyled={unstyled}
+            {...props}
+        />
     );
 });
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
