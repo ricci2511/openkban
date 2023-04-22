@@ -5,36 +5,36 @@ import { Button } from './ui/button';
 import { cn } from '@lib/helpers';
 
 interface HeaderProps {
-    collapsed?: boolean;
-    toggleCollapse?: () => void;
+    sidebarOpen?: boolean;
+    toggleSidebarOpen?: () => void;
 }
 
-export const Header = ({ collapsed, toggleCollapse }: HeaderProps) => {
+export const Header = ({ sidebarOpen, toggleSidebarOpen }: HeaderProps) => {
     return (
         <header className="sticky top-0 w-full border-b border-secondary bg-background/90 shadow-sm">
             <div className="flex h-16 w-full items-center px-4">
-                {toggleCollapse && (
+                {toggleSidebarOpen && (
                     <div className="z-50 flex-none">
                         <Button
                             variant="ghost"
                             className={cn(
                                 'w-9 px-0',
-                                !collapsed && 'bg-foreground/10'
+                                sidebarOpen && 'bg-foreground/10'
                             )}
-                            onClick={toggleCollapse}
+                            onClick={toggleSidebarOpen}
                         >
                             <SidebarOpen
                                 className={cn(
                                     'transition-all  duration-150',
-                                    collapsed && 'rotate-0 scale-100',
-                                    !collapsed && 'rotate-90 scale-0'
+                                    !sidebarOpen && 'rotate-0 scale-100',
+                                    sidebarOpen && 'rotate-90 scale-0'
                                 )}
                             />
                             <SidebarClose
                                 className={cn(
                                     'absolute transition-all duration-150',
-                                    collapsed && 'rotate-90 scale-0',
-                                    !collapsed && 'rotate-0 scale-100'
+                                    !sidebarOpen && 'rotate-90 scale-0',
+                                    sidebarOpen && 'rotate-0 scale-100'
                                 )}
                             />
                         </Button>

@@ -17,26 +17,25 @@ export const MainLayout = ({
     className,
     ...rest
 }: MainLayoutProps) => {
-    const [collapsed, setCollapsed] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    const toggleCollapsed = () => {
-        setCollapsed((collapsed) => !collapsed);
-    };
+    const toggleOpen = () => setSidebarOpen((open) => !open);
 
     return (
         <Auth>
-            <Header collapsed={collapsed} toggleCollapse={toggleCollapsed} />
+            <Header sidebarOpen={sidebarOpen} toggleSidebarOpen={toggleOpen} />
             <div
                 className={cn(
                     'relative grid min-h-[calc(100vh-65px)] md:transition-[grid-template-columns] md:duration-300 md:ease-in-out',
                     // on mobile, the sidebar acts as a drawer (overlaps the main content)
-                    !collapsed && 'md:grid-cols-sidebar',
-                    collapsed && 'md:grid-cols-sidebar-collapsed'
+                    // on desktop, the sidebar is collapsible (pushes the main content to the right)
+                    sidebarOpen && 'md:grid-cols-[300px,auto]',
+                    !sidebarOpen && 'md:grid-cols-[64px,auto]'
                 )}
             >
                 <Sidebar
-                    collapsed={collapsed}
-                    toggleCollapse={toggleCollapsed}
+                    sidebarOpen={sidebarOpen}
+                    toggleSidebarOpen={toggleOpen}
                 />
                 <main className={cn('relative w-full', className)} {...rest}>
                     {children}

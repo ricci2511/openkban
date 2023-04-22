@@ -10,13 +10,15 @@ import { SidebarProps } from './sidebar';
 import { LayoutDashboard, Table } from 'lucide-react';
 import { cn } from '@lib/helpers';
 
-export const SidebarLinks = ({ collapsed }: SidebarProps) => {
+export const SidebarLinks = ({
+    sidebarOpen,
+}: Pick<SidebarProps, 'sidebarOpen'>) => {
     const [isOpen, setIsOpen] = useState(false);
 
     // close the boards collapsible if sidebar is collapsed
     useEffect(() => {
-        if (collapsed) setIsOpen(false);
-    }, [collapsed]);
+        if (!sidebarOpen) setIsOpen(false);
+    }, [sidebarOpen]);
 
     const { boards, fetchStatus, isError } = useGetBoards(
         {
@@ -34,7 +36,7 @@ export const SidebarLinks = ({ collapsed }: SidebarProps) => {
                     <span
                         className={cn(
                             'text-base opacity-0 transition-opacity duration-200',
-                            !collapsed && 'opacity-100'
+                            sidebarOpen && 'opacity-100'
                         )}
                     >
                         Dashboard
@@ -52,7 +54,7 @@ export const SidebarLinks = ({ collapsed }: SidebarProps) => {
                         <span
                             className={cn(
                                 'text-base opacity-0 transition-opacity duration-200',
-                                !collapsed && 'opacity-100'
+                                sidebarOpen && 'opacity-100'
                             )}
                         >
                             Boards

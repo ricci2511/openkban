@@ -14,7 +14,9 @@ import { Button } from './ui/button';
 import { ChevronUp, LogOut } from 'lucide-react';
 import { cn } from '@lib/helpers';
 
-export const SidebarUser = ({ collapsed }: SidebarProps) => {
+export const SidebarUser = ({
+    sidebarOpen,
+}: Pick<SidebarProps, 'sidebarOpen'>) => {
     const { data: session } = useSession();
     const { email, image, name } = session!.user!;
 
@@ -31,7 +33,7 @@ export const SidebarUser = ({ collapsed }: SidebarProps) => {
                 <div
                     className={cn(
                         'opacity-0 transition-opacity duration-75',
-                        !collapsed && 'opacity-100 duration-200 delay-150' // delay this section to make it smoother
+                        sidebarOpen && 'opacity-100 duration-200 delay-150' // delay this section to make it smoother
                     )}
                 >
                     <div className="flex w-full">
