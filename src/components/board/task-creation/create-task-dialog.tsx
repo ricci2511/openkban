@@ -32,10 +32,7 @@ export const CreateTaskDialog = () => {
                     <TooltipTrigger asChild>
                         <DialogTrigger asChild>
                             <Button variant="accent" className="rounded-full">
-                                <ClipboardList
-                                    className="h-4 w-4 sm:h-5 sm:w-5"
-                                    size="lg"
-                                />
+                                <ClipboardList className="h-4 w-4 sm:h-5 sm:w-5" />
                             </Button>
                         </DialogTrigger>
                     </TooltipTrigger>

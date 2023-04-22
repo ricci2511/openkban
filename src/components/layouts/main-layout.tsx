@@ -37,6 +37,13 @@ export const MainLayout = ({
                     sidebarOpen={sidebarOpen}
                     toggleSidebarOpen={toggleOpen}
                 />
+                <div
+                    className={cn(
+                        'fixed top-[65px] right-0 h-full w-full cursor-pointer bg-black/60 opacity-0 animate-in fade-in-100 duration-200 md:hidden',
+                        sidebarOpen && 'z-20 opacity-100'
+                    )}
+                    onClick={() => setSidebarOpen(false)}
+                />
                 <main className={cn('relative w-full', className)} {...rest}>
                     {children}
                 </main>

@@ -1,4 +1,4 @@
-import { Loader } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import React from 'react';
 
 interface LoadingSpinnerProps {
@@ -17,7 +17,7 @@ export const LoadingSpinner = ({
 }: LoadingSpinnerProps) => {
     return (
         <div className={centered ? centeredClasses : notCenteredClasses}>
-            <Loader width={width} height={height} className="animate-spin" />
+            <Loader2 width={width} height={height} className="animate-spin" />
         </div>
     );
 };

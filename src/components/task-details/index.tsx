@@ -1,12 +1,11 @@
 import React from 'react';
-import { useColumns, useCurrentTask } from 'store/kanban-store';
+import { useCurrentTask } from 'store/kanban-store';
 import { Description } from './description';
 import { Subtasks } from './subtasks';
 import { ClipboardSignature } from 'lucide-react';
 
 export const TaskDetails = () => {
     const task = useCurrentTask()!;
-    const columns = useColumns();
 
     return (
         <div className="flex flex-col gap-6">

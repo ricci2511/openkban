@@ -28,6 +28,7 @@ export const Subtasks = () => {
                 <CreateSubtaskForm stopAddingCb={stopAdding} />
             ) : (
                 <Button
+                    variant="primary"
                     size="sm"
                     className="ml-9 flex gap-2"
                     onClick={startAdding}

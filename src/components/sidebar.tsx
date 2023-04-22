@@ -19,9 +19,9 @@ export const Sidebar = ({ sidebarOpen, toggleSidebarOpen }: SidebarProps) => {
         <aside
             className={cn(
                 'z-30 h-full overflow-y-auto border-r border-r-secondary bg-background shadow-sm', // base styles
-                'fixed top-[65px] left-0 h-[calc(100vh-65px)] max-w-sm animate-in slide-in-from-left duration-300', // mobile styles (drawer sidebar)
+                'fixed top-[65px] left-0 h-[calc(100vh-65px)] max-w-[300px] animate-in slide-in-from-left duration-300', // mobile styles (drawer sidebar)
                 'md:static md:animate-none', // desktop styles (collapsible sidebar)
-                !sidebarOpen && 'hidden md:block md:cursor-pointer'
+                !sidebarOpen && 'hidden md:block md:cursor-pointer' // hide on mobile when sidebar is collapsed
             )}
             onClick={onSidebarClick}
         >
