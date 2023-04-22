@@ -1,27 +1,45 @@
-import { useSession } from 'next-auth/react';
 import React from 'react';
-import { LoadingSpinner } from './ui/loading-spinner';
 import { SidebarLinks } from './sidebar-links';
 import { SidebarUser } from './sidebar-user';
+import { cn } from '@lib/helpers';
+import { Separator } from './ui/separator';
 
-export const Sidebar = () => {
-    const { data: session, status } = useSession();
+export interface SidebarProps {
+    shown: boolean;
+    collapsed: boolean;
+    setCollapsed: (collapsed: boolean) => void;
+}
+
+export const Sidebar = ({ shown, collapsed, setCollapsed }: SidebarProps) => {
+    const onSidebarClick = () => {
+        if (collapsed) setCollapsed(false);
+    };
 
     return (
-        <div className="drawer-side">
-            <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-            <nav className="menu max-w-xs overflow-y-auto bg-base-200 p-4 text-base-content">
-                <section
-                    className="flex-1 overflow-y-scroll"
-                    aria-label="primary links"
-                >
-                    <SidebarLinks />
+        <aside
+            className={cn(
+                'z-30 h-full overflow-y-auto border-r border-r-secondary bg-background/90 shadow-sm',
+                collapsed && 'cursor-pointer'
+            )}
+            onClick={onSidebarClick}
+        >
+            <div className="flex h-full flex-col">
+                <section className="flex-1 overflow-x-hidden overflow-y-scroll p-4">
+                    <SidebarLinks
+                        shown={shown}
+                        collapsed={collapsed}
+                        setCollapsed={setCollapsed}
+                    />
                 </section>
-                <section className="flex-none" aria-label="user">
-                    {status === 'loading' && <LoadingSpinner />}
-                    {session && <SidebarUser session={session} />}
+                <Separator role="separator" />
+                <section className="flex-none pl-1" aria-label="user">
+                    <SidebarUser
+                        shown={shown}
+                        collapsed={collapsed}
+                        setCollapsed={setCollapsed}
+                    />
                 </section>
-            </nav>
-        </div>
+            </div>
+        </aside>
     );
 };

@@ -1,7 +1,12 @@
 import { Auth } from '@components/auth';
 import { Header } from '@components/header';
+import { Sidebar } from '@components/sidebar';
 import { cn } from '@lib/helpers';
-import React, { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
+import React, {
+    ComponentPropsWithoutRef,
+    PropsWithChildren,
+    useState,
+} from 'react';
 
 interface MainLayoutProps
     extends PropsWithChildren,
@@ -12,11 +17,27 @@ export const MainLayout = ({
     className,
     ...rest
 }: MainLayoutProps) => {
+    const [collapsed, setCollapsed] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(true);
+
     return (
         <Auth>
-            <Header />
-            {/* Since header size is 4rem the height should be 100vh taking into account the header height */}
-            <div className="h-[calc(100vh-65px)]">
+            <Header
+                collapsed={collapsed}
+                setCollapsed={() => setCollapsed((collapsed) => !collapsed)}
+            />
+            <div
+                className={cn(
+                    'grid min-h-[calc(100vh-65px)] animate-in slide-in-from-left duration-300',
+                    !collapsed && 'grid-cols-sidebar',
+                    collapsed && 'grid-cols-sidebar-collapsed'
+                )}
+            >
+                <Sidebar
+                    shown={showSidebar}
+                    collapsed={collapsed}
+                    setCollapsed={() => setCollapsed((collapsed) => !collapsed)}
+                />
                 <main className={cn('relative w-full', className)} {...rest}>
                     {children}
                 </main>

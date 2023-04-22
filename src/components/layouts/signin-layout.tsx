@@ -13,7 +13,7 @@ export const SignInLayout = ({ children }: PropsWithChildren) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <Header sidebar={false} />
+            <Header />
             <main className="mt-32">{children}</main>
         </>
     );

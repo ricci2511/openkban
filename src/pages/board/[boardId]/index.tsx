@@ -6,10 +6,10 @@ import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { trpc } from '@lib/trpc';
 import { useBoardId, useInitKanbanStore } from 'store/kanban-store';
 import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
-import { MainLayout } from '@components/layouts/main-layout';
 import { KanbanHeaderSection } from '@components/board/kanban-header-section';
 import { KanbanBodySection } from '@components/board/kanban-body-section';
 import { useSession } from 'next-auth/react';
+import { KanbanLayout } from '@components/layouts/kanban-layout';
 
 const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
@@ -65,13 +65,7 @@ const BoardPage: NextPageWithLayout = () => {
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
-    return (
-        <MainLayout className="h-full overflow-y-auto">
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="relative mr-0 flex h-full flex-col">{page}</div>
-            </div>
-        </MainLayout>
-    );
+    return <KanbanLayout>{page}</KanbanLayout>;
 };
 
 export default BoardPage;
