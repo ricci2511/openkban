@@ -14,7 +14,7 @@ import { Button } from './ui/button';
 import { ChevronUp, LogOut } from 'lucide-react';
 import { cn } from '@lib/helpers';
 
-export const SidebarUser = ({ collapsed, setCollapsed }: SidebarProps) => {
+export const SidebarUser = ({ collapsed }: SidebarProps) => {
     const { data: session } = useSession();
     const { email, image, name } = session!.user!;
 
