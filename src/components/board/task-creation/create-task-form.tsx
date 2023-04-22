@@ -5,7 +5,7 @@ import {
     boardTaskCreationSchema,
 } from '@lib/schemas/board-schemas';
 import { LexoRank } from 'lexorank';
-import { useTasks } from 'store/kanban-store';
+import { useTasks, useUserRole } from 'store/kanban-store';
 import { CreateTaskMutation } from '@hooks/mutations/use-task-mutations';
 import { ColumnSelect } from './column-select';
 import { TaskDateInputs } from './task-date-inputs';
@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@components/ui/label';
 import { FormInput } from '@components/form-input';
 import { FormTextarea } from '@components/form-textarea';
+import { addDays } from 'date-fns';
 
 interface CreateTaskFormProps {
     createTask: CreateTaskMutation['mutate'];
@@ -20,6 +21,10 @@ interface CreateTaskFormProps {
 export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
     const formMethods = useForm<BoardTaskCreation>({
         resolver: zodResolver(boardTaskCreationSchema),
+        defaultValues: {
+            startDate: new Date(),
+            dueDate: addDays(new Date(), 5),
+        },
     });
     const {
         register,
@@ -39,6 +44,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
         }
     };
 
+    const role = useUserRole();
     const onSubmit = handleSubmit(
         ({ title, description, columnId, startDate, dueDate }) => {
             const rank = generateRank(columnId);
@@ -49,6 +55,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                 startDate,
                 dueDate,
                 rank,
+                role,
             });
         }
     );

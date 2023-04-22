@@ -54,8 +54,6 @@ model User {
   sessions          Session[]
   boards            Board[]
   boardUsers        BoardUser[]
-  BoardColumn       BoardColumn[]
-  BoardTask         BoardTask[]
   BoardTaskAssignee BoardTaskAssignee[]
 
   @@index([name])
@@ -104,18 +102,16 @@ model Board {
 }
 
 model BoardColumn {
-  id          String      @id @default(cuid())
-  createdAt   DateTime    @default(now())
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
   title       String
-  board       Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  board       Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
   boardId     String
   tasks       BoardTask[]
-  color       String      @default("#0ea5e9")
-  createdBy   User        @relation(fields: [createdById], references: [id])
-  createdById String
+  color       String        @default("#0ea5e9")
+  creatorRole BoardUserRole @default(MEMBER)
 
   @@index([boardId])
-  @@index([createdById])
 }
 
 model BoardTask {
@@ -129,12 +125,10 @@ model BoardTask {
   column      BoardColumn         @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId    String
   subtasks    BoardSubtask[]
-  createdBy   User                @relation(fields: [createdById], references: [id])
-  createdById String
+  creatorRole BoardUserRole       @default(MEMBER)
   asignees    BoardTaskAssignee[]
 
   @@index([columnId])
-  @@index([createdById])
 }
 
 model BoardTaskAssignee {

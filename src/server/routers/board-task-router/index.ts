@@ -23,7 +23,12 @@ export const boardTaskRouter = t.router({
             return task;
         }),
     create: authedProcedure
-        .input(boardTaskCreationSchema.extend({ rank: z.string() }))
+        .input(
+            boardTaskCreationSchema.extend({
+                rank: z.string(),
+                role: z.enum(['ADMIN', 'MEMBER', 'VIEWER']),
+            })
+        )
         .mutation(async ({ ctx, input }) => {
             const createTask = await ctx.prisma.boardTask.create({
                 data: {
@@ -33,11 +38,7 @@ export const boardTaskRouter = t.router({
                     startDate: input.startDate,
                     dueDate: input.dueDate,
                     rank: input.rank,
-                    createdBy: {
-                        connect: {
-                            id: ctx.session.user.id,
-                        },
-                    },
+                    creatorRole: input.role,
                 },
             });
             return createTask;

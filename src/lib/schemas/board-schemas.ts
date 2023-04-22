@@ -48,6 +48,7 @@ export const boardColumnCreationSchema = z.object({
     boardId: z.string().cuid(),
     title: columnTitle,
     color: z.string(),
+    role: z.enum(['ADMIN', 'MEMBER', 'VIEWER']),
 });
 export type BoardColumnCreation = z.infer<typeof boardColumnCreationSchema>;
 

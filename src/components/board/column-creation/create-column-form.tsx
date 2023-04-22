@@ -1,7 +1,7 @@
 import { PRESET_COLORS } from '@lib/constants';
 import React, { useState } from 'react';
 import { TitleInput, columnTitle } from '@lib/schemas/board-schemas';
-import { useBoardId } from 'store/kanban-store';
+import { useBoardId, useUserRole } from 'store/kanban-store';
 import { useTitleForm } from '@hooks/use-title-form';
 import { useClickOutside } from '@hooks/use-click-outside';
 import { useCreateColumn } from '@hooks/mutations/use-column-mutations';
@@ -26,8 +26,9 @@ export const CreateColumnForm = ({
 
     const { mutate: createColumn, isLoading } = useCreateColumn(stopCreatingCb);
     const boardId = useBoardId();
+    const role = useUserRole();
     const onSubmit = handleSubmit(({ title }) => {
-        createColumn({ boardId, title, color });
+        createColumn({ boardId, title, color, role });
     });
 
     const ref = useClickOutside<HTMLFormElement>(stopCreatingCb);
