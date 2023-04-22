@@ -22,11 +22,7 @@ export const createBoard = authedProcedure
                         create: input.columnTitles.map((title) => ({
                             title: title,
                             color: randomColor(),
-                            createdBy: {
-                                connect: {
-                                    id: userId,
-                                },
-                            },
+                            creatorRole: 'ADMIN',
                         })),
                     },
                     boardUser: {
@@ -51,6 +47,7 @@ export const createBoard = authedProcedure
 
             return board;
         } catch (error) {
+            console.error('ERROR creating board', error);
             throw internalServerError(createError('board'), error);
         }
     });
