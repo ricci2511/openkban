@@ -1,5 +1,5 @@
 import { BoardTask } from '@prisma/client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,6 +12,7 @@ import {
 import { Button } from '@components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
 
 const DeleteTaskAlertDialog = dynamic(
     () =>
@@ -65,11 +66,13 @@ export const TaskOptionsDropdown = ({
                     alert
                     destructive
                 >
-                    <DeleteTaskAlertDialog
-                        taskId={id}
-                        title={title}
-                        closeAlert={() => setIsDeleting(false)}
-                    />
+                    <Suspense fallback={<LoadingSpinner centered />}>
+                        <DeleteTaskAlertDialog
+                            taskId={id}
+                            title={title}
+                            closeAlert={() => setIsDeleting(false)}
+                        />
+                    </Suspense>
                 </DropdownMenuDialogItem>
             </DropdownMenuContent>
         </DropdownMenu>

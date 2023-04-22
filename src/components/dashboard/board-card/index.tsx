@@ -6,15 +6,7 @@ import { useUpdateBoardUser } from '@hooks/mutations/use-board-user-mutations';
 import { FavouriteButton } from './favourite-button';
 import { BoardOptionsDropdown } from './board-options-dropdown';
 import { BoardUserAvatar } from '@components/board-user-avatar';
-import dynamic from 'next/dynamic';
-
-const BoardTitleEditable = dynamic(
-    () =>
-        import('./board-title-editable').then((mod) => mod.BoardTitleEditable),
-    {
-        ssr: false,
-    }
-);
+import { BoardTitleEditable } from './board-title-editable';
 
 interface BoardProps {
     board: BoardWithUsers;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Board } from '@prisma/client';
 import { useLeaveBoard } from '@hooks/mutations/use-board-user-mutations';
 import {
@@ -13,6 +13,7 @@ import {
 import { Button } from '@components/ui/button';
 import { DoorOpen, MoreVertical, Pencil, Trash, Trash2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
 
 const DeleteBoardAlertDialog = dynamic(
     () =>
@@ -80,11 +81,13 @@ export const BoardOptionsDropdown = ({
                         alert
                         destructive
                     >
-                        <DeleteBoardAlertDialog
-                            boardId={id}
-                            title={title}
-                            closeAlert={() => setIsDeleting(false)}
-                        />
+                        <Suspense fallback={<LoadingSpinner centered />}>
+                            <DeleteBoardAlertDialog
+                                boardId={id}
+                                title={title}
+                                closeAlert={() => setIsDeleting(false)}
+                            />
+                        </Suspense>
                     </DropdownMenuDialogItem>
                 )}
             </DropdownMenuContent>

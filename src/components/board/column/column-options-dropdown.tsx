@@ -1,5 +1,5 @@
 import { BoardColumn } from '@prisma/client';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,6 +11,7 @@ import {
 import { Button } from '@components/ui/button';
 import { MoreHorizontal, Trash } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { LoadingSpinner } from '@components/ui/loading-spinner';
 
 const DeleteColumnAlertDialog = dynamic(
     () =>
@@ -54,11 +55,13 @@ export const ColumnOptionsDropdown = ({
                     alert
                     destructive
                 >
-                    <DeleteColumnAlertDialog
-                        columnId={id}
-                        title={title}
-                        closeAlert={() => setIsDeleting(false)}
-                    />
+                    <Suspense fallback={<LoadingSpinner centered />}>
+                        <DeleteColumnAlertDialog
+                            columnId={id}
+                            title={title}
+                            closeAlert={() => setIsDeleting(false)}
+                        />
+                    </Suspense>
                 </DropdownMenuDialogItem>
             </DropdownMenuContent>
         </DropdownMenu>

@@ -9,17 +9,7 @@ import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { TaskSortable } from '../task-sortable';
 import { Button } from '@components/ui/button';
 import { ColumnColorPicker } from './column-color-picker';
-import dynamic from 'next/dynamic';
-
-const ColumnTitleEditable = dynamic(
-    () =>
-        import('./column-title-editable').then(
-            (mod) => mod.ColumnTitleEditable
-        ),
-    {
-        ssr: false,
-    }
-);
+import { ColumnTitleEditable } from './column-title-editable';
 
 interface ColumnProps {
     column: BoardColumn;

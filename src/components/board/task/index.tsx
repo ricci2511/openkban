@@ -9,13 +9,7 @@ import { Dialog, DialogTrigger } from '@components/ui/dialog';
 import { Grip, Pencil } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import { isPast, isToday, format } from 'date-fns';
-
-const TaskTitleEditable = dynamic(
-    () => import('./task-title-editable').then((mod) => mod.TaskTitleEditable),
-    {
-        ssr: false,
-    }
-);
+import { TaskTitleEditable } from './task-title-editable';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
