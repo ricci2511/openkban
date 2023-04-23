@@ -37,6 +37,7 @@ export const Header = ({ sidebarOpen, toggleSidebarOpen }: HeaderProps) => {
                                     sidebarOpen && 'rotate-0 scale-100'
                                 )}
                             />
+                            <span className="sr-only">Toggle sidebar</span>
                         </Button>
                     </div>
                 )}

@@ -39,9 +39,12 @@ export const MainLayout = ({
                 />
                 <div
                     className={cn(
-                        'fixed top-[65px] right-0 h-full w-full cursor-pointer bg-black/60 opacity-0 animate-in fade-in-100 duration-200 md:hidden',
+                        'fixed top-[65px] right-0 h-full w-full bg-black/60 opacity-0 fade-in duration-200 md:hidden',
                         sidebarOpen && 'z-20 opacity-100'
                     )}
+                    role="button"
+                    aria-label="Close sidebar"
+                    style={{ WebkitTapHighlightColor: 'transparent' }} // prevent blue highlight on mobile
                     onClick={() => setSidebarOpen(false)}
                 />
                 <main className={cn('relative w-full', className)} {...rest}>
