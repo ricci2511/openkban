@@ -155,9 +155,13 @@ export const BoardUserInviteSection = () => {
                         deleteInvitedUser={deleteInvitedUser}
                     />
                 )}
-                <PopoverContent align="start" style={{ width: popoverWidth }}>
+                <PopoverContent
+                    align="start"
+                    style={{ width: popoverWidth }}
+                    className="max-h-[246px]"
+                >
                     {!users?.length && fetchStatus === 'idle' && (
-                        <p className="text-center text-gray-500 dark:text-gray-200">
+                        <p className="text-center text-foreground/50">
                             User <strong>{nameOrEmail}</strong> not found
                         </p>
                     )}

@@ -7,7 +7,7 @@ export const CreateColumnButton = () => {
     const [creating, setCreating] = useState(false);
 
     return (
-        <li>
+        <li className="mt-1">
             {!creating && (
                 <Button
                     variant="outline"
