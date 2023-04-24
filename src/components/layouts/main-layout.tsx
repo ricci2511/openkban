@@ -23,33 +23,42 @@ export const MainLayout = ({
 
     return (
         <Auth>
-            <Header sidebarOpen={sidebarOpen} toggleSidebarOpen={toggleOpen} />
-            <div
-                className={cn(
-                    'relative grid min-h-[calc(100vh-65px)] md:transition-[grid-template-columns] md:duration-300 md:ease-in-out',
-                    // on mobile, the sidebar acts as a drawer (overlaps the main content)
-                    // on desktop, the sidebar is collapsible (pushes the main content to the right)
-                    sidebarOpen && 'md:grid-cols-[300px,auto]',
-                    !sidebarOpen && 'md:grid-cols-[64px,auto]'
-                )}
-            >
-                <Sidebar
+            <div className="overflow-y-hidden">
+                <Header
                     sidebarOpen={sidebarOpen}
                     toggleSidebarOpen={toggleOpen}
                 />
                 <div
                     className={cn(
-                        'fixed top-[65px] right-0 h-full w-full bg-black/60 opacity-0 fade-in duration-200 md:hidden',
-                        sidebarOpen && 'z-20 opacity-100'
+                        'relative grid min-h-[calc(100vh-65px)] md:transition-[grid-template-columns] md:duration-300 md:ease-in-out',
+                        // on mobile, the sidebar acts as a drawer (overlaps the main content)
+                        // on desktop, the sidebar is collapsible (pushes the main content to the right)
+                        sidebarOpen && 'md:grid-cols-[300px,auto]',
+                        !sidebarOpen && 'md:grid-cols-[64px,auto]'
                     )}
-                    role="button"
-                    aria-label="Close sidebar"
-                    style={{ WebkitTapHighlightColor: 'transparent' }} // prevent blue highlight on mobile
-                    onClick={() => setSidebarOpen(false)}
-                />
-                <main className={cn('relative w-full', className)} {...rest}>
-                    {children}
-                </main>
+                >
+                    <Sidebar
+                        sidebarOpen={sidebarOpen}
+                        toggleSidebarOpen={toggleOpen}
+                    />
+                    <div
+                        className={cn(
+                            'fixed top-[65px] right-0 h-full w-full bg-background/75 opacity-0 fade-in duration-200 md:hidden',
+                            sidebarOpen && 'z-20 opacity-100'
+                        )}
+                        aria-label="Close sidebar"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                    <main
+                        className={cn(
+                            'relative h-[calc(100vh-65px)] w-full overflow-y-auto',
+                            className
+                        )}
+                        {...rest}
+                    >
+                        {children}
+                    </main>
+                </div>
             </div>
         </Auth>
     );

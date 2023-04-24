@@ -31,7 +31,10 @@ export const SidebarLinks = ({
     return (
         <ul className="flex flex-col items-stretch gap-3">
             <li className="flex rounded-md p-2 transition-all duration-200 ease-in hover:bg-muted/60">
-                <Link href="/dashboard" className="flex items-center gap-4">
+                <Link
+                    href="/dashboard"
+                    className="grid w-full grid-cols-[16px,auto] items-center gap-4"
+                >
                     <LayoutDashboard className="h-4 w-4" />
                     <span
                         className={cn(
@@ -47,13 +50,13 @@ export const SidebarLinks = ({
                 <Collapsible
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    className="flex flex-col"
+                    className="w-full"
                 >
-                    <CollapsibleTrigger className="flex w-full items-center gap-4">
+                    <CollapsibleTrigger className="grid w-full grid-cols-[16px,auto] items-center gap-4">
                         <Table className="h-4 w-4" />
                         <span
                             className={cn(
-                                'text-base opacity-0 transition-opacity duration-200',
+                                'justify-self-start text-base opacity-0 transition-opacity duration-200',
                                 sidebarOpen && 'opacity-100'
                             )}
                         >
@@ -61,16 +64,16 @@ export const SidebarLinks = ({
                         </span>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="w-full self-start">
-                        <ul className="mt-4 ml-7 flex w-full flex-col gap-2">
+                        <ul className="mt-4 ml-7 flex w-full flex-col gap-1">
                             {boards &&
                                 boards.map((board) => (
                                     <li
                                         key={board.id}
-                                        className="w-[12rem] rounded-md py-1.5 transition-colors duration-150 ease-in hover:bg-muted"
+                                        className="w-[12rem] rounded-md p-1.5 transition-colors duration-150 ease-in hover:bg-muted"
                                     >
                                         <Link
                                             href={`/board/${board.id}`}
-                                            className="w-full gap-4 rounded-md p-2"
+                                            className="block w-full rounded-md"
                                         >
                                             <span className="truncate text-sm sm:text-base">
                                                 {board.title}
