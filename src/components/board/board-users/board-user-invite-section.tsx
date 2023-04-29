@@ -20,7 +20,8 @@ import { MAX_BOARD_USERS } from '@lib/constants';
 import { Button } from '@components/ui/button';
 
 export const BoardUserInviteSection = () => {
-    const [open, setOpen] = useState(false); // popover open state
+    const [open, setOpen] = useState(false); // user search popover state
+
     const [popoverWidth, setPopoverWidth] = useState<number>(0);
     const refCallback = useCallback((node: HTMLInputElement | null) => {
         if (!node) return;
@@ -66,15 +67,18 @@ export const BoardUserInviteSection = () => {
         }
     );
 
-    const searchUsers = () => {
-        if (!nameOrEmail || nameOrEmail.length < 3) {
-            return;
-        }
-        setOpen(true);
-        fetchUsers();
-    };
-    // run searchUsers cb after 600ms of no input
-    useDebounce(searchUsers, 600, [nameOrEmail]);
+    // search for users after 600ms of no input
+    useDebounce(
+        () => {
+            if (!nameOrEmail || nameOrEmail.length < 3) {
+                return;
+            }
+            setOpen(true);
+            fetchUsers();
+        },
+        600,
+        [nameOrEmail]
+    );
 
     const { addBoardUsers } = useBoardUserActions();
     const onAddUsersSuccess = () => {

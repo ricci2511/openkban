@@ -1,4 +1,4 @@
-import { useBoardUsers, useUserRole } from 'store/kanban-store';
+import { useBoardUsers, useMyRole } from 'store/kanban-store';
 import { BoardUserItem } from './board-user-item';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@components/ui/tabs';
 import { useMemo } from 'react';
@@ -17,7 +17,7 @@ export const BoardUsersContent = () => {
     );
 
     const me = useSession().data!.user!;
-    const isAdmin = useUserRole() === 'ADMIN';
+    const isAdmin = useMyRole() === 'ADMIN';
 
     const { mutate: updateUserRole } = useUpdateBoardUser();
     const { mutate: deleteBoardUser } = useDeleteBoardUser();

@@ -1,12 +1,11 @@
 import { BoardUserAvatar } from '@components/board-user-avatar';
 import { BoardUserRole } from '@prisma/client';
 import { ClientBoardUser } from 'types/board-types';
-import { RxTrash } from 'react-icons/rx';
 import {
     useBoardId,
     useBoardUserActions,
-    useSetUserRole,
-    useUserRole,
+    useMyRole,
+    useSetMyRole,
 } from 'store/kanban-store';
 import {
     DeleteBoardUserMutation,
@@ -43,7 +42,7 @@ export const BoardUserItem = ({
     } = boardUser;
     const isBoardUserAdmin = role === 'ADMIN';
 
-    const myRole = useUserRole();
+    const myRole = useMyRole();
     const amIAdmin = myRole === 'ADMIN';
     const amIMember = myRole === 'MEMBER';
     const amIViewer = myRole === 'VIEWER';
@@ -76,16 +75,16 @@ export const BoardUserItem = ({
 
     const boardId = useBoardId();
     const { updateBoardUser, removeBoardUser } = useBoardUserActions();
-    const setUserRole = useSetUserRole();
+    const setMyRole = useSetMyRole();
 
     const onRoleChange = (role: BoardUserRole) => {
         // update the board user in the store
         updateBoardUser({ ...boardUser, role });
 
         if (isMe) {
-            // update the user role in the store
-            setUserRole(role);
-            // if changing my own role, specifying the userId is not necessary
+            // update the current user role in the store
+            setMyRole(role);
+            // api call, when changing my own role, specifying the userId is not necessary
             updateRole({ boardId, role });
             return;
         }

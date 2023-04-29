@@ -187,9 +187,9 @@ export const useBoardUsers = () => useKanbanStore((state) => state.boardUsers);
 /**
  * @returns the role of the current user
  */
-export const useUserRole = () => useKanbanStore((state) => state.role);
+export const useMyRole = () => useKanbanStore((state) => state.role);
 
-export const useSetUserRole = () => useKanbanStore((state) => state.setRole);
+export const useSetMyRole = () => useKanbanStore((state) => state.setRole);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.

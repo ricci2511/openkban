@@ -1,6 +1,6 @@
 import { TRPCLink, httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
-import type { AppRouter } from '@server/routers';
+import { appRouter, type AppRouter } from '@server/routers';
 import superjson from 'superjson';
 import { observable } from '@trpc/server/observable';
 import { toast } from 'react-hot-toast';

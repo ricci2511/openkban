@@ -1,4 +1,10 @@
-import { Control, FieldValues, useController } from 'react-hook-form';
+import {
+    Control,
+    FieldValues,
+    Path,
+    PathValue,
+    useController,
+} from 'react-hook-form';
 import { Label } from '@components/ui/label';
 import { Checkbox } from '@components/ui/checkbox';
 import { FormElmentPropsWithoutRegister } from 'types/form-types';
@@ -6,7 +12,7 @@ import { CheckboxProps } from '@radix-ui/react-checkbox';
 
 interface FormCheckboxProps<TFormValues extends FieldValues>
     extends FormElmentPropsWithoutRegister<TFormValues>,
-        Omit<CheckboxProps, 'name'> {
+        Omit<CheckboxProps, 'name' | 'defaultValue'> {
     // name attribute is overriden by useController
     control: Control<TFormValues>;
 }
@@ -18,7 +24,12 @@ export const FormCheckbox = <TFormValues extends FieldValues>({
     id,
     children,
 }: FormCheckboxProps<TFormValues>) => {
-    const { field } = useController({ name, control, rules });
+    const { field } = useController({
+        name,
+        control,
+        rules,
+        defaultValue: false as PathValue<TFormValues, Path<TFormValues>>,
+    });
 
     return (
         <>

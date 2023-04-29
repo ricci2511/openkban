@@ -11,13 +11,13 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from '@components/ui/tooltip';
-import { useUserRole } from 'store/kanban-store';
 import { BoardUsersContent } from './board-users-content';
 import { Button } from '@components/ui/button';
 import { User } from 'lucide-react';
+import { useMyRole } from 'store/kanban-store';
 
 export const BoardUsersDialog = () => {
-    const isAdmin = useUserRole() === 'ADMIN';
+    const isAdmin = useMyRole() === 'ADMIN';
 
     return (
         <Dialog>
