@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Task, TaskProps } from './task';
 import { animateLayoutChanges } from '@lib/helpers';
 
-export const TaskSortable = ({ task, color }: TaskProps) => {
+export const TaskSortable = ({ task }: TaskProps) => {
     const {
         attributes,
         listeners,
@@ -23,12 +23,7 @@ export const TaskSortable = ({ task, color }: TaskProps) => {
 
     return (
         <li ref={setNodeRef} style={style} {...attributes}>
-            <Task
-                task={task}
-                color={color}
-                isDragging={isDragging}
-                listeners={listeners}
-            />
+            <Task task={task} isDragging={isDragging} listeners={listeners} />
         </li>
     );
 };

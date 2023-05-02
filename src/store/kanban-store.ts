@@ -11,14 +11,16 @@ const useKanbanStore = create(
         currentTask: undefined,
         subtasks: [],
         boardUsers: [],
-        role: 'MEMBER',
-        init: (columns, tasks, boardUsers, role) =>
+        role: 'VIEWER',
+        membersPermissions: undefined,
+        init: (boardData, currRole) =>
             set((state) => {
-                state.columns = columns;
-                state.tasks = tasks;
-                state.boardUsers = boardUsers;
-                state.role = role;
-                state.boardId = columns[0].boardId;
+                state.columns = boardData.columns;
+                state.tasks = boardData.tasks;
+                state.boardUsers = boardData.boardUsers;
+                state.role = currRole;
+                state.membersPermissions = boardData.membersPermissions;
+                state.boardId = boardData.id;
             }),
         setRole: (role) =>
             set((state) => {
@@ -130,16 +132,16 @@ const useKanbanStore = create(
                 set((state) => {
                     state.boardUsers = [...state.boardUsers, ...users];
                 }),
-            removeBoardUser: (userId) =>
+            removeBoardUser: (boardUserId) =>
                 set((state) => {
                     state.boardUsers = state.boardUsers.filter(
-                        (bu) => bu.userId !== userId
+                        (bu) => bu.id !== boardUserId
                     );
                 }),
             updateBoardUser: (user) =>
                 set((state) => {
                     const index = state.boardUsers.findIndex(
-                        (bu) => bu.userId === user.userId
+                        (bu) => bu.user.id === user.user.id
                     );
                     if (index === -1) return;
                     state.boardUsers[index] = user;
@@ -189,7 +191,16 @@ export const useBoardUsers = () => useKanbanStore((state) => state.boardUsers);
  */
 export const useMyRole = () => useKanbanStore((state) => state.role);
 
+/**
+ * @returns method to set/update the role of the current user
+ */
 export const useSetMyRole = () => useKanbanStore((state) => state.setRole);
+
+/**
+ * @returns the permissions of board users with the MEMBER role
+ */
+export const useMembersPermissions = () =>
+    useKanbanStore((state) => state.membersPermissions);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.

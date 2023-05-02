@@ -29,8 +29,8 @@ export const ColumnTitleEditable = ({
             title={title}
             stopEditting={stopEditting}
             updater={updateTitle}
-            loading={isLoading}
             zodString={columnTitle}
+            loading={isLoading}
         />
     );
 };

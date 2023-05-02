@@ -2,7 +2,7 @@ import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useBoardId } from 'store/kanban-store';
+import { useBoardId, useColumns } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 import { TaskOptionsDropdown } from './task-options-dropdown';
 import { Dialog, DialogTrigger } from '@components/ui/dialog';
@@ -28,12 +28,12 @@ const TaskDetailsDialogContent = dynamic(
 
 export interface TaskProps {
     task: BoardTask;
-    color: string;
     isDragging?: boolean;
     listeners?: SyntheticListenerMap | undefined;
 }
-export const Task = ({ task, color, isDragging, listeners }: TaskProps) => {
-    const { id, title, dueDate } = task;
+export const Task = ({ task, isDragging, listeners }: TaskProps) => {
+    const { id, ownerId, title, dueDate } = task;
+    const color = useColumns().find((c) => c.id === task.columnId)?.color;
     const boardId = useBoardId();
 
     const taskClasses = `flex bg-card border-l-2 group min-h-[100px]

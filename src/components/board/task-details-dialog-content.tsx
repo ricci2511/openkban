@@ -42,7 +42,7 @@ export const TaskDetailsDialogContent = ({ task }: { task: BoardTask }) => {
             onCloseAutoFocus={onClose} // triggers when clicking the close button
             onEscapeKeyDown={onClose}
         >
-            {fetchStatus === 'fetching' && <LoadingSpinner centered />}
+            {fetchStatus === 'fetching' && <LoadingSpinner />}
             {subtasks && open && <TaskDetails />}
         </DialogContent>
     );

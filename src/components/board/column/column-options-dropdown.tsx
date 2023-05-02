@@ -30,7 +30,7 @@ interface ColumnOptionsDropdownProps {
 export const ColumnOptionsDropdown = ({
     column,
 }: ColumnOptionsDropdownProps) => {
-    const { id, title } = column;
+    const { id, ownerId, title } = column;
     const [isDeleting, setIsDeleting] = useState(false);
 
     return (
@@ -58,6 +58,7 @@ export const ColumnOptionsDropdown = ({
                     <Suspense fallback={<LoadingSpinner centered />}>
                         <DeleteColumnAlertDialog
                             columnId={id}
+                            ownerId={ownerId}
                             title={title}
                             closeAlert={() => setIsDeleting(false)}
                         />

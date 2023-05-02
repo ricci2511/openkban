@@ -1,26 +1,34 @@
 import { sortByLexoRankAsc } from '@lib/lexorank-helpers';
-import { internalServerError, notFound } from '@server/helpers/error-helpers';
-import { getSavedBoardById, saveBoard } from '@server/redis/board';
-import { upsertBoardIds } from '@server/redis/user-board-ids';
+import {
+    forbidden,
+    internalServerError,
+    notFound,
+} from '@server/helpers/error-helpers';
 import { BoardData, TasksMap, UnnormalizedBoardData } from 'types/board-types';
 import { z } from 'zod';
-import { BOARD_IDS_CACHE_ERROR, BOARD_METADATA_CACHE_ERROR } from '../errors';
-import { queryColumnsWithTasks } from '@server/routers/board-column-router/routes/get-all-columns-with-tasks';
 import { queryError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
-import { boardUserInclude } from './get-all-boards';
 
 const normalizeBoardData = (board: UnnormalizedBoardData): BoardData => {
     const tasksMap: TasksMap = {};
+
     const columns = board.columns.map(({ tasks, ...column }) => {
         tasksMap[column.id] = tasks.sort(sortByLexoRankAsc);
         return column;
     });
 
+    const { boardUser, memberPermissions, ...boardRest } = board;
+
     return {
-        ...board,
+        ...boardRest,
         columns,
         tasks: tasksMap,
+        boardUsers: boardUser.map((bu) => ({
+            id: bu.id,
+            role: bu.role,
+            user: bu.user,
+        })),
+        membersPermissions: memberPermissions?.map((p) => p.permission),
     };
 };
 
@@ -29,23 +37,9 @@ const idSchema = z.object({ id: z.string().cuid() });
 export const getBoardById = authedRateLimitedProcedure
     .input(idSchema)
     .query(async ({ ctx, input }) => {
-        const boardId = input.id;
-
-        const savedBoard = await getSavedBoardById(boardId);
-        // if board metadata is cached, only query the columns with tasks
-        if (savedBoard) {
-            const columnsWithTasks = await queryColumnsWithTasks(
-                ctx.prisma,
-                boardId
-            );
-
-            return normalizeBoardData({
-                ...savedBoard,
-                columns: columnsWithTasks,
-            });
-        }
-
         try {
+            const userId = ctx.session.user.id;
+
             const board = await ctx.prisma.board.findUnique({
                 where: {
                     id: input.id,
@@ -56,25 +50,43 @@ export const getBoardById = authedRateLimitedProcedure
                             tasks: true,
                         },
                     },
-                    ...boardUserInclude,
+                    boardUser: {
+                        select: {
+                            id: true,
+                            role: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    image: true,
+                                },
+                            },
+                        },
+                    },
                 },
             });
 
             if (!board) throw notFound('Board not found');
 
-            const { columns, ...boardRest } = board;
+            const me = board.boardUser.find((u) => u.user.id === userId);
+            if (!me) throw forbidden('You are not a member of this board.');
 
-            // cache board metadata
-            await saveBoard(boardRest).catch((error) => {
-                throw internalServerError(BOARD_METADATA_CACHE_ERROR, error);
-            });
+            // VIEWERs dont need to know anything about members permissions.
+            // On the other hand, ADMINs should know because they can change them
+            // and MEMBERs should know so their actions can be restricted based on their permissions
+            if (me.role !== 'VIEWER') {
+                const memberPermissions =
+                    await ctx.prisma.memberPermission.findUnique({
+                        where: { boardId: board.id },
+                        include: { permissions: true },
+                    });
 
-            // conditionally cache the board ID for the user
-            await upsertBoardIds(ctx.session.user.id, boardId).catch(
-                (error) => {
-                    throw internalServerError(BOARD_IDS_CACHE_ERROR, error);
-                }
-            );
+                return normalizeBoardData({
+                    ...board,
+                    memberPermissions: memberPermissions?.permissions,
+                });
+            }
 
             return normalizeBoardData(board);
         } catch (error) {

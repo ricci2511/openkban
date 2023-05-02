@@ -37,10 +37,10 @@ export const BoardUsersContent = () => {
                 <ul className="flex flex-col gap-4">
                     {boardUsers.map((bu) => (
                         <BoardUserItem
-                            key={bu.userId}
+                            key={bu.user.id}
                             boardUser={bu}
                             adminCount={adminCount}
-                            isMe={bu.userId === me.id}
+                            isMe={bu.user.id === me.id}
                             updateRole={updateUserRole}
                             deleteBoardUser={deleteBoardUser}
                         />

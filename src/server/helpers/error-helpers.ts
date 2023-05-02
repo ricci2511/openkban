@@ -21,3 +21,10 @@ export const unauthorized = (message: string) => {
         message,
     });
 };
+
+export const forbidden = (message: string) => {
+    throw new TRPCError({
+        code: 'FORBIDDEN',
+        message,
+    });
+};

@@ -25,11 +25,11 @@ const BoardPage: NextPageWithLayout = () => {
         },
         {
             refetchOnWindowFocus: false,
-            onSuccess: ({ id, columns, tasks, boardUser }) => {
-                const role = boardUser.find(
-                    (bu) => bu.userId === session?.user?.id
+            onSuccess: (board) => {
+                const role = board.boardUsers.find(
+                    (bu) => bu.user.id === session?.user?.id
                 )?.role;
-                initStore(columns, tasks, boardUser, role!);
+                initStore(board, role!);
                 // update lastInteractedAt only if a different board is loaded
                 if (id !== storeBoardId) {
                     updateBoard({ id, lastInteractedAt: new Date() });

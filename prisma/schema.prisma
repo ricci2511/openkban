@@ -68,50 +68,97 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-enum BoardUserRole {
+enum Role {
   ADMIN
   MEMBER
   VIEWER
 }
 
-model BoardUser {
-  id          String        @id @default(cuid())
-  role        BoardUserRole @default(MEMBER)
-  isFavourite Boolean       @default(false)
-  board       Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId     String
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+enum Permission {
+  CREATE_COLUMN
+  CREATE_TASK
+  CREATE_SUBTASK
+  UPDATE_OWN_COLUMN
+  UPDATE_MEMBERS_COLUMN
+  UPDATE_ADMINS_COLUMN
+  UPDATE_OWN_TASK
+  UPDATE_MEMBERS_TASK
+  UPDATE_ADMINS_TASK
+  UPDATE_OWN_SUBTASK
+  UPDATE_MEMBERS_SUBTASK
+  UPDATE_ADMINS_SUBTASK
+  DELETE_OWN_COLUMN
+  DELETE_MEMBERS_COLUMN
+  DELETE_ADMINS_COLUMN
+  DELETE_OWN_TASK
+  DELETE_MEMBERS_TASK
+  DELETE_ADMINS_TASK
+  DELETE_OWN_SUBTASK
+  DELETE_MEMBERS_SUBTASK
+  DELETE_ADMINS_SUBTASK
+}
 
-  @@unique([boardId, userId])
-  @@index([boardId])
+model BoardPermission {
+  id                 String            @id @default(cuid())
+  permission         Permission
+  memberPermissions  MemberPermission? @relation(fields: [memberPermissionId], references: [id], onDelete: Cascade)
+  memberPermissionId String?
+
+  @@unique([memberPermissionId, permission])
+}
+
+model MemberPermission {
+  id          String            @id @default(cuid())
+  board       Board             @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String
+  permissions BoardPermission[]
+
+  @@unique([boardId])
+}
+
+model BoardUser {
+  id          String         @id @default(cuid())
+  role        Role           @default(VIEWER)
+  isFavourite Boolean        @default(false)
+  board       Board          @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId     String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  columns     BoardColumn[]
+  tasks       BoardTask[]
+  subtasks    BoardSubtask[]
+
   @@index([userId])
+  @@index([boardId])
 }
 
 model Board {
-  id               String        @id @default(cuid())
-  createdAt        DateTime      @default(now())
-  title            String
-  user             User          @relation(fields: [userId], references: [id])
-  boardUser        BoardUser[]
-  userId           String
-  lastInteractedAt DateTime      @default(now())
-  columns          BoardColumn[]
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  title             String
+  user              User              @relation(fields: [userId], references: [id])
+  boardUser         BoardUser[]
+  userId            String
+  lastInteractedAt  DateTime          @default(now())
+  columns           BoardColumn[]
+  memberPermissions MemberPermission?
 
   @@index([userId])
 }
 
 model BoardColumn {
-  id          String        @id @default(cuid())
-  createdAt   DateTime      @default(now())
-  title       String
-  board       Board         @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  boardId     String
-  tasks       BoardTask[]
-  color       String        @default("#0ea5e9")
-  creatorRole BoardUserRole @default(MEMBER)
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  title     String
+  board     Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId   String
+  tasks     BoardTask[]
+  color     String      @default("#0ea5e9")
+  owner     BoardUser   @relation(fields: [ownerId], references: [id], onDelete: NoAction)
+  ownerId   String
 
   @@index([boardId])
+  @@index([ownerId])
 }
 
 model BoardTask {
@@ -125,10 +172,12 @@ model BoardTask {
   column      BoardColumn         @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId    String
   subtasks    BoardSubtask[]
-  creatorRole BoardUserRole       @default(MEMBER)
   asignees    BoardTaskAssignee[]
+  owner       BoardUser           @relation(fields: [ownerId], references: [id], onDelete: NoAction)
+  ownerId     String
 
   @@index([columnId])
+  @@index([ownerId])
 }
 
 model BoardTaskAssignee {
@@ -150,6 +199,9 @@ model BoardSubtask {
   task      BoardTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId    String
   isDone    Boolean   @default(false)
+  owner     BoardUser @relation(fields: [ownerId], references: [id], onDelete: NoAction)
+  ownerId   String
 
   @@index([taskId])
+  @@index([ownerId])
 }

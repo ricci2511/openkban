@@ -17,14 +17,18 @@ export const BoardCard = ({ board }: BoardProps) => {
 
     const { data: session } = useSession();
 
-    const me = boardUser.find((bu) => bu.userId === session!.user!.id)!;
-    const { isFavourite, role, userId } = me;
+    const me = boardUser.find((bu) => bu.user.id === session!.user!.id)!;
+    const { isFavourite, role, id: boardUserId } = me;
     const isAdmin = role === 'ADMIN';
 
     // fav status is stored on the boardUser, each user can have its own fav status for the same board
     const { mutate: updateBoardUser } = useUpdateBoardUser();
     const updateFavourite = () => {
-        updateBoardUser({ boardId: id, isFavourite: !isFavourite, userId });
+        updateBoardUser({
+            boardId: id,
+            isFavourite: !isFavourite,
+            boardUserId,
+        });
     };
 
     const admin = isAdmin ? me : boardUser.find((bu) => bu.role === 'ADMIN');
@@ -58,13 +62,14 @@ export const BoardCard = ({ board }: BoardProps) => {
             )}
             <div className="absolute -top-4 -left-3">
                 <FavouriteButton
-                    favourite={isFavourite}
+                    favourite={isFavourite!}
                     updateFavourite={updateFavourite}
                 />
             </div>
             {!isEditting && (
                 <BoardOptionsDropdown
                     board={board}
+                    boardUserId={boardUserId}
                     isAdmin={isAdmin}
                     startEditting={() => setIsEditting(true)}
                 />

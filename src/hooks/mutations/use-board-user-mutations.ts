@@ -1,19 +1,23 @@
 import { trpc } from '@lib/trpc';
 import produce from 'immer';
+import { useBoardUserActions } from 'store/kanban-store';
 
-export const useCreateBoardUser = (successCb?: () => void) => {
+export const useCreateBoardUsers = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
+    const { addBoardUsers } = useBoardUserActions();
 
-    const createBoardUserMutation = trpc.boardUserRouter.create.useMutation({
-        onSuccess: async () => {
-            if (utils.getData()) {
-                // invalidate boards query cache if it exists
-                utils.invalidate();
-            }
+    const createBoardUserMutation =
+        trpc.boardUserRouter.createUsers.useMutation({
+            onSuccess: async (boardUsers) => {
+                if (utils.getData()) {
+                    // invalidate boards query cache if it exists
+                    utils.invalidate();
+                }
 
-            successCb?.();
-        },
-    });
+                addBoardUsers(boardUsers);
+                successCb?.();
+            },
+        });
 
     return createBoardUserMutation;
 };
@@ -32,7 +36,7 @@ export const useDeleteBoardUser = () => {
                     if (boardIndex === -1) return prevBoards;
                     const filteredBoardUsers = draft[
                         boardIndex
-                    ].boardUser.filter((bu) => bu.userId !== boardUser.userId);
+                    ].boardUser.filter((bu) => bu.id !== boardUser.id);
                     draft[boardIndex].boardUser = filteredBoardUsers;
                 })
             );
@@ -87,7 +91,7 @@ export const useUpdateBoardUser = (successCb?: () => void) => {
                     const boardUserIndex = draft[
                         boardIndex
                     ].boardUser.findIndex(
-                        (user) => user.userId === boardUser.userId
+                        (bu) => bu.id === boardUser.boardUserId
                     );
                     if (boardUserIndex === -1) return prevBoards;
                     const oldBoardUser =

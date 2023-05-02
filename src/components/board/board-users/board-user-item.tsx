@@ -1,5 +1,4 @@
 import { BoardUserAvatar } from '@components/board-user-avatar';
-import { BoardUserRole } from '@prisma/client';
 import { ClientBoardUser } from 'types/board-types';
 import {
     useBoardId,
@@ -19,6 +18,7 @@ import {
 } from '@components/ui/popover';
 import { Button } from '@components/ui/button';
 import { Trash } from 'lucide-react';
+import { Role } from '@prisma/client';
 
 interface BoardUserItemProps {
     boardUser: ClientBoardUser;
@@ -36,9 +36,9 @@ export const BoardUserItem = ({
     deleteBoardUser,
 }: BoardUserItemProps) => {
     const {
+        id: boardUserId,
         role,
         user: { email, name },
-        userId,
     } = boardUser;
     const isBoardUserAdmin = role === 'ADMIN';
 
@@ -77,26 +77,25 @@ export const BoardUserItem = ({
     const { updateBoardUser, removeBoardUser } = useBoardUserActions();
     const setMyRole = useSetMyRole();
 
-    const onRoleChange = (role: BoardUserRole) => {
-        // update the board user in the store
-        updateBoardUser({ ...boardUser, role });
-
-        if (isMe) {
-            // update the current user role in the store
-            setMyRole(role);
-            // api call, when changing my own role, specifying the userId is not necessary
-            updateRole({ boardId, role });
-            return;
-        }
-
-        updateRole({ boardId, userId, role });
+    const onRoleChange = (role: Role) => {
+        updateRole(
+            { boardId, boardUserId, role },
+            {
+                onSuccess: () => {
+                    // set my new role when updating my own role
+                    if (isMe) setMyRole(role);
+                    // update the board user array in the store
+                    updateBoardUser({ ...boardUser, role });
+                },
+            }
+        );
     };
 
     const onBoardUserDelete = () => {
         // remove the board user from the store
-        removeBoardUser(userId);
+        removeBoardUser(boardUserId);
         // delete board user api call
-        deleteBoardUser({ boardId, userId });
+        deleteBoardUser({ boardId, boardUserId });
     };
 
     return (

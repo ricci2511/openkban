@@ -5,7 +5,7 @@ import {
     boardTaskCreationSchema,
 } from '@lib/schemas/board-schemas';
 import { LexoRank } from 'lexorank';
-import { useTasks, useMyRole } from 'store/kanban-store';
+import { useTasks, useMyRole, useBoardId } from 'store/kanban-store';
 import { CreateTaskMutation } from '@hooks/mutations/use-task-mutations';
 import { ColumnSelect } from './column-select';
 import { TaskDateInputs } from './task-date-inputs';
@@ -44,7 +44,9 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
         }
     };
 
+    const boardId = useBoardId();
     const role = useMyRole();
+
     const onSubmit = handleSubmit(
         ({ title, description, columnId, startDate, dueDate }) => {
             const rank = generateRank(columnId);
@@ -56,6 +58,7 @@ export const CreateTaskForm = ({ createTask }: CreateTaskFormProps) => {
                 dueDate,
                 rank,
                 role,
+                boardId,
             });
         }
     );

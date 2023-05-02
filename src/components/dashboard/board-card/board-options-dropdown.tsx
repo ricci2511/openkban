@@ -27,18 +27,21 @@ const DeleteBoardAlertDialog = dynamic(
 
 interface OptionsDropdownProps {
     board: Board;
+    boardUserId: string;
     isAdmin: boolean;
     startEditting: () => void;
 }
 
 export const BoardOptionsDropdown = ({
     board,
+    boardUserId,
     isAdmin,
     startEditting,
 }: OptionsDropdownProps) => {
     const { id, title } = board;
 
     const { mutate: leaveBoard } = useLeaveBoard();
+    const onLeaveBoard = () => leaveBoard({ boardId: board.id, boardUserId });
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -56,40 +59,42 @@ export const BoardOptionsDropdown = ({
             >
                 <DropdownMenuLabel>Board options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                    onClick={startEditting}
-                    aria-label={`Rename ${title} board`}
-                >
-                    <Pencil className="mr-2 h-4 w-4" />
-                    <span>Rename</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => leaveBoard({ boardId: id })}>
+                {isAdmin && (
+                    <>
+                        <DropdownMenuItem
+                            onClick={startEditting}
+                            aria-label={`Rename ${title} board`}
+                        >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            <span>Rename</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuDialogItem
+                            open={isDeleting}
+                            onOpenChange={setIsDeleting}
+                            aria-label={`Delete ${title} task`}
+                            trigger={
+                                <>
+                                    <Trash className="mr-2 h-4 w-4" />
+                                    <span>Delete</span>
+                                </>
+                            }
+                            alert
+                            destructive
+                        >
+                            <Suspense fallback={<LoadingSpinner centered />}>
+                                <DeleteBoardAlertDialog
+                                    boardId={id}
+                                    title={title}
+                                    closeAlert={() => setIsDeleting(false)}
+                                />
+                            </Suspense>
+                        </DropdownMenuDialogItem>
+                    </>
+                )}
+                <DropdownMenuItem onClick={onLeaveBoard}>
                     <DoorOpen className="mr-2 h-4 w-4" />
                     <span>Leave</span>
                 </DropdownMenuItem>
-                {isAdmin && (
-                    <DropdownMenuDialogItem
-                        open={isDeleting}
-                        onOpenChange={setIsDeleting}
-                        aria-label={`Delete ${title} task`}
-                        trigger={
-                            <>
-                                <Trash className="mr-2 h-4 w-4" />
-                                <span>Delete</span>
-                            </>
-                        }
-                        alert
-                        destructive
-                    >
-                        <Suspense fallback={<LoadingSpinner centered />}>
-                            <DeleteBoardAlertDialog
-                                boardId={id}
-                                title={title}
-                                closeAlert={() => setIsDeleting(false)}
-                            />
-                        </Suspense>
-                    </DropdownMenuDialogItem>
-                )}
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -1,21 +1,16 @@
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { Popover, PopoverAnchor, PopoverContent } from '@components/ui/popover';
-import {
-    useBoardId,
-    useBoardUserActions,
-    useBoardUsers,
-} from 'store/kanban-store';
+import { useBoardId, useBoardUsers } from 'store/kanban-store';
 import { useCallback, useState } from 'react';
 import { trpc } from '@lib/trpc';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
-import { BoardUserRole, User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import useDebounce from 'use-debouncy/lib/effect';
 import { UserRolesSelect } from './user-roles-select';
 import { UserSearchResults } from './user-search-results';
 import { BoardUsersInviteList } from './board-users-invite-list';
-import { useCreateBoardUser } from '@hooks/mutations/use-board-user-mutations';
-import { ClientBoardUser } from 'types/board-types';
+import { useCreateBoardUsers } from '@hooks/mutations/use-board-user-mutations';
 import { MAX_BOARD_USERS } from '@lib/constants';
 import { Button } from '@components/ui/button';
 
@@ -34,10 +29,10 @@ export const BoardUserInviteSection = () => {
     }, []);
 
     const [invitedUsers, setInvitedUsers] = useState<User[]>([]);
-    const [role, setRole] = useState<BoardUserRole>('MEMBER');
+    const [role, setRole] = useState<Role>('MEMBER');
 
     // to keep track of users who are already members of the board
-    const boardUserIds = useBoardUsers().map((boardUser) => boardUser.userId);
+    const boardUserIds = useBoardUsers().map((boardUser) => boardUser.user.id);
     // to keep track of users already on the invite list
     const invitedUserIds = invitedUsers.map((u) => u.id);
 
@@ -52,8 +47,8 @@ export const BoardUserInviteSection = () => {
         setOpen(false);
     };
 
-    // search input state
     const [nameOrEmail, setNameOrEmail] = useState('');
+    // user search query
     const {
         data: users,
         fetchStatus,
@@ -67,7 +62,7 @@ export const BoardUserInviteSection = () => {
         }
     );
 
-    // search for users after 600ms of no input
+    // run user search query after 600ms of no input
     useDebounce(
         () => {
             if (!nameOrEmail || nameOrEmail.length < 3) {
@@ -80,28 +75,14 @@ export const BoardUserInviteSection = () => {
         [nameOrEmail]
     );
 
-    const { addBoardUsers } = useBoardUserActions();
+    // reset state after adding users
     const onAddUsersSuccess = () => {
-        // add users to kanban store
-        const newBoardUsers: ClientBoardUser[] = invitedUsers.map(
-            ({ emailVerified, ...user }) => {
-                return {
-                    userId: user.id,
-                    user,
-                    role,
-                    isFavourite: false,
-                };
-            }
-        );
-        addBoardUsers(newBoardUsers);
-
-        // reset state
         setNameOrEmail('');
         setInvitedUsers([]);
     };
 
     const { mutate: addUsers, isLoading } =
-        useCreateBoardUser(onAddUsersSuccess);
+        useCreateBoardUsers(onAddUsersSuccess);
 
     const boardId = useBoardId();
 

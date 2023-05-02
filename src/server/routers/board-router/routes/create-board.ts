@@ -1,30 +1,23 @@
-import { PRESET_COLORS } from '@lib/constants';
+import {
+    DEFAULT_MEMBER_BOARD_PERMISSIONS,
+    PRESET_COLORS,
+} from '@lib/constants';
 import { randomNoRepeats } from '@lib/helpers';
 import { boardCeationSchema } from '@lib/schemas/board-schemas';
 import { internalServerError } from '@server/helpers/error-helpers';
-import { saveBoard } from '@server/redis/board';
 import { authedProcedure } from '@server/routers/auth-router';
-import { upsertBoardIds } from '@server/redis/user-board-ids';
 import { createError } from '@server/routers/common-errors';
-import { boardUserInclude } from './get-all-boards';
 
 export const createBoard = authedProcedure
     .input(boardCeationSchema)
     .mutation(async ({ ctx, input }) => {
-        const randomColor = randomNoRepeats(PRESET_COLORS);
-        const userId = ctx.session.user.id;
         try {
+            const userId = ctx.session.user.id;
+
             const board = await ctx.prisma.board.create({
                 data: {
                     title: input.title,
                     userId: ctx.session.user.id,
-                    columns: {
-                        create: input.columnTitles.map((title) => ({
-                            title: title,
-                            color: randomColor(),
-                            creatorRole: 'ADMIN',
-                        })),
-                    },
                     boardUser: {
                         create: {
                             role: 'ADMIN',
@@ -36,14 +29,56 @@ export const createBoard = authedProcedure
                             },
                         },
                     },
+                    memberPermissions: {
+                        create: {
+                            permissions: {
+                                create: DEFAULT_MEMBER_BOARD_PERMISSIONS.map(
+                                    (permission) => ({ permission })
+                                ),
+                            },
+                        },
+                    },
                 },
-                include: { ...boardUserInclude },
+                include: {
+                    boardUser: {
+                        select: {
+                            id: true,
+                            role: true,
+                            isFavourite: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    image: true,
+                                },
+                            },
+                        },
+                    },
+                },
             });
 
-            // cache the new board metadata
-            await saveBoard(board);
-            // cache the new board ID
-            await upsertBoardIds(userId, board.id);
+            const randomColor = randomNoRepeats(PRESET_COLORS);
+            // columns need to be created separetely to properly connect the owner
+            // createMany doesnt allow connect relations, therefore a loop with create is needed
+            for (const title of input.columnTitles) {
+                await ctx.prisma.boardColumn.create({
+                    data: {
+                        title,
+                        color: randomColor(),
+                        board: {
+                            connect: {
+                                id: board.id,
+                            },
+                        },
+                        owner: {
+                            connect: {
+                                id: board.boardUser[0].id,
+                            },
+                        },
+                    },
+                });
+            }
 
             return board;
         } catch (error) {

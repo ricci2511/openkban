@@ -6,15 +6,15 @@ import {
     SelectContent,
     SelectValue,
 } from '@components/ui/select';
-import { BoardUserRole } from '@prisma/client';
 import { SelectTriggerProps } from '@radix-ui/react-select';
 import { BOARD_USER_ROLES } from '@lib/constants';
+import { Role } from '@prisma/client';
 
 interface UserRolesSelectProps extends SelectTriggerProps {
     admin: boolean;
-    defaultValue?: BoardUserRole;
+    defaultValue?: Role;
     disabled?: boolean;
-    onRoleChange?: (role: BoardUserRole) => void;
+    onRoleChange?: (role: Role) => void;
 }
 
 export const UserRolesSelect = ({

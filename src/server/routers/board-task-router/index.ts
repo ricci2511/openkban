@@ -3,6 +3,7 @@ import { authedProcedure } from '../auth-router';
 import { boardTaskCreationSchema } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { queryBoardUserProperty } from '../board-user-router/routes/get-board-user';
 
 export const boardTaskRouter = t.router({
     getById: authedRateLimitedProcedure
@@ -27,9 +28,17 @@ export const boardTaskRouter = t.router({
             boardTaskCreationSchema.extend({
                 rank: z.string(),
                 role: z.enum(['ADMIN', 'MEMBER', 'VIEWER']),
+                boardId: z.string().cuid(),
             })
         )
         .mutation(async ({ ctx, input }) => {
+            const boardUserId = await queryBoardUserProperty(
+                ctx.session.user.id,
+                input.boardId,
+                'id',
+                ctx.prisma
+            );
+
             const createTask = await ctx.prisma.boardTask.create({
                 data: {
                     title: input.title,
@@ -38,7 +47,11 @@ export const boardTaskRouter = t.router({
                     startDate: input.startDate,
                     dueDate: input.dueDate,
                     rank: input.rank,
-                    creatorRole: input.role,
+                    owner: {
+                        connect: {
+                            id: boardUserId,
+                        },
+                    },
                 },
             });
             return createTask;

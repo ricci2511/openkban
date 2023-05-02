@@ -6,6 +6,9 @@ import {
     BoardUser,
     User,
     BoardUserRole,
+    Role,
+    Permission,
+    BoardPermission,
 } from '@prisma/client';
 
 export type BoardColumnsLayout = 'default' | 'custom';
@@ -26,21 +29,28 @@ export type TaskWithSubTasks = BoardTask & {
 export type TasksMap = Record<string, BoardTask[]>;
 
 export type ClientBoardUser = {
-    role: BoardUserRole;
-    isFavourite: boolean;
-    userId: string;
-    user: Omit<User, 'id' | 'emailVerified'>;
+    id: string;
+    role: Role;
+    user: Omit<User, 'emailVerified'>;
+    isFavourite?: boolean; // whether the user has favourited the board
 };
 
 export type BoardWithUsers = Board & {
     boardUser: ClientBoardUser[];
 };
 
-export type UnnormalizedBoardData = BoardWithUsers & {
+export type UnnormalizedBoardData = Board & {
+    boardUser: ClientBoardUser[];
     columns: BoardColumnWithTasks[];
+    memberPermissions?: BoardPermission[];
 };
 
-export type BoardData = BoardWithUsers & {
+export type BoardData = Board & {
     columns: BoardColumn[];
     tasks: TasksMap;
+    boardUsers: ClientBoardUser[];
+    // the permissions applied to all board users with the role of member
+    // others are not relevant, a VIEWER has no permissions, an ADMIN has all permissions
+    // this prop is omitted if the current user is a VIEWER
+    membersPermissions?: Permission[];
 };

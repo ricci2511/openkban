@@ -33,7 +33,7 @@ export const TaskOptionsDropdown = ({
     task,
     startEditting,
 }: TaskOptionsDropdownProps) => {
-    const { id, title } = task;
+    const { id, title, ownerId } = task;
     const [isDeleting, setIsDeleting] = useState(false);
 
     return (
@@ -69,6 +69,7 @@ export const TaskOptionsDropdown = ({
                     <Suspense fallback={<LoadingSpinner centered />}>
                         <DeleteTaskAlertDialog
                             taskId={id}
+                            ownerId={ownerId}
                             title={title}
                             closeAlert={() => setIsDeleting(false)}
                         />

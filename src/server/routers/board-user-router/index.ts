@@ -1,14 +1,14 @@
 import { t } from '@server/trpc';
-import { getBoardUserRole } from './routes/get-board-user-role';
+import { getBoardUser } from './routes/get-board-user';
 import { updateBoardUser } from './routes/update-board-user';
 import { leaveBoard } from './routes/leave-board';
 import { deleteBoardUser } from './routes/delete-board-user';
-import { createBoardUser } from './routes/create-board-user';
+import { createBoardUser } from './routes/create-board-users';
 
 export const boardUserRouter = t.router({
-    getRole: getBoardUserRole,
+    getUser: getBoardUser,
     leaveBoard: leaveBoard,
-    create: createBoardUser,
+    createUsers: createBoardUser,
     delete: deleteBoardUser,
     update: updateBoardUser,
 });

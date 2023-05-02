@@ -4,10 +4,8 @@ import {
 } from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { z } from 'zod';
-import { queryBoardUserRole } from './get-board-user-role';
-import { invalidateSavedBoard } from '@server/redis/board';
+import { queryBoardUserProperty } from './get-board-user';
 import { MAX_BOARD_USERS } from '@lib/constants';
-import { addBoardIdOrIds, idsSetExists } from '@server/redis/user-board-ids';
 
 const schema = z.array(
     z.object({
@@ -23,9 +21,10 @@ export const createBoardUser = authedRateLimitedProcedure
         try {
             const boardId = input[0].boardId;
 
-            const boardUserRole = await queryBoardUserRole(
+            const boardUserRole = await queryBoardUserProperty(
                 ctx.session.user.id,
                 boardId,
+                'role',
                 ctx.prisma
             );
 
@@ -46,21 +45,31 @@ export const createBoardUser = authedRateLimitedProcedure
                 );
             }
 
-            const boardUsers = await ctx.prisma.boardUser.createMany({
-                data: input.map(({ boardId, userId, role }) => ({
-                    boardId,
-                    userId,
-                    role,
-                })),
-                skipDuplicates: true,
-            });
-
-            await invalidateSavedBoard(boardId);
-            input.forEach(async ({ userId, boardId }) => {
-                // if there is no cached set of board ids for the user, don't bother adding anything to it
-                if (!(await idsSetExists(userId))) return;
-                await addBoardIdOrIds(userId, boardId);
-            });
+            // this is a workaround
+            // not using createMany because prismas createMany does not return the created records
+            const boardUsers = await ctx.prisma.$transaction(
+                input.map((bu) =>
+                    ctx.prisma.boardUser.create({
+                        data: {
+                            boardId: bu.boardId,
+                            userId: bu.userId,
+                            role: bu.role,
+                        },
+                        select: {
+                            id: true,
+                            role: true,
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    email: true,
+                                    image: true,
+                                },
+                            },
+                        },
+                    })
+                )
+            );
 
             return boardUsers;
         } catch (error) {

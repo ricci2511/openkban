@@ -5,13 +5,13 @@ import {
 import { useUpdateColumn } from '@hooks/mutations/use-column-mutations';
 
 interface ColumnColorPickerProps extends PopoverContentPropsWithoutColor {
-    id: string;
+    columnId: string;
     color: string;
     toggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ColumnColorPicker = ({
-    id,
+    columnId,
     color,
     toggle,
     ...props
@@ -22,7 +22,7 @@ export const ColumnColorPicker = ({
         // prevent updating if color is the same or if already mutating
         if (color === newColor || isLoading) return;
         updateColumn({
-            id,
+            id: columnId,
             color: newColor,
         });
     };

@@ -7,19 +7,24 @@ import {
     AlertDialogFooter,
 } from '@components/ui/alert-dialog';
 import { Button } from '@components/ui/button';
+import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 
 interface DeleteColumnAlertDialogProps {
     columnId: string;
+    ownerId: string;
     title: string;
     closeAlert: () => void;
 }
 
 export const DeleteColumnAlertDialog = ({
     columnId,
+    ownerId,
     title,
     closeAlert,
 }: DeleteColumnAlertDialogProps) => {
     const { mutate: deleteColumn, isLoading } = useDeleteColumn();
+    // check if the current user has permissions to delete the column
+    const canDelete = useCanPerformEntityAction('COLUMN', 'DELETE', ownerId);
 
     return (
         <>
@@ -34,6 +39,7 @@ export const DeleteColumnAlertDialog = ({
                 <Button
                     type="button"
                     variant="destructive"
+                    disabled={!canDelete}
                     loading={isLoading}
                     aria-label={`Delete ${title} column`}
                     onClick={() => deleteColumn({ id: columnId })}

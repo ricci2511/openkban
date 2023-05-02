@@ -13,7 +13,7 @@ export interface ElementTitleEditableProps {
 }
 
 interface EditableTitleInputProps
-    extends Omit<ElementTitleEditableProps, 'id'> {
+    extends Omit<ElementTitleEditableProps, 'id' | 'ownerId'> {
     updater: (newTitle: string) => void;
     zodString: z.ZodString; // zod string to validate the title against
     loading?: boolean; // optional loading state to disable input
@@ -23,8 +23,8 @@ export const EditableTitleInput = ({
     title,
     stopEditting,
     updater,
-    loading,
     zodString,
+    loading,
 }: EditableTitleInputProps) => {
     const {
         register,
@@ -56,7 +56,7 @@ export const EditableTitleInput = ({
     const ref = useClickOutside<HTMLFormElement>(onSubmit);
 
     return (
-        <form ref={ref} className="flex items-center gap-2" onSubmit={onSubmit}>
+        <form ref={ref} className="flex flex-col gap-2" onSubmit={onSubmit}>
             <FormInput<TitleInput>
                 type="text"
                 name="title"
@@ -68,17 +68,18 @@ export const EditableTitleInput = ({
                 autoFocus
                 onFocus={(e) => e.target.select()}
                 className="text-sm sm:text-base"
-            />
-            <Button
-                type="submit"
-                variant="primary"
-                size="sm"
-                loading={loading}
-                title="Save changes"
             >
-                {!loading && <Check className="h-4 w-4" />}
-                <span className="sr-only">Save changes</span>
-            </Button>
+                <Button
+                    type="submit"
+                    variant="primary"
+                    size="sm"
+                    loading={loading}
+                    title="Save changes"
+                >
+                    {!loading && <Check className="h-4 w-4" />}
+                    <span className="sr-only">Save changes</span>
+                </Button>
+            </FormInput>
         </form>
     );
 };

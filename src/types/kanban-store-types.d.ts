@@ -2,9 +2,10 @@ import {
     BoardColumn,
     BoardSubtask,
     BoardTask,
-    BoardUserRole,
+    Permission,
+    Role,
 } from '@prisma/client';
-import { ClientBoardUser, TasksMap } from './board-types';
+import { BoardData, ClientBoardUser, TasksMap } from './board-types';
 
 export type ColumnsActions = {
     setColumns: (columns: BoardColumn[]) => void;
@@ -51,15 +52,11 @@ export type KanbanStore = {
     // only the subtasks of the current task in use are stored here
     subtasks: BoardSubtask[];
     boardUsers: ClientBoardUser[];
-    // whether the current user is the admin of the board
-    role: BoardUserRole;
+    // the role of the current user
+    role: Role;
+    membersPermissions: Permission[] | undefined;
     setRole: (role: BoardUserRole) => void;
-    init: (
-        columns: BoardColumn[],
-        tasks: TasksMap,
-        boardUsers: ClientBoardUser[],
-        role: BoardUserRole
-    ) => void;
+    init: (boardData: BoardData, currRole: Role) => void;
     columnsActions: ColumnsActions;
     tasksActions: TasksActions;
     subtasksActions: SubtasksActions;
