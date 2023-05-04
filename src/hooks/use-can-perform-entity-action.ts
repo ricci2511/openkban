@@ -1,12 +1,10 @@
+import { KanbanAction, KanbanEntity } from 'types/board-types';
 import { useSession } from 'next-auth/react';
 import {
     useBoardUsers,
     useMembersPermissions,
     useMyRole,
 } from 'store/kanban-store';
-
-type KanbanEntity = 'COLUMN' | 'TASK' | 'SUBTASK';
-type KanbanAction = 'CREATE' | 'UPDATE' | 'DELETE';
 
 /**
  *

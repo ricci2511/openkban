@@ -8,6 +8,7 @@ import {
     useUpdateBoardUser,
 } from '@hooks/mutations/use-board-user-mutations';
 import { BoardUserInviteSection } from './board-user-invite-section';
+import { MembersAccessSection } from './members-access-section';
 
 export const BoardUsersContent = () => {
     const boardUsers = useBoardUsers();
@@ -26,13 +27,16 @@ export const BoardUsersContent = () => {
         <Tabs defaultValue="users" className="w-full">
             <TabsList className="w-full">
                 <TabsTrigger value="users">Members</TabsTrigger>
+                <TabsTrigger value="members-access" disabled={!isAdmin}>
+                    Members Access
+                </TabsTrigger>
                 <TabsTrigger value="invite-users" disabled={!isAdmin}>
-                    Invite new members
+                    Invite Users
                 </TabsTrigger>
             </TabsList>
             <TabsContent
                 value="users"
-                className="max-h-[246px] min-h-[198px] overflow-y-auto border-0 p-2 sm:border sm:p-4"
+                className="h-[246px] max-h-[246px] overflow-y-auto border-0 p-4 sm:border"
             >
                 <ul className="flex flex-col gap-4">
                     {boardUsers.map((bu) => (
@@ -48,8 +52,14 @@ export const BoardUsersContent = () => {
                 </ul>
             </TabsContent>
             <TabsContent
+                value="members-access"
+                className="h-[246px] max-h-[246px] overflow-y-auto border-0 p-4 sm:border"
+            >
+                <MembersAccessSection />
+            </TabsContent>
+            <TabsContent
                 value="invite-users"
-                className="min-h-[198px] border-0 p-2 sm:border sm:p-4"
+                className="h-[246px] max-h-[246px] border-0 p-4 sm:border"
             >
                 <BoardUserInviteSection />
             </TabsContent>

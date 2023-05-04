@@ -4,7 +4,7 @@ import { Role, Permission } from '@prisma/client';
 export const BOARD_USER_ROLES = Object.values(Role);
 
 // board permissions
-export const ADMIN_BOARD_PERMISSIONS = Object.values(Permission);
+export const ALL_BOARD_PERMISSIONS = Object.values(Permission);
 export const DEFAULT_MEMBER_BOARD_PERMISSIONS: Permission[] = [
     'CREATE_COLUMN',
     'CREATE_TASK',

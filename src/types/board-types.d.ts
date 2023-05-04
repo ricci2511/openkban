@@ -54,3 +54,6 @@ export type BoardData = Board & {
     // this prop is omitted if the current user is a VIEWER
     membersPermissions?: Permission[];
 };
+
+export type KanbanEntity = 'COLUMN' | 'TASK' | 'SUBTASK';
+export type KanbanAction = 'CREATE' | 'UPDATE' | 'DELETE';
