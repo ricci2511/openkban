@@ -55,5 +55,7 @@ export type BoardData = Board & {
     membersPermissions?: Permission[];
 };
 
+export type PermissionMap = Record<Permission, boolean>;
+
 export type KanbanEntity = 'COLUMN' | 'TASK' | 'SUBTASK';
 export type KanbanAction = 'CREATE' | 'UPDATE' | 'DELETE';

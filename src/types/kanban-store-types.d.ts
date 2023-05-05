@@ -5,7 +5,12 @@ import {
     Permission,
     Role,
 } from '@prisma/client';
-import { BoardData, ClientBoardUser, TasksMap } from './board-types';
+import {
+    BoardData,
+    ClientBoardUser,
+    PermissionMap,
+    TasksMap,
+} from './board-types';
 
 export type ColumnsActions = {
     setColumns: (columns: BoardColumn[]) => void;
@@ -43,6 +48,7 @@ export type BoardUserActions = {
 };
 
 export type KanbanStore = {
+    init: (boardData: BoardData, currRole: Role) => void;
     boardId: string;
     columns: BoardColumn[];
     tasks: TasksMap;
@@ -54,9 +60,10 @@ export type KanbanStore = {
     boardUsers: ClientBoardUser[];
     // the role of the current user
     role: Role;
-    membersPermissions: Permission[] | undefined;
     setRole: (role: BoardUserRole) => void;
-    init: (boardData: BoardData, currRole: Role) => void;
+    // the permissions applied to all users with the MEMBER role
+    membersPermissions: PermissionMap | undefined;
+    updateMembersPermission: (permission: Permission, access: boolean) => void;
     columnsActions: ColumnsActions;
     tasksActions: TasksActions;
     subtasksActions: SubtasksActions;

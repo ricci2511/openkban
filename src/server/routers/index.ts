@@ -6,6 +6,7 @@ import { t } from '@server/trpc';
 import { boardTaskRouter } from './board-task-router';
 import { boardColumnRouter } from './board-column-router';
 import { boardSubtaskRouter } from './board-subtask-router';
+import { boardPermissionRouter } from './board-permission-router';
 
 export const appRouter = t.router({
     authRouter,
@@ -15,6 +16,7 @@ export const appRouter = t.router({
     boardSubtaskRouter,
     userRouter,
     boardUserRouter,
+    boardPermissionRouter,
 });
 
 export type AppRouter = typeof appRouter;

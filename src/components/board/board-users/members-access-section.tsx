@@ -1,55 +1,62 @@
 import { Permission } from '@prisma/client';
-import { useEffect, useState } from 'react';
-import { useMembersPermissions } from 'store/kanban-store';
-import { ALL_BOARD_PERMISSIONS } from '@lib/constants';
+import {
+    useBoardId,
+    useMembersPermissions,
+    useUpdateMembersPermission,
+} from 'store/kanban-store';
 import { MembersAccessColumns } from './members-access-columns';
 import { MembersAccessTasks } from './members-access-tasks';
 import { MembersAccessSubtasks } from './members-access-subtasks';
 import { Separator } from '@components/ui/separator';
-
-export type PermissionMap = Record<Permission, boolean>;
+import { PermissionMap } from 'types/board-types';
+import { trpc } from '@lib/trpc';
 
 export interface MembersAccessProps {
     currPermissions: PermissionMap;
     onPermissionChange: (perm: Permission, value: boolean) => void;
 }
 
-export const getPermissionMap = (currPermissions: Permission[] | undefined) => {
-    return ALL_BOARD_PERMISSIONS.reduce<PermissionMap>((acc, perm) => {
-        acc[perm] = currPermissions?.includes(perm) || false;
-        return acc;
-    }, {} as PermissionMap);
-};
-
 export const MembersAccessSection = () => {
-    const memberPermissions = useMembersPermissions();
-    const [currPermissions, setCurrPermissions] = useState<PermissionMap>();
+    const membersPermissions = useMembersPermissions();
+    const updateStorePermission = useUpdateMembersPermission();
 
-    useEffect(() => {
-        setCurrPermissions(getPermissionMap(memberPermissions));
-    }, [memberPermissions]);
+    const { mutate } = trpc.boardPermissionRouter.update.useMutation();
+    const boardId = useBoardId();
 
-    const onPermissionChange = (perm: Permission, value: boolean) => {
-        setCurrPermissions((curr) => {
-            if (!curr) return curr;
+    const onPermissionChange = (permission: Permission, access: boolean) => {
+        // optimistically update the store permission map
+        updateStorePermission(permission, access);
 
-            return {
-                ...curr,
-                [perm]: value,
-            };
-        });
+        // api call to update member permissions
+        mutate(
+            {
+                boardId,
+                // the permission to update and whether to grant or revoke access to it
+                memberPermission: { permission, access },
+            },
+            {
+                // if error, revert the change
+                onError: () => updateStorePermission(permission, !access),
+            }
+        );
     };
 
     return (
         <div className="flex flex-col gap-6">
-            {currPermissions && (
+            {!membersPermissions && (
+                <p>
+                    Could not load permission settings for members. Make sure
+                    you are an admin before trying again.
+                </p>
+            )}
+            {membersPermissions && (
                 <>
                     <section className="h-full w-full">
                         <h2 className="mb-2 font-semibold">
                             Columns permissions
                         </h2>
                         <MembersAccessColumns
-                            currPermissions={currPermissions}
+                            currPermissions={membersPermissions}
                             onPermissionChange={onPermissionChange}
                         />
                     </section>
@@ -59,7 +66,7 @@ export const MembersAccessSection = () => {
                             Tasks permissions
                         </h2>
                         <MembersAccessTasks
-                            currPermissions={currPermissions}
+                            currPermissions={membersPermissions}
                             onPermissionChange={onPermissionChange}
                         />
                     </section>
@@ -69,7 +76,7 @@ export const MembersAccessSection = () => {
                             Subtasks permissions
                         </h2>
                         <MembersAccessSubtasks
-                            currPermissions={currPermissions}
+                            currPermissions={membersPermissions}
                             onPermissionChange={onPermissionChange}
                         />
                     </section>

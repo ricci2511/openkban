@@ -1,7 +1,20 @@
 import { arrayMove } from '@dnd-kit/sortable';
+import { ALL_BOARD_PERMISSIONS } from '@lib/constants';
+import { Permission } from '@prisma/client';
+import { PermissionMap } from 'types/board-types';
 import { KanbanStore } from 'types/kanban-store-types';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+
+const getPermissionMap = (currPermissions: Permission[] | undefined) => {
+    // when no permissions are passed, the user is likely a VIEWER, so we can keep it undefined
+    if (!currPermissions) return;
+
+    return ALL_BOARD_PERMISSIONS.reduce<PermissionMap>((acc, perm) => {
+        acc[perm] = currPermissions?.includes(perm) || false;
+        return acc;
+    }, {} as PermissionMap);
+};
 
 const useKanbanStore = create(
     immer<KanbanStore>((set) => ({
@@ -19,12 +32,19 @@ const useKanbanStore = create(
                 state.tasks = boardData.tasks;
                 state.boardUsers = boardData.boardUsers;
                 state.role = currRole;
-                state.membersPermissions = boardData.membersPermissions;
+                state.membersPermissions = getPermissionMap(
+                    boardData.membersPermissions
+                );
                 state.boardId = boardData.id;
             }),
         setRole: (role) =>
             set((state) => {
                 state.role = role;
+            }),
+        updateMembersPermission: (permission, access) =>
+            set((state) => {
+                if (!state.membersPermissions) return;
+                state.membersPermissions[permission] = access;
             }),
         columnsActions: {
             setColumns: (columns) =>
@@ -201,6 +221,9 @@ export const useSetMyRole = () => useKanbanStore((state) => state.setRole);
  */
 export const useMembersPermissions = () =>
     useKanbanStore((state) => state.membersPermissions);
+
+export const useUpdateMembersPermission = () =>
+    useKanbanStore((state) => state.updateMembersPermission);
 
 /**
  * All actions can be accessed with one selector while avoiding unnecessary rerenders.
