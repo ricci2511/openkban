@@ -35,7 +35,7 @@ export const MembersAccessSection = () => {
                 memberPermission: { permission, access },
             },
             {
-                // if error, revert the change
+                // if error, revert the change that was made to the store
                 onError: () => updateStorePermission(permission, !access),
             }
         );

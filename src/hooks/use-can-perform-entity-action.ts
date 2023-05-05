@@ -31,7 +31,7 @@ export const useCanPerformEntityAction = (
     // MEMBERs are dependent on the current member permissions
     if (action === 'CREATE') {
         // CREATE actions dont have any action type
-        return membersPermissions.includes(`CREATE_${entity}`);
+        return membersPermissions[`CREATE_${entity}`];
     }
 
     if (!entityOwnerId) {
@@ -53,5 +53,5 @@ export const useCanPerformEntityAction = (
         ? 'ADMINS'
         : 'MEMBERS';
 
-    return membersPermissions.includes(`${action}_${actionType}_${entity}`);
+    return membersPermissions[`${action}_${actionType}_${entity}`];
 };
