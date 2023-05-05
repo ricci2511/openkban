@@ -10,6 +10,8 @@ import { Grip, Pencil } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import { isPast, isToday, format } from 'date-fns';
 import { TaskTitleEditable } from './task-title-editable';
+import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
+import { cn } from '@lib/helpers';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
@@ -31,27 +33,32 @@ export interface TaskProps {
     isDragging?: boolean;
     listeners?: SyntheticListenerMap | undefined;
 }
-export const Task = ({ task, isDragging, listeners }: TaskProps) => {
+
+export const Task = React.memo(({ task, isDragging, listeners }: TaskProps) => {
     const { id, ownerId, title, dueDate } = task;
     const color = useColumns().find((c) => c.id === task.columnId)?.color;
     const boardId = useBoardId();
 
-    const taskClasses = `flex bg-card border-l-2 group min-h-[100px]
-        ${isDragging && 'opacity-50'}`;
-
     const dueDateToday = isToday(dueDate);
     const dueDateOverdue = isPast(dueDate);
 
-    // task title editting state
     const [isEditting, setIsEditting] = useState(false);
+    // wether the current user can update task related data (title)
+    const canUpdate = useCanPerformEntityAction('TASK', 'UPDATE', ownerId);
 
-    const onEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const handleStartEditting = () => {
+        if (!canUpdate) return;
         setIsEditting(true);
     };
 
     return (
-        <div className={taskClasses} style={{ borderLeftColor: color }}>
+        <div
+            className={cn(
+                'group flex min-h-[100px] border-l-2 bg-card',
+                isDragging && 'opacity-50'
+            )}
+            style={{ borderLeftColor: color }}
+        >
             {isEditting ? (
                 <div className="my-auto w-full px-3">
                     <TaskTitleEditable
@@ -73,17 +80,20 @@ export const Task = ({ task, isDragging, listeners }: TaskProps) => {
                             >
                                 <div className="flex flex-col space-y-4 p-3">
                                     <div className="flex items-center space-x-4">
-                                        <span className="text-sm sm:text-base">
-                                            {title}
-                                        </span>
-                                        <Button
-                                            variant="secondary"
-                                            size="xs"
-                                            className="opacity-0 transition-opacity duration-150 ease-in group-hover:opacity-100"
-                                            onClick={onEditClick}
-                                        >
-                                            <Pencil className="h-3 w-3" />
-                                        </Button>
+                                        <span className="text-sm">{title}</span>
+                                        {canUpdate && (
+                                            <Button
+                                                variant="secondary"
+                                                size="xs"
+                                                className="opacity-0 transition-opacity duration-150 ease-in group-focus-within:opacity-100 group-hover:opacity-100"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleStartEditting();
+                                                }}
+                                            >
+                                                <Pencil className="h-3 w-3" />
+                                            </Button>
+                                        )}
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <span className="text-xs font-light">
@@ -109,7 +119,7 @@ export const Task = ({ task, isDragging, listeners }: TaskProps) => {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="w-9 cursor-grab px-0 focus:cursor-grabbing"
+                                className="w-9 cursor-grab px-0"
                                 {...listeners}
                             >
                                 <Grip className="h-5 w-5" />
@@ -118,7 +128,7 @@ export const Task = ({ task, isDragging, listeners }: TaskProps) => {
                         <span className="mr-1">
                             <TaskOptionsDropdown
                                 task={task}
-                                startEditting={() => setIsEditting(true)}
+                                handleStartEditting={handleStartEditting}
                             />
                         </span>
                     </div>
@@ -126,4 +136,6 @@ export const Task = ({ task, isDragging, listeners }: TaskProps) => {
             )}
         </div>
     );
-};
+});
+
+Task.displayName = 'Task';

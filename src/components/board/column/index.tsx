@@ -5,17 +5,23 @@ import { ColumnTitleEditable } from './column-title-editable';
 import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 import { ColumnColorPickerButton } from './column-color-picker-button';
 
-export const Column = ({ column }: { column: BoardColumn }) => {
+export const Column = React.memo(({ column }: { column: BoardColumn }) => {
     const { id, ownerId, title, color } = column;
 
+    const [isEditting, setIsEditting] = useState(false);
     // wether the current user can update column related data (title, color)
     const canUpdate = useCanPerformEntityAction('COLUMN', 'UPDATE', ownerId);
-
-    const [isEditting, setIsEditting] = useState(false);
 
     const handleStartEditting = () => {
         if (!canUpdate) return;
         setIsEditting(true);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleStartEditting();
+        }
     };
 
     return (
@@ -36,7 +42,10 @@ export const Column = ({ column }: { column: BoardColumn }) => {
                     <div className="flex items-center gap-2">
                         <div
                             onClick={handleStartEditting}
+                            onKeyDown={handleKeyDown}
                             className="cursor-pointer"
+                            tabIndex={canUpdate ? 0 : -1}
+                            aria-readonly={!canUpdate}
                         >
                             <h2 className="text-sm font-semibold uppercase sm:text-base">
                                 {title}
@@ -59,4 +68,6 @@ export const Column = ({ column }: { column: BoardColumn }) => {
             )}
         </>
     );
-};
+});
+
+Column.displayName = 'Column';

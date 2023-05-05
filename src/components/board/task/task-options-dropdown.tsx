@@ -26,12 +26,12 @@ const DeleteTaskAlertDialog = dynamic(
 
 interface TaskOptionsDropdownProps {
     task: BoardTask;
-    startEditting: () => void;
+    handleStartEditting: () => void;
 }
 
 export const TaskOptionsDropdown = ({
     task,
-    startEditting,
+    handleStartEditting,
 }: TaskOptionsDropdownProps) => {
     const { id, title, ownerId } = task;
     const [isDeleting, setIsDeleting] = useState(false);
@@ -48,7 +48,7 @@ export const TaskOptionsDropdown = ({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     aria-label={`Rename ${title} task`}
-                    onClick={startEditting}
+                    onClick={handleStartEditting}
                 >
                     <Pencil className="mr-2 h-4 w-4" />
                     <span>Rename</span>
