@@ -4,7 +4,7 @@ import { useClickOutside } from '@hooks/use-click-outside';
 import { useTitleForm } from '@hooks/use-title-form';
 import { TitleInput, subtaskTitle } from '@lib/schemas/board-schemas';
 import React from 'react';
-import { useBoardId, useCurrentTask } from 'store/kanban-store';
+import { getBoardId, useCurrentTask } from 'store/kanban-store';
 import { Button } from '@components/ui/button';
 
 export const CreateSubtaskForm = ({
@@ -21,9 +21,8 @@ export const CreateSubtaskForm = ({
     const { mutate: createSubtask, isLoading } = useCreateSubtask(stopAddingCb);
     const { id: taskId } = useCurrentTask()!;
 
-    const boardId = useBoardId();
     const onSubmit = handleSubmit(({ title }) => {
-        createSubtask({ taskId, title, boardId });
+        createSubtask({ taskId, title, boardId: getBoardId() });
     });
 
     const ref = useClickOutside<HTMLFormElement>(stopAddingCb);

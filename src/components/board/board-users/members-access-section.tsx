@@ -1,6 +1,6 @@
 import { Permission } from '@prisma/client';
 import {
-    useBoardId,
+    getBoardId,
     useMembersPermissions,
     useUpdateMembersPermission,
 } from 'store/kanban-store';
@@ -21,7 +21,6 @@ export const MembersAccessSection = () => {
     const updateStorePermission = useUpdateMembersPermission();
 
     const { mutate } = trpc.boardPermissionRouter.update.useMutation();
-    const boardId = useBoardId();
 
     const onPermissionChange = (permission: Permission, access: boolean) => {
         // optimistically update the store permission map
@@ -30,7 +29,7 @@ export const MembersAccessSection = () => {
         // api call to update member permissions
         mutate(
             {
-                boardId,
+                boardId: getBoardId(),
                 // the permission to update and whether to grant or revoke access to it
                 memberPermission: { permission, access },
             },

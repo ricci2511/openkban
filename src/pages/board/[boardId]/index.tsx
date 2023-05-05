@@ -4,19 +4,17 @@ import React, { ReactElement } from 'react';
 import { NextPageWithLayout } from 'pages/_app';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { trpc } from '@lib/trpc';
-import { useBoardId, useInitKanbanStore } from 'store/kanban-store';
 import { useUpdateBoard } from '@hooks/mutations/use-board-mutations';
 import { KanbanHeaderSection } from '@components/board/kanban-header-section';
 import { KanbanBodySection } from '@components/board/kanban-body-section';
 import { useSession } from 'next-auth/react';
 import { KanbanLayout } from '@components/layouts/kanban-layout';
+import { getBoardId, initKanbanStore } from 'store/kanban-store';
 
 const BoardPage: NextPageWithLayout = () => {
     const id = useRouter().query.boardId as string;
 
-    const initStore = useInitKanbanStore();
     const { mutate: updateBoard } = useUpdateBoard();
-    const storeBoardId = useBoardId();
     const { data: session } = useSession();
 
     const { data, error, isLoading } = trpc.boardRouter.getById.useQuery(
@@ -29,9 +27,9 @@ const BoardPage: NextPageWithLayout = () => {
                 const role = board.boardUsers.find(
                     (bu) => bu.user.id === session?.user?.id
                 )?.role;
-                initStore(board, role!);
+                initKanbanStore(board, role!);
                 // update lastInteractedAt only if a different board is loaded
-                if (id !== storeBoardId) {
+                if (id !== getBoardId()) {
                     updateBoard({ id, lastInteractedAt: new Date() });
                 }
             },

@@ -14,7 +14,7 @@ export const columnTitle = z
 export const taskTitle = z
     .string()
     .min(1, 'Task title cannot be empty')
-    .max(35, 'Task title cannot contain more than 35 characters');
+    .max(100, 'Task title cannot contain more than 100 characters');
 
 export const subtaskTitle = z
     .string()

@@ -171,14 +171,16 @@ const useKanbanStore = create(
 );
 
 /**
- * @returns method to initialize the kanban store with the given columns and tasks
+ * Initializes the kanban store to interact with the kanban board data
+ * @param boardData data of the board to initialize the store with
+ * @param currRole role of the current user
  */
-export const useInitKanbanStore = () => useKanbanStore((state) => state.init);
+export const initKanbanStore = useKanbanStore.getState().init;
 
 /**
  * @returns boardId of the current kanban board
  */
-export const useBoardId = () => useKanbanStore((state) => state.boardId);
+export const getBoardId = () => useKanbanStore.getState().boardId;
 
 /**
  * @returns all columns that are in the kanban store

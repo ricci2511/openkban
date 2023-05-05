@@ -66,8 +66,6 @@ export const EditableTitleInput = ({
                 disabled={loading}
                 onKeyDown={onKeyDown}
                 autoFocus
-                onFocus={(e) => e.target.select()}
-                className="text-sm sm:text-base"
             >
                 <Button
                     type="submit"

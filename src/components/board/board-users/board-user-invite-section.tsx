@@ -1,7 +1,7 @@
 import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { Popover, PopoverAnchor, PopoverContent } from '@components/ui/popover';
-import { useBoardId, useBoardUsers } from 'store/kanban-store';
+import { getBoardId, useBoardUsers } from 'store/kanban-store';
 import { useCallback, useState } from 'react';
 import { trpc } from '@lib/trpc';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
@@ -84,14 +84,12 @@ export const BoardUserInviteSection = () => {
     const { mutate: addUsers, isLoading } =
         useCreateBoardUsers(onAddUsersSuccess);
 
-    const boardId = useBoardId();
-
     const inviteUsers = () => {
         if (!invitedUsers.length) return;
         const users = invitedUsers.map((user) => ({
             userId: user.id,
             role,
-            boardId,
+            boardId: getBoardId(),
         }));
         // add users to board api call
         addUsers(users);

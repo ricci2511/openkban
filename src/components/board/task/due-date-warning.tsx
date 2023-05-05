@@ -12,13 +12,16 @@ export const DueDateWarning = ({ today, overdue }: DueDateWarningProps) => {
             {today && (
                 <span className="flex gap-2">
                     <RiErrorWarningFill className="text-warning" size={20} />
-                    <p className="text-sm text-warning">Due date Today</p>
+                    <p className="text-xs text-warning">Due date Today</p>
                 </span>
             )}
             {overdue && (
                 <span className="flex gap-2">
-                    <RiErrorWarningFill className="text-error" size={20} />
-                    <p className="text-sm text-error">Due date Overdue</p>
+                    <RiErrorWarningFill
+                        className="text-destructive"
+                        size={20}
+                    />
+                    <p className="text-xs text-destructive">Due date Overdue</p>
                 </span>
             )}
         </>
