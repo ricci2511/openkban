@@ -38,7 +38,7 @@ export const CreateSubtaskForm = ({
                     id="description"
                     placeholder="Your subtask title..."
                     autoFocus
-                    className="w-full"
+                    className="h-10 w-full"
                     register={register}
                     name="title"
                     errors={errors}

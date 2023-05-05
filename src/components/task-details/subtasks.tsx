@@ -17,7 +17,7 @@ export const Subtasks = () => {
         <>
             <span className="flex items-center gap-3">
                 <ListChecks className="h-5 w-5" />
-                <h4 className="text-xl font-semibold">Subtasks</h4>
+                <h4 className="text-lg font-semibold">Subtasks</h4>
             </span>
             <ul className="my-3" aria-label={`Subtasks list of ${title}`}>
                 {subtasks.map((subtask) => (

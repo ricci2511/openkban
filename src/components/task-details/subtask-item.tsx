@@ -12,7 +12,7 @@ export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
     const { mutate: updateTask } = useUpdateSubtask();
 
     return (
-        <li className="hover:bg-base-300 -ml-1.5 flex items-start gap-3.5 rounded-md p-2 transition-all duration-200">
+        <li className="-ml-1.5 flex cursor-pointer items-start gap-3.5 rounded-md p-2 transition-all duration-200 hover:bg-secondary/50">
             <Checkbox
                 checked={isDone}
                 onCheckedChange={(checked) =>
@@ -28,7 +28,7 @@ export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
                 />
             ) : (
                 <span
-                    className="-mt-1.5 w-full"
+                    className="-mt-0.5 w-full text-sm"
                     onClick={() => setEditting(true)}
                 >
                     {isDone ? <s>{title}</s> : <>{title}</>}

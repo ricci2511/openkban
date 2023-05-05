@@ -14,10 +14,10 @@ export const Description = () => {
         <>
             <div className="mb-2 flex items-center gap-3">
                 <AlignLeft className="h-5 w-5" />
-                <h4 className="text-xl font-semibold">Task Description</h4>
+                <h4 className="text-lg font-semibold">Description</h4>
                 {!editting && description && (
-                    <Button variant="outline" size="sm" onClick={startEditting}>
-                        <Pencil className="h-4 w-4" />
+                    <Button variant="outline" size="xs" onClick={startEditting}>
+                        <Pencil className="h-3.5 w-3.5" />
                     </Button>
                 )}
             </div>

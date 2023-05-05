@@ -9,9 +9,9 @@ export const TaskDetails = () => {
 
     return (
         <div className="flex flex-col gap-6">
-            <section className="mb-2 flex items-center gap-3">
-                <ClipboardSignature className="h-8 w-8" />
-                <h1 className="text-4xl font-bold">
+            <section className="mb-2 flex  gap-3 pr-2">
+                <ClipboardSignature className="h-6 w-6" />
+                <h1 className="text-xl font-bold">
                     {task?.title.charAt(0).toUpperCase() + task?.title.slice(1)}
                 </h1>
                 {/**

@@ -50,10 +50,11 @@ export const UpdateSubtaskForm = ({
                     id="subtask-title"
                     placeholder="Your subtask title..."
                     autoFocus
-                    className="w-full"
+                    className="h-10 w-full"
                     register={register}
                     name="title"
                     errors={errors}
+                    onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
                 />
             </div>
             <div className="flex gap-2">

@@ -27,7 +27,7 @@ const BoardPage: NextPageWithLayout = () => {
                 const role = board.boardUsers.find(
                     (bu) => bu.user.id === session?.user?.id
                 )?.role;
-                initKanbanStore(board, role!);
+                initKanbanStore(board, role ?? 'VIEWER');
                 // update lastInteractedAt only if a different board is loaded
                 if (id !== getBoardId()) {
                     updateBoard({ id, lastInteractedAt: new Date() });
