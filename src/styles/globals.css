@@ -91,10 +91,29 @@
 @layer base {
   * {
     @apply border-border;
+    /* Firefox */
+    scrollbar-width: 7px;
+    scrollbar-color: gray;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1 "calt" 1;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 8px;
   }
 }
 
