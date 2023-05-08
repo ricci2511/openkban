@@ -1,8 +1,9 @@
 import { t } from '@server/trpc';
 import { TRPCError } from '@trpc/server';
 import { NextApiRequest } from 'next';
-import { internalServerError } from './helpers/error-helpers';
+import { internalServerError, unauthorized } from './helpers/error-helpers';
 import { createTRPCUpstashLimiter } from '@trpc-limiter/upstash';
+import { z } from 'zod';
 
 export const apiMiddleware = t.middleware(({ ctx, next }) => {
     const { req, res } = ctx;
@@ -39,6 +40,7 @@ const authMiddleware = apiMiddleware.unstable_pipe(({ ctx, next }) => {
         },
     });
 });
+// protected procedure with auth
 export const authedProcedure = t.procedure.use(authMiddleware);
 
 const getFingerprint = (req: NextApiRequest) => {
@@ -62,11 +64,30 @@ const rateLimiterMiddlweware = createTRPCUpstashLimiter({
     max: 12,
 });
 
-const authRateLimitterMiddleware = authMiddleware.unstable_pipe(
+export const rateLimitedProcedure = apiProcedure.use(rateLimiterMiddlweware);
+export const authedRateLimitedProcedure = authedProcedure.use(
     rateLimiterMiddlweware
 );
 
-export const rateLimitedProcedure = t.procedure.use(rateLimiterMiddlweware);
-export const authedRateLimitedProcedure = t.procedure.use(
-    authRateLimitterMiddleware
-);
+// procedure for board actions that require admin privileges
+export const adminBoardUserProcedure = authedRateLimitedProcedure
+    .input(z.object({ boardId: z.string().cuid() }))
+    .use(async (opts) => {
+        const { ctx, input, next } = opts;
+
+        const currBoardUser = await ctx.prisma.boardUser.findFirst({
+            where: {
+                userId: ctx.session.user.id,
+                boardId: input.boardId,
+            },
+            select: {
+                role: true,
+            },
+        });
+
+        if (currBoardUser?.role !== 'ADMIN') {
+            throw unauthorized('Only admins can perform this action.');
+        }
+
+        return next();
+    });

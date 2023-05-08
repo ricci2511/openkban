@@ -89,10 +89,9 @@ export const BoardUserInviteSection = () => {
         const users = invitedUsers.map((user) => ({
             userId: user.id,
             role,
-            boardId: getBoardId(),
         }));
         // add users to board api call
-        addUsers(users);
+        addUsers({ boardId: getBoardId(), boardUsers: users });
     };
 
     return (
