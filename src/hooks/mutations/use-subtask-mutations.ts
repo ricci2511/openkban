@@ -16,7 +16,20 @@ export const useCreateSubtask = (successCb?: () => void) => {
 };
 export type CreateSubtaskMutation = ReturnType<typeof useCreateSubtask>;
 
-// TODO: delete subtask mutation
+export const useDeleteSubtask = (successCb?: () => void) => {
+    const { removeSubtask } = useSubtasksActions();
+
+    const deleteSubtaskMutation = trpc.boardSubtaskRouter.delete.useMutation({
+        onSuccess: (subtask) => {
+            if (!subtask) return;
+            removeSubtask(subtask.id);
+            successCb?.();
+        },
+    });
+
+    return deleteSubtaskMutation;
+};
+export type DeleteSubtaskMutation = ReturnType<typeof useDeleteSubtask>;
 
 export const useUpdateSubtask = (successCb?: () => void) => {
     const { updateSubtask } = useSubtasksActions();

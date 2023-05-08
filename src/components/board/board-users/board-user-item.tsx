@@ -11,14 +11,8 @@ import {
     UpdateBoardUserMutation,
 } from '@hooks/mutations/use-board-user-mutations';
 import { UserRolesSelect } from './user-roles-select';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@components/ui/popover';
-import { Button } from '@components/ui/button';
-import { Trash } from 'lucide-react';
 import { Role } from '@prisma/client';
+import { DeleteButtonWithPopover } from '@components/delete-button-with-popover';
 
 interface BoardUserItemProps {
     boardUser: ClientBoardUser;
@@ -119,30 +113,14 @@ export const BoardUserItem = ({
                         title={triggerTitle}
                     />
                     {amIAdmin && !isMe && (
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="px-1.5"
-                                >
-                                    <Trash className="h-4 w-4" />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent align="end">
-                                <p className="text-sm">
-                                    Remove <strong>{name}</strong> from this
-                                    board?
-                                </p>
-                                <Button
-                                    variant="destructive"
-                                    className="btn-error btn-sm btn mt-2 w-full"
-                                    onClick={onBoardUserDelete}
-                                >
-                                    Remove
-                                </Button>
-                            </PopoverContent>
-                        </Popover>
+                        <DeleteButtonWithPopover
+                            variant="outline"
+                            size="sm"
+                            className="px-1.5"
+                            onDelete={onBoardUserDelete}
+                        >
+                            Remove <strong>{name}</strong> from this board?
+                        </DeleteButtonWithPopover>
                     )}
                 </div>
             </div>
