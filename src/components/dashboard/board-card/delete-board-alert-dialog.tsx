@@ -36,7 +36,7 @@ export const DeleteBoardAlertDialog = ({
                     variant="destructive"
                     loading={isLoading}
                     aria-label={`Delete ${title} column`}
-                    onClick={() => deleteBoard({ id: boardId })}
+                    onClick={() => deleteBoard({ boardId })}
                 >
                     {isLoading ? 'Deleting...' : 'Yes, delete board'}
                 </Button>

@@ -1,5 +1,4 @@
 import { internalServerError } from '@server/helpers/error-helpers';
-import { z } from 'zod';
 import { deleteError } from '@server/routers/common-errors';
 import { PrismaClient } from '@prisma/client';
 import { adminBoardUserProcedure } from '@server/middlewares';
@@ -19,17 +18,13 @@ export const deleteBoardMutation = (boardId: string, prisma: PrismaClient) => {
     });
 };
 
-const schema = z.object({ id: z.string().cuid() });
-
-export const deleteBoard = adminBoardUserProcedure
-    .input(schema)
-    .mutation(async ({ ctx, input }) => {
-        const id = input.id;
-
+export const deleteBoard = adminBoardUserProcedure.mutation(
+    async ({ ctx, input }) => {
         try {
-            const board = await deleteBoardMutation(id, ctx.prisma);
+            const board = await deleteBoardMutation(input.boardId, ctx.prisma);
             return board;
         } catch (error) {
             throw internalServerError(deleteError('board'), error);
         }
-    });
+    }
+);
