@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useCurrentTask, useSubtasks } from 'store/kanban-store';
 import { SubtaskItem } from './subtask-item';
-import { CreateSubtaskForm } from './create-subtask-form';
-import { ListChecks, Plus } from 'lucide-react';
-import { Button } from '@components/ui/button';
+import { ListChecks } from 'lucide-react';
+import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
+import { AddSubtaskButton } from './add-subtask-button';
 
 export const Subtasks = () => {
     const { title } = useCurrentTask()!;
     const subtasks = useSubtasks();
 
-    const [adding, setAdding] = useState(false);
-    const stopAdding = () => setAdding(false);
-    const startAdding = () => setAdding(true);
+    const canCreateSubtask = useCanPerformEntityAction('SUBTASK', 'CREATE');
 
     return (
         <>
@@ -24,20 +22,7 @@ export const Subtasks = () => {
                     <SubtaskItem key={subtask.id} data={subtask} />
                 ))}
             </ul>
-            {adding ? (
-                <CreateSubtaskForm stopAddingCb={stopAdding} />
-            ) : (
-                <Button
-                    variant="primary"
-                    size="sm"
-                    className="ml-9 flex gap-2"
-                    onClick={startAdding}
-                    aria-label="Add a subtask"
-                >
-                    <span>Add a subtask</span>
-                    <Plus className="h-4 w-4" />
-                </Button>
-            )}
+            {canCreateSubtask && <AddSubtaskButton />}
         </>
     );
 };

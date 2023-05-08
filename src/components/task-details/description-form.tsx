@@ -61,7 +61,7 @@ export const DescriptionForm = ({
                     errors={errors}
                 />
             </div>
-            <div className="mt-2 flex gap-3 self-start">
+            <div className="mt-2 flex gap-2 self-start">
                 <Button
                     type="submit"
                     variant="primary"
@@ -69,7 +69,7 @@ export const DescriptionForm = ({
                     loading={isLoading}
                     aria-label={`Update description for task ${title}`}
                 >
-                    {isLoading ? 'Updating...' : 'Update Description'}
+                    {isLoading ? 'Updating...' : 'Update'}
                 </Button>
                 <Button
                     type="button"

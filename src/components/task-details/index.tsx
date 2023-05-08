@@ -3,9 +3,15 @@ import { useCurrentTask } from 'store/kanban-store';
 import { Description } from './description';
 import { Subtasks } from './subtasks';
 import { ClipboardSignature } from 'lucide-react';
+import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 
 export const TaskDetails = () => {
     const task = useCurrentTask()!;
+    const canUpdateTask = useCanPerformEntityAction(
+        'TASK',
+        'UPDATE',
+        task.ownerId
+    );
 
     return (
         <div className="flex flex-col gap-6">
@@ -20,7 +26,7 @@ export const TaskDetails = () => {
                  */}
             </section>
             <section>
-                <Description />
+                <Description canUpdateTask={canUpdateTask} />
             </section>
             <section>
                 <Subtasks />

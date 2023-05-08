@@ -43,7 +43,7 @@ export const Column = React.memo(({ column }: { column: BoardColumn }) => {
                         <div
                             onClick={handleStartEditting}
                             onKeyDown={handleKeyDown}
-                            className="cursor-pointer"
+                            className={`${canUpdate && 'cursor-pointer'}`}
                             tabIndex={canUpdate ? 0 : -1}
                             aria-readonly={!canUpdate}
                         >
