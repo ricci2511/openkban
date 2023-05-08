@@ -32,11 +32,11 @@ export const SidebarUser = ({
                 />
                 <div
                     className={cn(
-                        'opacity-0 transition-opacity duration-75',
+                        'w-full opacity-0 transition-opacity duration-75',
                         sidebarOpen && 'opacity-100 duration-200 delay-150' // delay this section to make it smoother
                     )}
                 >
-                    <div className="flex w-full">
+                    <div className="flex w-full justify-between">
                         <div className="max-w-[12rem]">
                             <p className="text-base font-bold">{name}</p>
                             <p

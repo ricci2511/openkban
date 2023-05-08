@@ -40,7 +40,7 @@ export const Task = React.memo(({ task, isDragging, listeners }: TaskProps) => {
     const boardId = getBoardId();
 
     const dueDateToday = isToday(dueDate);
-    const dueDateOverdue = isPast(dueDate);
+    const dueDateOverdue = isPast(dueDate) && !dueDateToday;
 
     const [isEditting, setIsEditting] = useState(false);
     // wether the current user can update task related data (title)

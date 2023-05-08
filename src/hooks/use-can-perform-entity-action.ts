@@ -7,7 +7,6 @@ import {
 } from 'store/kanban-store';
 
 /**
- *
  * @param entity the entity type to check permissions for
  * @param action the action type to check permissions for
  * @param entityOwnerId the owner of the entity, which is the board user id
