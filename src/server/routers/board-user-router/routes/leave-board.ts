@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { deleteError } from '@server/routers/common-errors';
 import { deleteBoardMutation } from '@server/routers/board-router/routes/delete-board';
+import { transferEntitiesOwnership } from './delete-board-user';
 
 const schema = z.object({
     boardId: z.string().cuid(),
@@ -16,14 +17,21 @@ export const leaveBoard = authedRateLimitedProcedure
         const boardUserId = input.boardUserId;
 
         try {
+            // first transfer ownership of all entities owned by the user
+            await transferEntitiesOwnership(boardUserId, boardId, ctx.prisma);
+
             const boardUser = await ctx.prisma.boardUser.delete({
                 where: {
                     id: boardUserId,
                 },
             });
 
-            // if the user was the admin, transfer adminship to another user if any exist
-            if (boardUser.role === 'ADMIN') {
+            const adminsCount = await ctx.prisma.boardUser.count({
+                where: { boardId, role: 'ADMIN' },
+            });
+
+            // if the user was the admin and no more admins are left, transfer adminship to another user if any exist
+            if (boardUser.role === 'ADMIN' && adminsCount === 0) {
                 // query all user ids of the board users
                 const boardUsers = await ctx.prisma.boardUser.findMany({
                     where: { boardId },

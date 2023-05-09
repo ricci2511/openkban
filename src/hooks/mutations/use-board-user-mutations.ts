@@ -1,6 +1,6 @@
 import { trpc } from '@lib/trpc';
 import produce from 'immer';
-import { useBoardUserActions } from 'store/kanban-store';
+import { useBoardUserActions, useBoardUsers } from 'store/kanban-store';
 
 export const useCreateBoardUsers = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
@@ -23,11 +23,18 @@ export const useCreateBoardUsers = (successCb?: () => void) => {
 };
 
 export const useDeleteBoardUser = () => {
-    const utils = trpc.useContext().boardRouter.getAll;
+    const allBoardsUtils = trpc.useContext().boardRouter.getAll;
+    const boardByIdUtils = trpc.useContext().boardRouter.getById;
 
     const deleteBoardUserMutation = trpc.boardUserRouter.delete.useMutation({
         onSuccess: async (boardUser) => {
-            utils.setData(undefined, (prevBoards) =>
+            // invalidate kanban board data
+            boardByIdUtils.invalidate({ id: boardUser.boardId });
+
+            // return early if cached dashboard board list doesn't exist
+            if (!allBoardsUtils.getData()) return;
+            // update cached dashboard board list by removing the deleted board user
+            allBoardsUtils.setData(undefined, (prevBoards) =>
                 produce(prevBoards, (draft) => {
                     if (!draft || !prevBoards) return prevBoards;
                     const boardIndex = draft.findIndex(
@@ -75,12 +82,27 @@ export type LeaveBoardMutation = ReturnType<typeof useLeaveBoard>;
 export const useUpdateBoardUser = (successCb?: () => void) => {
     const utils = trpc.useContext().boardRouter.getAll;
 
+    const { updateBoardUser, setBoardUsers } = useBoardUserActions();
+    const boardUsers = useBoardUsers();
+
     const updateBoardUserMutation = trpc.boardUserRouter.update.useMutation({
-        // optimistic update
         onMutate: async (boardUser) => {
-            utils.cancel();
-            // store old board users in case mutation fails
-            const oldBoards = utils.getData();
+            // store old board users in case of error
+            const oldBoardUsers = boardUsers;
+
+            // update board user in kanban store
+            updateBoardUser({ id: boardUser.boardUserId, ...boardUser });
+            successCb?.();
+
+            return oldBoardUsers;
+        },
+        onError: (err, boardUser, oldBoardUsers) => {
+            // on error revert to previous board users
+            oldBoardUsers ? setBoardUsers(oldBoardUsers) : undefined;
+        },
+        // update cached dashboard board list with new board user if it exists
+        onSuccess: (boardUser) => {
+            if (!utils.getData()) return;
             utils.setData(undefined, (prevBoards) =>
                 produce(prevBoards, (draft) => {
                     if (!draft || !prevBoards) return prevBoards;
@@ -90,9 +112,7 @@ export const useUpdateBoardUser = (successCb?: () => void) => {
                     if (boardIndex === -1) return prevBoards;
                     const boardUserIndex = draft[
                         boardIndex
-                    ].boardUser.findIndex(
-                        (bu) => bu.id === boardUser.boardUserId
-                    );
+                    ].boardUser.findIndex((bu) => bu.id === boardUser.id);
                     if (boardUserIndex === -1) return prevBoards;
                     const oldBoardUser =
                         draft[boardIndex].boardUser[boardUserIndex];
@@ -102,13 +122,6 @@ export const useUpdateBoardUser = (successCb?: () => void) => {
                     };
                 })
             );
-            successCb?.();
-            // return the previous boards in case the mutation fails
-            return oldBoards;
-        },
-        onError: (err, boardUser, oldBoards) => {
-            // on error revert to previous board users
-            utils.setData(undefined, oldBoards);
         },
     });
 

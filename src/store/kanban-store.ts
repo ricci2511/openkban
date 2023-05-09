@@ -144,13 +144,13 @@ const useKanbanStore = create(
                 }),
         },
         boardUserActions: {
-            setBoardUsers: (users) =>
+            setBoardUsers: (boardUsers) =>
                 set((state) => {
-                    state.boardUsers = users;
+                    state.boardUsers = boardUsers;
                 }),
-            addBoardUsers: (users) =>
+            addBoardUsers: (boardUsers) =>
                 set((state) => {
-                    state.boardUsers = [...state.boardUsers, ...users];
+                    state.boardUsers = [...state.boardUsers, ...boardUsers];
                 }),
             removeBoardUser: (boardUserId) =>
                 set((state) => {
@@ -158,13 +158,14 @@ const useKanbanStore = create(
                         (bu) => bu.id !== boardUserId
                     );
                 }),
-            updateBoardUser: (user) =>
+            updateBoardUser: (boardUser) =>
                 set((state) => {
                     const index = state.boardUsers.findIndex(
-                        (bu) => bu.user.id === user.user.id
+                        (bu) => bu.id === boardUser.id
                     );
                     if (index === -1) return;
-                    state.boardUsers[index] = user;
+                    const userToUpdate = state.boardUsers[index];
+                    state.boardUsers[index] = { ...userToUpdate, ...boardUser };
                 }),
         },
     }))

@@ -44,7 +44,7 @@ export type BoardUserActions = {
     setBoardUsers: (users: ClientBoardUser[]) => void;
     addBoardUsers: (user: ClientBoardUser[]) => void;
     removeBoardUser: (userId: string) => void;
-    updateBoardUser: (user: ClientBoardUser) => void;
+    updateBoardUser: (user: Optional<ClientBoardUser, 'role' | 'user'>) => void;
 };
 
 export type KanbanStore = {

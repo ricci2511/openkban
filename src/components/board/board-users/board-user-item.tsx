@@ -1,11 +1,6 @@
 import { BoardUserAvatar } from '@components/board-user-avatar';
 import { ClientBoardUser } from 'types/board-types';
-import {
-    useBoardUserActions,
-    useMyRole,
-    useSetMyRole,
-    getBoardId,
-} from 'store/kanban-store';
+import { useMyRole, useSetMyRole, getBoardId } from 'store/kanban-store';
 import {
     DeleteBoardUserMutation,
     UpdateBoardUserMutation,
@@ -67,27 +62,15 @@ export const BoardUserItem = ({
         }
     })();
 
-    const { updateBoardUser, removeBoardUser } = useBoardUserActions();
     const setMyRole = useSetMyRole();
 
     const onRoleChange = (role: Role) => {
-        updateRole(
-            { boardId: getBoardId(), boardUserId, role },
-            {
-                onSuccess: () => {
-                    // set my new role when updating my own role
-                    if (isMe) setMyRole(role);
-                    // update the board user array in the store
-                    updateBoardUser({ ...boardUser, role });
-                },
-            }
-        );
+        updateRole({ boardId: getBoardId(), boardUserId, role });
+        // when changing my own role, set my new role in the store
+        if (isMe) setMyRole(role);
     };
 
     const onBoardUserDelete = () => {
-        // remove the board user from the store
-        removeBoardUser(boardUserId);
-        // delete board user api call
         deleteBoardUser({ boardId: getBoardId(), boardUserId });
     };
 
