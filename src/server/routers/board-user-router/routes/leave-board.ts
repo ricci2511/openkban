@@ -65,7 +65,6 @@ export const leaveBoard = authedRateLimitedProcedure
             // if the board user being deleted is not a valid owner, meaning they are a viewer or do not own any entities
             // then just delete the board user and return
             if (!isValidEntityOwner(boardUser)) {
-                console.log('NOT VALID OWNER, DELETING BOARD USER ONLY');
                 return deleteBoardUserMutation(boardUserId, ctx.prisma);
             }
 
@@ -86,17 +85,13 @@ export const leaveBoard = authedRateLimitedProcedure
 
             // transfer ownership of all entities owned by the leaving user to the board admin
             if (boardAdmin) {
-                console.log('TRANSFERING OWNERSHIP TO ADMIN');
-
                 await transferAllEntitiesOwnership(
                     ownedEntities,
                     boardAdmin.id,
                     ctx.prisma
                 );
             } else {
-                // if the user was the only admin left, transfer adminship to a random user
-                console.log('TRANSFERING ADMINSHIP TO RANDOM USER');
-
+                // if boardAdmin is null, the leaving user was the only admin left, transfer adminship to a random user
                 const remainingUsers = boardUsers
                     .filter((bu) => bu.id !== boardUserId)
                     .map((bu) => bu.id);
