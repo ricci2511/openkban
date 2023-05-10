@@ -1,4 +1,3 @@
-import { BoardTask } from '@prisma/client';
 import React, { Suspense, useState } from 'react';
 import {
     DropdownMenu,
@@ -13,6 +12,7 @@ import { Button } from '@components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
+import { ClientTask } from 'types/board-types';
 
 const DeleteTaskAlertDialog = dynamic(
     () =>
@@ -25,7 +25,7 @@ const DeleteTaskAlertDialog = dynamic(
 );
 
 interface TaskOptionsDropdownProps {
-    task: BoardTask;
+    task: ClientTask;
     handleStartEditting: () => void;
 }
 

@@ -1,5 +1,4 @@
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { BoardTask } from '@prisma/client';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { getBoardId, useColumns } from 'store/kanban-store';
@@ -12,6 +11,7 @@ import { isPast, isToday, format } from 'date-fns';
 import { TaskTitleEditable } from './task-title-editable';
 import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 import { cn } from '@lib/helpers';
+import { ClientTask } from 'types/board-types';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
@@ -29,7 +29,7 @@ const TaskDetailsDialogContent = dynamic(
 );
 
 export interface TaskProps {
-    task: BoardTask;
+    task: ClientTask;
     isDragging?: boolean;
     listeners?: SyntheticListenerMap | undefined;
 }

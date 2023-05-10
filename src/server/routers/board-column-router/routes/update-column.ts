@@ -1,6 +1,7 @@
 import { internalServerError } from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { updateError } from '@server/routers/common-errors';
+import { ClientColumn } from 'types/board-types';
 import { z } from 'zod';
 
 export const updateColumn = authedRateLimitedProcedure
@@ -22,7 +23,7 @@ export const updateColumn = authedRateLimitedProcedure
                     color: input.color,
                 },
             });
-            return updateColumn;
+            return updateColumn as ClientColumn;
         } catch (error) {
             throw internalServerError(updateError('column'), error);
         }

@@ -3,15 +3,15 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { BoardTask } from '@prisma/client';
 import { useMemo } from 'react';
 import { TaskSortable } from './task-sortable';
 import { useMyRole } from 'store/kanban-store';
 import { Task } from './task';
+import { ClientTask } from 'types/board-types';
 
 interface TasksListProps {
     columnId: string;
-    tasks: BoardTask[];
+    tasks: ClientTask[];
 }
 
 export const TasksList = ({ columnId, tasks }: TasksListProps) => {

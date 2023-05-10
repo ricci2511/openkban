@@ -1,4 +1,3 @@
-import { BoardColumn } from '@prisma/client';
 import React, { Suspense, useState } from 'react';
 import {
     DropdownMenu,
@@ -12,6 +11,7 @@ import { Button } from '@components/ui/button';
 import { MoreHorizontal, Trash } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { LoadingSpinner } from '@components/ui/loading-spinner';
+import { ClientColumn } from 'types/board-types';
 
 const DeleteColumnAlertDialog = dynamic(
     () =>
@@ -24,7 +24,7 @@ const DeleteColumnAlertDialog = dynamic(
 );
 
 interface ColumnOptionsDropdownProps {
-    column: BoardColumn;
+    column: ClientColumn;
 }
 
 export const ColumnOptionsDropdown = ({

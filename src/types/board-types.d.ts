@@ -1,3 +1,4 @@
+import { ClientTask } from './board-types.d';
 import {
     Board,
     BoardColumn,
@@ -17,16 +18,17 @@ export type BoardToUpdate = Partial<Omit<Board, 'userId' | 'createdAt'>> & {
     id: string;
 };
 
-export type BoardColumnWithTasks = BoardColumn & {
-    tasks: BoardTask[];
+export type ClientTaskWithSubTasks = ClientTask & {
+    subtasks: ClientSubtask[];
 };
 
-export type TaskWithSubTasks = BoardTask & {
-    subtasks: BoardSubtask[];
-};
+// owner id is always included in the client
+export type ClientColumn = NonNullableField<BoardColumn, 'ownerId'>;
+export type ClientTask = NonNullableField<BoardTask, 'ownerId'>;
+export type ClientSubtask = NonNullableField<BoardSubtask, 'ownerId'>;
 
 // map of columnId to tasks
-export type TasksMap = Record<string, BoardTask[]>;
+export type TasksMap = Record<string, ClientTask[]>;
 
 export type ClientBoardUser = {
     id: string;
@@ -46,7 +48,7 @@ export type UnnormalizedBoardData = Board & {
 };
 
 export type BoardData = Board & {
-    columns: BoardColumn[];
+    columns: ClientColumn[];
     tasks: TasksMap;
     boardUsers: ClientBoardUser[];
     // the permissions applied to all board users with the role of member

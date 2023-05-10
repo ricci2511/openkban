@@ -61,7 +61,8 @@ export const useLeaveBoard = () => {
     const utils = trpc.useContext().boardRouter.getAll;
 
     const leaveBoardMutation = trpc.boardUserRouter.leaveBoard.useMutation({
-        onSuccess: async ({ boardId }) => {
+        onSuccess: async (boardUser) => {
+            const boardId = boardUser.boardId;
             // delete board from user's board list on client (tanstack query cache)
             utils.setData(undefined, (prevBoards) => {
                 if (!prevBoards) return prevBoards;
@@ -80,7 +81,8 @@ export type LeaveBoardMutation = ReturnType<typeof useLeaveBoard>;
  * @param successCb callback to run after successful board user update
  */
 export const useUpdateBoardUser = (successCb?: () => void) => {
-    const utils = trpc.useContext().boardRouter.getAll;
+    const allBoardsUtils = trpc.useContext().boardRouter.getAll;
+    const boardByIdUtils = trpc.useContext().boardRouter.getById;
 
     const { updateBoardUser, setBoardUsers } = useBoardUserActions();
     const boardUsers = useBoardUsers();
@@ -92,7 +94,6 @@ export const useUpdateBoardUser = (successCb?: () => void) => {
 
             // update board user in kanban store
             updateBoardUser({ id: boardUser.boardUserId, ...boardUser });
-            successCb?.();
 
             return oldBoardUsers;
         },
@@ -102,8 +103,19 @@ export const useUpdateBoardUser = (successCb?: () => void) => {
         },
         // update cached dashboard board list with new board user if it exists
         onSuccess: (boardUser) => {
-            if (!utils.getData()) return;
-            utils.setData(undefined, (prevBoards) =>
+            successCb?.();
+
+            // if demoted to VIEWER, invalidate query cache
+            // reason being that VIEWERs can't own anything, therefore anything they owned before is now invalid
+            // by invalidating, all entities will have the updated owner id
+            if (boardUser.role === 'VIEWER') {
+                boardByIdUtils.invalidate({ id: boardUser.boardId });
+                return; // return early
+            }
+
+            if (!allBoardsUtils.getData()) return;
+
+            allBoardsUtils.setData(undefined, (prevBoards) =>
                 produce(prevBoards, (draft) => {
                     if (!draft || !prevBoards) return prevBoards;
                     const boardIndex = draft.findIndex(

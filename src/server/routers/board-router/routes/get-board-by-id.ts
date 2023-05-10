@@ -4,7 +4,13 @@ import {
     internalServerError,
     notFound,
 } from '@server/helpers/error-helpers';
-import { BoardData, TasksMap, UnnormalizedBoardData } from 'types/board-types';
+import {
+    BoardData,
+    ClientColumn,
+    ClientTask,
+    TasksMap,
+    UnnormalizedBoardData,
+} from 'types/board-types';
 import { z } from 'zod';
 import { queryError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
@@ -13,8 +19,8 @@ const normalizeBoardData = (board: UnnormalizedBoardData): BoardData => {
     const tasksMap: TasksMap = {};
 
     const columns = board.columns.map(({ tasks, ...column }) => {
-        tasksMap[column.id] = tasks.sort(sortByLexoRankAsc);
-        return column;
+        tasksMap[column.id] = tasks.sort(sortByLexoRankAsc) as ClientTask[];
+        return column as ClientColumn;
     });
 
     const { boardUser, memberPermissions, ...boardRest } = board;

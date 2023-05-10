@@ -3,6 +3,7 @@ import { internalServerError } from '@server/helpers/error-helpers';
 import { authedProcedure } from '@server/routers/auth-router';
 import { queryBoardUserProperty } from '@server/routers/board-user-router/routes/get-board-user';
 import { createError } from '@server/routers/common-errors';
+import { ClientSubtask } from 'types/board-types';
 import { z } from 'zod';
 
 export const createSubtask = authedProcedure
@@ -33,7 +34,7 @@ export const createSubtask = authedProcedure
                 },
             });
 
-            return subtask;
+            return subtask as ClientSubtask;
         } catch (error) {
             throw internalServerError(createError('subtask'), error);
         }

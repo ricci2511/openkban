@@ -1,16 +1,16 @@
 import { LoadingSpinner } from '@components/ui/loading-spinner';
 import { trpc } from '@lib/trpc';
-import { BoardTask } from '@prisma/client';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useSubtasksActions, useTasksActions } from 'store/kanban-store';
 import { DialogContent } from '@components/ui/dialog';
 import { TaskDetails } from '@components/task-details';
+import { ClientTask } from 'types/board-types';
 
 /**
  * @returns Dialog using the route as modal pattern to display task data.
  */
-export const TaskDetailsDialogContent = ({ task }: { task: BoardTask }) => {
+export const TaskDetailsDialogContent = ({ task }: { task: ClientTask }) => {
     let router = useRouter();
     const { boardId, taskId } = router.query;
     const open = !!taskId && task.id === taskId;

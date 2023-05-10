@@ -1,6 +1,7 @@
 import { internalServerError } from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { updateError } from '@server/routers/common-errors';
+import { ClientSubtask } from 'types/board-types';
 import { z } from 'zod';
 
 export const updateSubtask = authedRateLimitedProcedure
@@ -23,7 +24,7 @@ export const updateSubtask = authedRateLimitedProcedure
                 },
             });
 
-            return subtask;
+            return subtask as ClientSubtask;
         } catch (error) {
             throw internalServerError(updateError('subtask'), error);
         }

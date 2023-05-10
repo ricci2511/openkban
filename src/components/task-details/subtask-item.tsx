@@ -1,12 +1,12 @@
-import { BoardSubtask } from '@prisma/client';
 import React, { useState } from 'react';
 import { useUpdateSubtask } from '@hooks/mutations/use-subtask-mutations';
 import { UpdateSubtaskForm } from './update-subtask-form';
 import { Checkbox } from '@components/ui/checkbox';
 import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 import { DeleteSubtaskButton } from './delete-subtask-button';
+import { ClientSubtask } from 'types/board-types';
 
-export const SubtaskItem = ({ data }: { data: BoardSubtask }) => {
+export const SubtaskItem = ({ data }: { data: ClientSubtask }) => {
     const { id, title, isDone, ownerId } = data;
 
     const [editting, setEditting] = useState(false);

@@ -154,8 +154,8 @@ model BoardColumn {
   boardId   String
   tasks     BoardTask[]
   color     String      @default("#0ea5e9")
-  owner     BoardUser   @relation(fields: [ownerId], references: [id], onDelete: NoAction)
-  ownerId   String
+  owner     BoardUser? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId   String?
 
   @@index([boardId])
   @@index([ownerId])
@@ -173,8 +173,8 @@ model BoardTask {
   columnId    String
   subtasks    BoardSubtask[]
   asignees    BoardTaskAssignee[]
-  owner       BoardUser           @relation(fields: [ownerId], references: [id], onDelete: NoAction)
-  ownerId     String
+  owner     BoardUser? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId   String?
 
   @@index([columnId])
   @@index([ownerId])
@@ -199,8 +199,8 @@ model BoardSubtask {
   task      BoardTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId    String
   isDone    Boolean   @default(false)
-  owner     BoardUser @relation(fields: [ownerId], references: [id], onDelete: NoAction)
-  ownerId   String
+  owner     BoardUser? @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId   String?
 
   @@index([taskId])
   @@index([ownerId])

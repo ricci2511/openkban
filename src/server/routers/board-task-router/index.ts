@@ -4,6 +4,8 @@ import { boardTaskCreationSchema } from '@lib/schemas/board-schemas';
 import { z } from 'zod';
 import { authedRateLimitedProcedure } from '@server/middlewares';
 import { queryBoardUserProperty } from '../board-user-router/routes/get-board-user';
+import { ClientTask, ClientTaskWithSubTasks } from 'types/board-types';
+import { notFound } from '@server/helpers/error-helpers';
 
 export const boardTaskRouter = t.router({
     getById: authedRateLimitedProcedure
@@ -13,7 +15,7 @@ export const boardTaskRouter = t.router({
             })
         )
         .query(async ({ ctx, input }) => {
-            const task = await ctx.prisma.boardTask.findUnique({
+            const taskWithSubtasks = await ctx.prisma.boardTask.findUnique({
                 where: {
                     id: input.id,
                 },
@@ -21,7 +23,12 @@ export const boardTaskRouter = t.router({
                     subtasks: true,
                 },
             });
-            return task;
+
+            if (!taskWithSubtasks) {
+                throw notFound('Could not find the selected task.');
+            }
+
+            return taskWithSubtasks as ClientTaskWithSubTasks;
         }),
     create: authedProcedure
         .input(
@@ -39,7 +46,7 @@ export const boardTaskRouter = t.router({
                 ctx.prisma
             );
 
-            const createTask = await ctx.prisma.boardTask.create({
+            const task = await ctx.prisma.boardTask.create({
                 data: {
                     title: input.title,
                     description: input.description,
@@ -54,7 +61,7 @@ export const boardTaskRouter = t.router({
                     },
                 },
             });
-            return createTask;
+            return task as ClientTask;
         }),
     update: authedRateLimitedProcedure
         .input(
@@ -69,7 +76,7 @@ export const boardTaskRouter = t.router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            const updateTask = await ctx.prisma.boardTask.update({
+            const task = await ctx.prisma.boardTask.update({
                 where: {
                     id: input.id,
                 },
@@ -82,7 +89,7 @@ export const boardTaskRouter = t.router({
                     dueDate: input.dueDate,
                 },
             });
-            return updateTask;
+            return task as ClientTask;
         }),
     delete: authedProcedure
         .input(
@@ -91,11 +98,11 @@ export const boardTaskRouter = t.router({
             })
         )
         .mutation(async ({ ctx, input }) => {
-            const deleteTask = await ctx.prisma.boardTask.delete({
+            const task = await ctx.prisma.boardTask.delete({
                 where: {
                     id: input.id,
                 },
             });
-            return deleteTask;
+            return task as ClientTask;
         }),
 });

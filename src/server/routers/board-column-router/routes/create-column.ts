@@ -3,6 +3,7 @@ import { authedProcedure } from '@server/routers/auth-router';
 import { internalServerError } from '@server/helpers/error-helpers';
 import { createError } from '@server/routers/common-errors';
 import { queryBoardUserProperty } from '@server/routers/board-user-router/routes/get-board-user';
+import { ClientColumn } from 'types/board-types';
 
 export const createColumn = authedProcedure
     .input(boardColumnCreationSchema)
@@ -34,7 +35,7 @@ export const createColumn = authedProcedure
                     },
                 },
             });
-            return createColumn;
+            return createColumn as ClientColumn;
         } catch (error) {
             console.error('CREATE COLUMN ERROR: ', error);
             throw internalServerError(createError('column'), error);

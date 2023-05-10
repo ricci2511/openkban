@@ -1,62 +1,59 @@
-import {
-    BoardColumn,
-    BoardSubtask,
-    BoardTask,
-    Permission,
-    Role,
-} from '@prisma/client';
+import { Permission, Role } from '@prisma/client';
 import {
     BoardData,
     ClientBoardUser,
+    ClientColumn,
+    ClientSubtask,
+    ClientTask,
     PermissionMap,
     TasksMap,
 } from './board-types';
 
 export type ColumnsActions = {
-    setColumns: (columns: BoardColumn[]) => void;
-    addColumn: (column: BoardColumn) => void;
+    setColumns: (columns: ClientColumn[]) => void;
+    addColumn: (column: ClientColumn) => void;
     deleteColumn: (columnId: string) => void;
-    updateColumn: (column: BoardColumn) => void;
+    updateColumn: (column: ClientColumn) => void;
 };
 
 export type TasksActions = {
     setTasks: (tasks: TasksMap) => void;
-    setCurrentTask: (task: BoardTask) => void;
-    addTask: (task: BoardTask) => void;
+    setCurrentTask: (task: ClientTask) => void;
+    addTask: (task: ClientTask) => void;
     removeTask: (taskId: string, columnId: string) => void;
-    updateTask: (task: BoardTask) => void;
+    updateTask: (task: ClientTask) => void;
     dropTaskInColumn: (
         columnId: string,
-        tasks: BoardTask[],
+        tasks: ClientTask[],
         oldTaskIndex: number,
         newTaskIndex: number
     ) => void;
 };
 
 export type SubtasksActions = {
-    setSubtasks: (subtasks: BoardSubtask[]) => void;
-    addSubtask: (subtask: BoardSubtask) => void;
+    setSubtasks: (subtasks: ClientSubtask[]) => void;
+    addSubtask: (subtask: ClientSubtask) => void;
     removeSubtask: (subtaskId: string) => void;
-    updateSubtask: (subtask: BoardSubtask) => void;
+    updateSubtask: (subtask: ClientSubtask) => void;
 };
 
 export type BoardUserActions = {
     setBoardUsers: (users: ClientBoardUser[]) => void;
     addBoardUsers: (user: ClientBoardUser[]) => void;
     removeBoardUser: (userId: string) => void;
-    updateBoardUser: (user: Optional<ClientBoardUser, 'role' | 'user'>) => void;
+    updateBoardUser: (user: PartialExcept<ClientBoardUser, 'id'>) => void;
 };
 
 export type KanbanStore = {
     init: (boardData: BoardData, currRole: Role) => void;
     boardId: string;
-    columns: BoardColumn[];
+    columns: ClientColumn[];
     tasks: TasksMap;
     // it might be more efficient to just store the reference with a tuple to avoid task
     // data duplication, e.g. [columnId, taskIndex], but i encountered race condition problems
-    currentTask: BoardTask | undefined;
+    currentTask: ClientTask | undefined;
     // only the subtasks of the current task in use are stored here
-    subtasks: BoardSubtask[];
+    subtasks: ClientSubtask[];
     boardUsers: ClientBoardUser[];
     // the role of the current user
     role: Role;

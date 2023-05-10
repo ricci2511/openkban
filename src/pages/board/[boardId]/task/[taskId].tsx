@@ -44,7 +44,6 @@ const TaskPage: NextPageWithLayout = () => {
             enabled: !!columns,
             refetchOnWindowFocus: false,
             onSuccess: (task) => {
-                if (!task) return;
                 const { subtasks, ...taskWithoutSubtasks } = task;
                 setCurrentTask(taskWithoutSubtasks);
                 setSubtasks(subtasks);

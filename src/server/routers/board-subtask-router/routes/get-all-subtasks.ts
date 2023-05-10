@@ -2,6 +2,7 @@ import { internalServerError, notFound } from '@server/helpers/error-helpers';
 import { z } from 'zod';
 import { queryError } from '@server/routers/common-errors';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { ClientSubtask } from 'types/board-types';
 
 export const getAllSubtasks = authedRateLimitedProcedure
     .input(
@@ -17,7 +18,7 @@ export const getAllSubtasks = authedRateLimitedProcedure
                 },
             });
             if (!subtasks) return notFound('Subtasks not found');
-            return subtasks;
+            return subtasks as ClientSubtask[];
         } catch (error) {
             const message = queryError('subtask', false);
             throw internalServerError(message, error);

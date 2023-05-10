@@ -3,6 +3,7 @@ import { authedRateLimitedProcedure } from '@server/middlewares';
 import { z } from 'zod';
 import { queryBoardUserProperty } from './get-board-user';
 import { notFound, unauthorized } from '@server/helpers/error-helpers';
+import { getBoardAdmin, transferAllEntitiesOwnership } from '../helpers';
 
 const schema = z.object({
     boardId: z.string(),
@@ -23,10 +24,25 @@ export const updateBoardUserMutation = async (
     // get the user id of the board user being updated to check if it's the current user or not
     const boardUser = await prisma.boardUser.findUnique({
         where: { id: boardUserId },
-        select: { userId: true },
+        select: { userId: true, columns: true, tasks: true, subtasks: true },
     });
 
     if (!boardUser) throw notFound('Board user not found.');
+
+    // if the role is being demoted to VIEWER, transfer all entities the user might own to a board admin
+    // a viewer cannot own any entities
+    if (role === 'VIEWER') {
+        const entities = {
+            columns: boardUser.columns,
+            tasks: boardUser.tasks,
+            subtasks: boardUser.subtasks,
+        };
+
+        const boardAdmin = await getBoardAdmin(boardId, prisma, boardUserId);
+        if (boardAdmin) {
+            await transferAllEntitiesOwnership(entities, boardAdmin.id, prisma);
+        }
+    }
 
     // the current user is updating another user
     if (boardUser.userId !== currUserId) {

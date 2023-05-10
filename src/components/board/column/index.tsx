@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { BoardColumn } from '@prisma/client';
 import { ColumnOptionsDropdown } from './column-options-dropdown';
 import { ColumnTitleEditable } from './column-title-editable';
 import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 import { ColumnColorPickerButton } from './column-color-picker-button';
+import { ClientColumn } from 'types/board-types';
 
-export const Column = React.memo(({ column }: { column: BoardColumn }) => {
+export const Column = React.memo(({ column }: { column: ClientColumn }) => {
     const { id, ownerId, title, color } = column;
 
     const [isEditting, setIsEditting] = useState(false);
