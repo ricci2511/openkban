@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import BoardPage from '..';
+import { NextPageWithLayout } from 'pages/_app';
+import { KanbanLayout } from '@components/layouts/kanban-layout';
 
 /**
  * For task details, the route as modal pattern is used,
@@ -8,8 +10,12 @@ import BoardPage from '..';
  *
  * @see: src/components/board/task-details-dialog.tsx
  */
-const TaskPage = () => {
+const TaskPage: NextPageWithLayout = () => {
     return <BoardPage />;
+};
+
+TaskPage.getLayout = function getLayout(page: ReactElement) {
+    return <KanbanLayout>{page}</KanbanLayout>;
 };
 
 export default TaskPage;

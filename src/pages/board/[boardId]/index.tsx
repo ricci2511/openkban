@@ -56,15 +56,15 @@ const BoardPage: NextPageWithLayout = () => {
 
     // TODO: SEO
     return (
-        <KanbanLayout>
+        <>
             <KanbanHeaderSection title={data.title} />
             <KanbanBodySection />
-        </KanbanLayout>
+        </>
     );
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
-    return <>{page}</>;
+    return <KanbanLayout>{page}</KanbanLayout>;
 };
 
 export default BoardPage;
