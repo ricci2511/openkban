@@ -21,7 +21,7 @@ const useKanbanStore = create(
         boardId: '',
         columns: [],
         tasks: {},
-        currentTask: undefined,
+        currTaskRef: undefined,
         subtasks: [],
         boardUsers: [],
         role: 'VIEWER',
@@ -45,6 +45,13 @@ const useKanbanStore = create(
             set((state) => {
                 if (!state.membersPermissions) return;
                 state.membersPermissions[permission] = access;
+            }),
+        setCurrTaskRef: (columnId, taskId) =>
+            set((state) => {
+                const taskIndex = state.tasks[columnId].findIndex(
+                    (t) => t.id === taskId
+                );
+                state.currTaskRef = [columnId, taskIndex];
             }),
         columnsActions: {
             setColumns: (columns) =>
@@ -77,10 +84,6 @@ const useKanbanStore = create(
                 set((state) => {
                     state.tasks = tasks;
                 }),
-            setCurrentTask: (task) =>
-                set((state) => {
-                    state.currentTask = task;
-                }),
             addTask: (task) =>
                 set((state) => {
                     if (!state.tasks[task.columnId]) {
@@ -96,11 +99,6 @@ const useKanbanStore = create(
                 }),
             updateTask: (task) =>
                 set((state) => {
-                    // update current task if it's the same as the updated task
-                    if (state.currentTask && state.currentTask.id === task.id) {
-                        state.currentTask = task;
-                    }
-
                     if (!state.tasks[task.columnId]) return;
                     const index = state.tasks[task.columnId].findIndex(
                         (t) => t.id === task.id
@@ -194,10 +192,21 @@ export const useColumns = () => useKanbanStore((state) => state.columns);
 export const useTasks = () => useKanbanStore((state) => state.tasks);
 
 /**
- * @returns the current task that the user is working on
+ * @returns the currently opened task or undefined if no task is opened
  */
-export const useCurrentTask = () =>
-    useKanbanStore((state) => state.currentTask);
+export const useCurrentTask = () => {
+    // get the reference to the task in the tasks map
+    const taskRef = useKanbanStore((state) => state.currTaskRef);
+    if (!taskRef) return undefined;
+    const [columnId, taskIndex] = taskRef;
+    return useKanbanStore.getState().tasks[columnId][taskIndex];
+};
+
+/**
+ * @returns method to set the reference to the currently opened task in the kanban store
+ */
+export const useSetCurrTaskRef = () =>
+    useKanbanStore((state) => state.setCurrTaskRef);
 
 /**
  * @returns all subtasks that are in the kanban store

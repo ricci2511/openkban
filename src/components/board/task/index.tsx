@@ -28,7 +28,7 @@ export interface TaskProps {
 }
 
 export const Task = React.memo(({ task, isDragging, listeners }: TaskProps) => {
-    const { id, ownerId, title, dueDate } = task;
+    const { id, columnId, ownerId, title, dueDate } = task;
     const color = useColumns().find((c) => c.id === task.columnId)?.color;
     const boardId = getBoardId();
 
@@ -62,7 +62,7 @@ export const Task = React.memo(({ task, isDragging, listeners }: TaskProps) => {
                 </div>
             ) : (
                 <>
-                    <TaskDetailsDialog task={task}>
+                    <TaskDetailsDialog taskId={id} columnId={columnId}>
                         <Link
                             className="flex flex-1 py-2"
                             href={`/board/[boardId]?boardId=${boardId}&taskId=${id}`}

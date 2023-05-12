@@ -18,7 +18,6 @@ export type ColumnsActions = {
 
 export type TasksActions = {
     setTasks: (tasks: TasksMap) => void;
-    setCurrentTask: (task: ClientTask) => void;
     addTask: (task: ClientTask) => void;
     removeTask: (taskId: string, columnId: string) => void;
     updateTask: (task: ClientTask) => void;
@@ -49,10 +48,10 @@ export type KanbanStore = {
     boardId: string;
     columns: ClientColumn[];
     tasks: TasksMap;
-    // it might be more efficient to just store the reference with a tuple to avoid task
-    // data duplication, e.g. [columnId, taskIndex], but i encountered race condition problems
-    currentTask: ClientTask | undefined;
-    // only the subtasks of the current task in use are stored here
+    // tuple of [columnId, taskIndex] of the currently opened task
+    currTaskRef: [string, number] | undefined;
+    setCurrTaskRef: (columnId: string, taskId: string) => void;
+    // only the subtasks of the currently opened task are stored
     subtasks: ClientSubtask[];
     boardUsers: ClientBoardUser[];
     // the role of the current user
