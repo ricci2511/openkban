@@ -12,20 +12,13 @@ import { TaskTitleEditable } from './task-title-editable';
 import { useCanPerformEntityAction } from '@hooks/use-can-perform-entity-action';
 import { cn } from '@lib/helpers';
 import { ClientTask } from 'types/board-types';
+import { TaskDetailsDialog } from '../task-details-dialog';
 
 const DueDateWarning = dynamic(
     () => import('./due-date-warning').then((mod) => mod.DueDateWarning),
     {
         ssr: false,
     }
-);
-
-const TaskDetailsDialogContent = dynamic(
-    () =>
-        import('@components/board/task-details-dialog-content').then(
-            (mod) => mod.TaskDetailsDialogContent
-        ),
-    { ssr: false }
 );
 
 export interface TaskProps {
@@ -69,51 +62,48 @@ export const Task = React.memo(({ task, isDragging, listeners }: TaskProps) => {
                 </div>
             ) : (
                 <>
-                    <Dialog modal>
-                        <DialogTrigger asChild>
-                            <Link
-                                className="flex flex-1 py-2"
-                                href={`/board/[boardId]?boardId=${boardId}&taskId=${id}`}
-                                as={`/board/${boardId}/task/${id}`}
-                                scroll={false}
-                                shallow
-                            >
-                                <div className="flex flex-col space-y-4 p-3">
-                                    <div className="flex items-center space-x-4">
-                                        <span className="text-sm">{title}</span>
-                                        {canUpdate && (
-                                            <Button
-                                                variant="secondary"
-                                                size="xs"
-                                                className="opacity-0 transition-opacity duration-150 ease-in group-focus-within:opacity-100 group-hover:opacity-100"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleStartEditting();
-                                                }}
-                                            >
-                                                <Pencil className="h-3 w-3" />
-                                            </Button>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-xs font-light">
-                                            {`${format(
-                                                dueDate,
-                                                'MMM'
-                                            )} ${dueDate.getDate()}`}
-                                        </span>
-                                    </div>
-                                    {(dueDateToday || dueDateOverdue) && (
-                                        <DueDateWarning
-                                            today={dueDateToday}
-                                            overdue={dueDateOverdue}
-                                        />
+                    <TaskDetailsDialog task={task}>
+                        <Link
+                            className="flex flex-1 py-2"
+                            href={`/board/[boardId]?boardId=${boardId}&taskId=${id}`}
+                            as={`/board/${boardId}/task/${id}`}
+                            scroll={false}
+                            shallow
+                        >
+                            <div className="flex flex-col space-y-4 p-3">
+                                <div className="flex items-center space-x-4">
+                                    <span className="text-sm">{title}</span>
+                                    {canUpdate && (
+                                        <Button
+                                            variant="secondary"
+                                            size="xs"
+                                            className="opacity-0 transition-opacity duration-150 ease-in group-focus-within:opacity-100 group-hover:opacity-100"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleStartEditting();
+                                            }}
+                                        >
+                                            <Pencil className="h-3 w-3" />
+                                        </Button>
                                     )}
                                 </div>
-                            </Link>
-                        </DialogTrigger>
-                        <TaskDetailsDialogContent task={task} />
-                    </Dialog>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-xs font-light">
+                                        {`${format(
+                                            dueDate,
+                                            'MMM'
+                                        )} ${dueDate.getDate()}`}
+                                    </span>
+                                </div>
+                                {(dueDateToday || dueDateOverdue) && (
+                                    <DueDateWarning
+                                        today={dueDateToday}
+                                        overdue={dueDateOverdue}
+                                    />
+                                )}
+                            </div>
+                        </Link>
+                    </TaskDetailsDialog>
                     <div className="flex flex-none flex-col items-center justify-around">
                         <span className="pr-2" aria-roledescription="draggable">
                             <Button

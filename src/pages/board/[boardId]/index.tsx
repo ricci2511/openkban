@@ -22,6 +22,7 @@ const BoardPage: NextPageWithLayout = () => {
             id,
         },
         {
+            enabled: !!id,
             refetchOnWindowFocus: false,
             onSuccess: (board) => {
                 const role = board.boardUsers.find(
@@ -55,15 +56,15 @@ const BoardPage: NextPageWithLayout = () => {
 
     // TODO: SEO
     return (
-        <>
+        <KanbanLayout>
             <KanbanHeaderSection title={data.title} />
             <KanbanBodySection />
-        </>
+        </KanbanLayout>
     );
 };
 
 BoardPage.getLayout = function getLayout(page: ReactElement) {
-    return <KanbanLayout>{page}</KanbanLayout>;
+    return <>{page}</>;
 };
 
 export default BoardPage;

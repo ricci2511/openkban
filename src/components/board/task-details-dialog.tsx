@@ -3,14 +3,22 @@ import { trpc } from '@lib/trpc';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useSubtasksActions, useTasksActions } from 'store/kanban-store';
-import { DialogContent } from '@components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@components/ui/dialog';
 import { TaskDetails } from '@components/task-details';
 import { ClientTask } from 'types/board-types';
+
+interface TaskDetailsDialogProps {
+    task: ClientTask;
+    children: React.ReactNode; // dialog trigger
+}
 
 /**
  * @returns Dialog using the route as modal pattern to display task data.
  */
-export const TaskDetailsDialogContent = ({ task }: { task: ClientTask }) => {
+export const TaskDetailsDialog = ({
+    task,
+    children,
+}: TaskDetailsDialogProps) => {
     let router = useRouter();
     const { boardId, taskId } = router.query;
     const open = !!taskId && task.id === taskId;
@@ -33,17 +41,17 @@ export const TaskDetailsDialogContent = ({ task }: { task: ClientTask }) => {
             }
         );
 
-    const onClose = () => router.push(`/board/${boardId}`);
+    const onOpenChange = (open: boolean) => {
+        !open ? router.push(`/board/${boardId}`) : undefined;
+    };
 
     return (
-        <DialogContent
-            className="min-h-[384px] sm:max-w-xl lg:max-w-2xl"
-            onPointerDownOutside={onClose} // triggers when clicking outside of the dialog
-            onCloseAutoFocus={onClose} // triggers when clicking the close button
-            onEscapeKeyDown={onClose}
-        >
-            {fetchStatus === 'fetching' && <LoadingSpinner />}
-            {subtasks && open && <TaskDetails />}
-        </DialogContent>
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent className="min-h-[384px] sm:max-w-xl lg:max-w-2xl">
+                {fetchStatus === 'fetching' && <LoadingSpinner />}
+                {subtasks && <TaskDetails />}
+            </DialogContent>
+        </Dialog>
     );
 };
