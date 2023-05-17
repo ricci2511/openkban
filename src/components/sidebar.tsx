@@ -26,7 +26,7 @@ export const Sidebar = ({ sidebarOpen, toggleSidebarOpen }: SidebarProps) => {
             onClick={onSidebarClick}
         >
             <div className="flex h-full flex-col">
-                <section className="flex-1 overflow-x-hidden overflow-y-scroll p-4">
+                <section className="flex-1 overflow-x-hidden overflow-y-scroll p-3">
                     <SidebarLinks sidebarOpen={sidebarOpen} />
                 </section>
                 <Separator role="separator" />
