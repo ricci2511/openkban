@@ -20,7 +20,7 @@ export const InfoTooltip = ({ message, side, ...props }: InfoTooltipProps) => {
     return (
         <TooltipProvider delayDuration={150}>
             <Tooltip>
-                <TooltipTrigger {...props}>
+                <TooltipTrigger {...props} type="button">
                     <Info size={18} />
                 </TooltipTrigger>
                 <TooltipContent variant="info" size="sm" side={side}>

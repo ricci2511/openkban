@@ -19,7 +19,16 @@ const normalizeBoardData = (board: UnnormalizedBoardData): BoardData => {
     const tasksMap: TasksMap = {};
 
     const columns = board.columns.map(({ tasks, ...column }) => {
-        tasksMap[column.id] = tasks.sort(sortByLexoRankAsc) as ClientTask[];
+        tasksMap[column.id] = tasks.sort(sortByLexoRankAsc).map((t) => {
+            const { asignees, ...task } = t;
+
+            return {
+                ...task,
+                // just return the board user id of the task assignees to the client
+                assignees: asignees.map((a) => a.boardUserId),
+            };
+        }) as ClientTask[];
+
         return column as ClientColumn;
     });
 
@@ -53,7 +62,11 @@ export const getBoardById = authedRateLimitedProcedure
                 include: {
                     columns: {
                         include: {
-                            tasks: true,
+                            tasks: {
+                                include: {
+                                    asignees: true,
+                                },
+                            },
                         },
                     },
                     boardUser: {
@@ -80,7 +93,7 @@ export const getBoardById = authedRateLimitedProcedure
 
             // VIEWERs dont need to know anything about members permissions.
             // On the other hand, ADMINs should know because they can change them
-            // and MEMBERs should know so their actions can be restricted based on their permissions
+            // and MEMBERs should know so that UI actions can be restricted based on their permissions
             if (me.role !== 'VIEWER') {
                 const memberPermissions =
                     await ctx.prisma.memberPermission.findUnique({

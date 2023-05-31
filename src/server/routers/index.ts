@@ -7,6 +7,7 @@ import { boardTaskRouter } from './board-task-router';
 import { boardColumnRouter } from './board-column-router';
 import { boardSubtaskRouter } from './board-subtask-router';
 import { boardPermissionRouter } from './board-permission-router';
+import { boardTaskAssigneeRouter } from './board-task-assignee-router';
 
 export const appRouter = t.router({
     authRouter,
@@ -17,6 +18,7 @@ export const appRouter = t.router({
     userRouter,
     boardUserRouter,
     boardPermissionRouter,
+    boardTaskAssigneeRouter,
 });
 
 export type AppRouter = typeof appRouter;

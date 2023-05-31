@@ -8,6 +8,7 @@ import {
 import { UserRolesSelect } from './user-roles-select';
 import { Role } from '@prisma/client';
 import { DeleteButtonWithPopover } from '@components/delete-button-with-popover';
+import { BoardUserInfo } from '@components/board-user-info';
 
 interface BoardUserItemProps {
     boardUser: ClientBoardUser;
@@ -77,15 +78,7 @@ export const BoardUserItem = ({
     return (
         <li>
             <div className="flex items-center gap-3">
-                <BoardUserAvatar boardUser={boardUser} width={36} height={36} />
-                <div className="flex flex-col gap-1">
-                    <span className="break-word text-sm sm:text-base">
-                        {name} {isMe && '(you)'}
-                    </span>
-                    <span className="break-word text-xs font-light">
-                        {email}
-                    </span>
-                </div>
+                <BoardUserInfo boardUser={boardUser} isMe={isMe} />
                 <div className="ml-auto flex items-center gap-2">
                     <UserRolesSelect
                         admin={amIAdmin}

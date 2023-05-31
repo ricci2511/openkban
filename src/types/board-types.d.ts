@@ -10,6 +10,7 @@ import {
     Role,
     Permission,
     BoardPermission,
+    BoardTaskAssignee,
 } from '@prisma/client';
 
 export type BoardColumnsLayout = 'default' | 'custom';
@@ -18,14 +19,19 @@ export type BoardToUpdate = Partial<Omit<Board, 'userId' | 'createdAt'>> & {
     id: string;
 };
 
+// owner id is always included in the client
+export type ClientColumn = NonNullableField<BoardColumn, 'ownerId'>;
+
+export type ClientTask = NonNullableField<BoardTask, 'ownerId'> & {
+    // each task has an array of assignees, represented by their board user id
+    assignees: string[];
+};
+
+export type ClientSubtask = NonNullableField<BoardSubtask, 'ownerId'>;
+
 export type ClientTaskWithSubTasks = ClientTask & {
     subtasks: ClientSubtask[];
 };
-
-// owner id is always included in the client
-export type ClientColumn = NonNullableField<BoardColumn, 'ownerId'>;
-export type ClientTask = NonNullableField<BoardTask, 'ownerId'>;
-export type ClientSubtask = NonNullableField<BoardSubtask, 'ownerId'>;
 
 // map of columnId to tasks
 export type TasksMap = Record<string, ClientTask[]>;
@@ -43,7 +49,12 @@ export type BoardWithUsers = Board & {
 
 export type UnnormalizedBoardData = Board & {
     boardUser: ClientBoardUser[];
-    columns: BoardColumnWithTasks[];
+    // Columns hold array of tasks, and tasks hold array of task assignees
+    columns: (BoardColumn & {
+        tasks: (BoardTask & {
+            asignees: BoardTaskAssignee[];
+        })[];
+    })[];
     memberPermissions?: BoardPermission[];
 };
 
