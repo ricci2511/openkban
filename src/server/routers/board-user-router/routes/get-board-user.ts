@@ -21,10 +21,10 @@ export const queryBoardUserProperty = async <TProp extends keyof BoardUser>(
             },
         });
 
-        if (!boardUser) return notFound('Board user not found.');
+        if (!boardUser) throw notFound('Board user not found.');
 
         if (!boardUser[property])
-            return notFound(`Board user ${property} not found.`);
+            throw notFound(`Board user ${property} not found.`);
 
         return boardUser[property];
     } catch (error) {

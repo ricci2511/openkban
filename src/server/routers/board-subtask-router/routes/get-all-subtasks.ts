@@ -17,7 +17,7 @@ export const getAllSubtasks = authedRateLimitedProcedure
                     taskId: input.taskId,
                 },
             });
-            if (!subtasks) return notFound('Subtasks not found');
+            if (!subtasks) throw notFound('Subtasks not found');
             return subtasks as ClientSubtask[];
         } catch (error) {
             const message = queryError('subtask', false);
