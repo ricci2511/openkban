@@ -22,7 +22,7 @@ export const BoardUserInfo = ({
                 height={avatarHeight}
             />
             <div className="flex flex-col gap-1">
-                <span className="break-word text-sm sm:text-base">
+                <span className="break-word text-sm">
                     {boardUser.user.name} {isMe && '(you)'}
                 </span>
                 <span className="break-word text-xs font-light">

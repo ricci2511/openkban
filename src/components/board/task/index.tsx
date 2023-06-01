@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { getBoardId, useColumns } from 'store/kanban-store';
 import dynamic from 'next/dynamic';
 import { TaskOptionsDropdown } from './task-options-dropdown';
-import { Dialog, DialogTrigger } from '@components/ui/dialog';
 import { Grip, Pencil } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import { isPast, isToday, format } from 'date-fns';

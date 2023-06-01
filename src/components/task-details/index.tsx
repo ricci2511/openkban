@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCurrentTask } from 'store/kanban-store';
+import { useCurrentTask, useMyRole } from 'store/kanban-store';
 import { Description } from './description';
 import { Subtasks } from './subtasks';
 import { ClipboardSignature } from 'lucide-react';
@@ -14,6 +14,7 @@ export const TaskDetails = () => {
         'UPDATE',
         task.ownerId
     );
+    const myRole = useMyRole();
 
     return (
         <div className="flex flex-col gap-6">
@@ -26,19 +27,25 @@ export const TaskDetails = () => {
                     </h1>
                 </div>
                 <div className="ml-9 flex flex-col gap-1.5">
-                    <span className="text-sm font-semibold">Assignees</span>
+                    <span className="text-sm font-semibold">Assignees:</span>
                     <div className="flex flex-wrap items-center gap-2">
-                        <ul className="flex flex-wrap items-center gap-1">
-                            {!!task.assignees.length &&
-                                task.assignees.map((boardUserId) => (
+                        {!!task.assignees.length && (
+                            <ul className="flex flex-wrap items-center gap-1">
+                                {task.assignees.map((boardUserId) => (
                                     <li key={boardUserId} className="pt-1">
                                         <TaskAssignee
                                             boardUserId={boardUserId}
                                         />
                                     </li>
                                 ))}
-                        </ul>
-                        <AssignUserButton />
+                            </ul>
+                        )}
+                        {!task.assignees.length && (
+                            <p className="text-xs text-muted-foreground">
+                                No assignees
+                            </p>
+                        )}
+                        {myRole !== 'VIEWER' && <AssignUserButton />}
                     </div>
                 </div>
                 {/**

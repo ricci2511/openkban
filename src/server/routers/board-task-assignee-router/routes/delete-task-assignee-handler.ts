@@ -1,18 +1,35 @@
-import { internalServerError, notFound } from '@server/helpers/error-helpers';
+import {
+    forbidden,
+    internalServerError,
+    notFound,
+} from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { queryBoardUserProperty } from '@server/routers/board-user-router/routes/get-board-user';
 import { z } from 'zod';
 
 const schema = z.object({
-    boardUserId: z.string(),
-    taskId: z.string(),
+    boardUserId: z.string().cuid(),
+    taskId: z.string().cuid(),
+    boardId: z.string().cuid(),
 });
 
 export const deleteTaskAssigneeHandler = authedRateLimitedProcedure
     .input(schema)
     .mutation(async ({ ctx, input }) => {
-        const { boardUserId, taskId } = input;
+        const { boardUserId, taskId, boardId } = input;
 
         try {
+            const role = await queryBoardUserProperty(
+                ctx.session.user.id,
+                boardId,
+                'role',
+                ctx.prisma
+            );
+
+            if (role === 'VIEWER') {
+                throw forbidden('You are not allowed to remove task assignees');
+            }
+
             // find the task assignee to delete
             const assignee = await ctx.prisma.boardTaskAssignee.findFirst({
                 where: {

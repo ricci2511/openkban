@@ -9,6 +9,7 @@ import { trpc } from '@lib/trpc';
 import { Plus } from 'lucide-react';
 import { useMemo } from 'react';
 import {
+    getBoardId,
     useBoardUsers,
     useCurrentTask,
     useTasksActions,
@@ -19,7 +20,10 @@ export const AssignUserButton = () => {
     const boardUsers = useBoardUsers();
 
     const nonAssignees = useMemo(() => {
-        return boardUsers.filter((bu) => !task.assignees.includes(bu.id));
+        // filter out already assigned users and viewers
+        return boardUsers.filter(
+            (bu) => !(task.assignees.includes(bu.id) || bu.role === 'VIEWER')
+        );
     }, [boardUsers, task.assignees]);
 
     const { updateTask } = useTasksActions();
@@ -44,7 +48,7 @@ export const AssignUserButton = () => {
     });
 
     const handleAssignUser = (boardUserId: string) => {
-        mutate({ boardUserId, taskId: task.id });
+        mutate({ boardUserId, taskId: task.id, boardId: getBoardId() });
     };
 
     return (
@@ -58,7 +62,7 @@ export const AssignUserButton = () => {
                 <h3 className="text-sm font-semibold">
                     Non-assigned board members
                 </h3>
-                <ul className="mt-2">
+                <ul className="mt-2 flex max-h-44 flex-col gap-1 overflow-y-auto">
                     {!nonAssignees.length && (
                         <p className="text-sm text-muted-foreground">
                             No more board members left to assign.

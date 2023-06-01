@@ -1,17 +1,31 @@
-import { internalServerError } from '@server/helpers/error-helpers';
+import { forbidden, internalServerError } from '@server/helpers/error-helpers';
 import { authedRateLimitedProcedure } from '@server/middlewares';
+import { queryBoardUserProperty } from '@server/routers/board-user-router/routes/get-board-user';
 import { z } from 'zod';
 
 const schema = z.object({
-    boardUserId: z.string(),
-    taskId: z.string(),
+    boardUserId: z.string().cuid(),
+    taskId: z.string().cuid(),
+    boardId: z.string().cuid(),
 });
 
 export const createTaskAssigneeHandler = authedRateLimitedProcedure
     .input(schema)
     .mutation(async ({ ctx, input }) => {
-        const { boardUserId, taskId } = input;
+        const { boardUserId, taskId, boardId } = input;
+
         try {
+            const role = await queryBoardUserProperty(
+                ctx.session.user.id,
+                boardId,
+                'role',
+                ctx.prisma
+            );
+
+            if (role === 'VIEWER') {
+                throw forbidden('You are not allowed to create task assignees');
+            }
+
             const taskAssignee = await ctx.prisma.boardTaskAssignee.create({
                 data: {
                     boardUser: {
